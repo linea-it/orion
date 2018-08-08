@@ -1,0 +1,22 @@
+[
+    {
+        "field": "pipeline", 
+        "header": "Pipeline"
+    },
+    {
+        "field": "start", 
+        "header": "Start"
+    },
+    {
+        "field": "duration", 
+        "header": "Duration"
+    },
+    {
+        "field": "runs", 
+        "header": "Runs"
+    },
+    {
+        "field": "status", 
+        "header": "Status"
+    }
+]

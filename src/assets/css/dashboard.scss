@@ -1,0 +1,32 @@
+/*.dashboard .a01 {
+  height: calc(100vh - 65px);
+}*/
+
+.a01-1, .a01-2 {
+    border: solid 1px #ccc;
+}
+
+.ui-datatable {
+    margin: 0 0 10px;
+}
+
+.headerTitle {
+    padding: .5rem 0;
+    margin: 0 -15px 0 -15px;
+    border-bottom: solid 1px #ccc;
+}
+
+.filter {
+    padding: .5rem 0;
+    margin: 0 0 .5rem;
+    border-bottom: solid 1px #ccc;
+    width: 100%;
+
+    .sr-only {
+        position: static; 
+        width: 70px;
+        height: auto;
+        padding: 0; 
+        margin: -1px;
+    }
+}
