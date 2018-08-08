@@ -1,0 +1,9 @@
+version: "3.6"
+services:
+  dashboard:
+    build: ./dashboard
+    image: portal-dashboard
+    working_dir: /src/app
+    ports:
+      - 6000:6000
+    command: ./entrypoint.sh
