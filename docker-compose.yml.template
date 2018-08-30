@@ -3,8 +3,10 @@ services:
   dashboard:
     build: .
     working_dir: /src/app
+    environment:
+      - PORT=7002
     ports:
-      - 5000:5000
+      - 7002:7002
     command: sh entrypoint.sh
     volumes:
       - ./entrypoint.sh:/src/app/entrypoint.sh
