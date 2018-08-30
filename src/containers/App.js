@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Proptypes from 'prop-types';
+import Dashboard from '../views/Dashboard';
 
 import '../assets/css/App.css';
 
@@ -12,7 +13,7 @@ class App extends Component {
       <div className="app">
         <Header />
         <main role="main" className="container-fluid">
-          {this.props.children}
+          <Dashboard />
         </main>
         <Footer />
       </div>

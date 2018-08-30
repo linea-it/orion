@@ -1,17 +1,13 @@
 import React from 'react';
-import { IndexLink } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const Menu = () => {
   return (
     <ul className="navbar-nav mr-auto">
       <li className="nav-item">
-        <IndexLink
-          to="/Dashboard"
-          activeClassName="active"
-          className="nav-link"
-        >
+        <Link to="/Dashboard" activeClassName="active" className="nav-link">
           Dashboard
-        </IndexLink>
+        </Link>
       </li>
     </ul>
   );
