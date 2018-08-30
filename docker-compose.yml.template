@@ -10,3 +10,4 @@ services:
     command: sh entrypoint.sh
     volumes:
       - ./entrypoint.sh:/src/app/entrypoint.sh
+  
