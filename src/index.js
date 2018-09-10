@@ -14,7 +14,7 @@ import registerServiceWorker from './registerServiceWorker';
 const history = createHistory();
 
 ReactDOM.render(
-  <Router basename={"/orion"} history={history}>
+  <Router basename={process.env.REACT_APP_PUBLIC_URL} history={history}>
     <Route path={`${process.env.PUBLIC_URL}/`} component={App} />
   </Router>,
   document.getElementById("root")
