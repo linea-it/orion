@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Centaurus from '../../api';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -16,6 +17,7 @@ export default class TableSpecialSamples extends Component {
     this.state = {
       colsTableSpecialSamples: columnsTableSpecialSamples,
       data: DADOS,
+      // rows: [],
     };
 
     this.colOptionsTableSpecialSamples = [];
@@ -36,9 +38,43 @@ export default class TableSpecialSamples extends Component {
     this.setState({ colsTableSpecialSamples: event.value });
   }
 
+  componentDidMount() {
+    this.setState({
+      loading: true,
+    });
+
+    this.loadSpecialSamples();
+  }
+
+  loadSpecialSamples = async () => {
+    const specialSamples = await Centaurus.getAllSpecialSamples();
+    if (
+      specialSamples &&
+      specialSamples.pipelinesModulesList &&
+      specialSamples.pipelinesModulesList.edges
+    ) {
+      const rows = specialSamples.pipelinesModulesList.edges.map(e => {
+        return {
+          pipeline: e.node.pipeline.displayName,
+          displayName: e.node.module.displayName,
+          moduleId: e.node.module.moduleId,
+          owner: e.node.module.user.displayName,
+          version: e.node.module.version,
+        };
+      });
+      this.setState({
+        rows,
+        loading: false,
+      });
+    } else {
+      this.setState({ loading: false });
+    }
+  };
+
   render() {
-    const footer = (
+    const header = (
       <div style={{ textAlign: 'left' }}>
+        <p>Special Samples</p>
         <MultiSelect
           value={this.state.colsTableSpecialSamples}
           options={this.colOptionsTableSpecialSamples}
@@ -62,9 +98,9 @@ export default class TableSpecialSamples extends Component {
 
     return (
       <DataTable
-        header="Data Instalation"
-        footer={footer}
+        header={header}
         value={this.state.data}
+        // value={this.state.rows}
         resizableColumns={true}
         columnResizeMode="expand"
         reorderableColumns={true}

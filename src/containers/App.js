@@ -22,7 +22,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-  children: Proptypes.string.isRequired,
+  children: Proptypes.object.isRequired,
 };
 
 export default App;

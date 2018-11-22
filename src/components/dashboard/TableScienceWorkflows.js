@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Centaurus from '../../api';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -16,6 +17,7 @@ export default class TableScienceWorkflows extends Component {
     this.state = {
       colsTableScienceWorkflows: columnsTableScienceWorkflows,
       data: DADOS,
+      // rows: [],
     };
 
     this.colOptionsTableScienceWorkflows = [];
@@ -36,9 +38,43 @@ export default class TableScienceWorkflows extends Component {
     this.setState({ colsTableScienceWorkflows: event.value });
   }
 
+  componentDidMount() {
+    this.setState({
+      loading: true,
+    });
+
+    this.loadScienceWorkflows();
+  }
+
+  loadScienceWorkflows = async () => {
+    const scienceWorkflows = await Centaurus.getAllScienceWorkflows();
+    if (
+      scienceWorkflows &&
+      scienceWorkflows.pipelinesModulesList &&
+      scienceWorkflows.pipelinesModulesList.edges
+    ) {
+      const rows = scienceWorkflows.pipelinesModulesList.edges.map(e => {
+        return {
+          pipeline: e.node.pipeline.displayName,
+          displayName: e.node.module.displayName,
+          moduleId: e.node.module.moduleId,
+          owner: e.node.module.user.displayName,
+          version: e.node.module.version,
+        };
+      });
+      this.setState({
+        rows,
+        loading: false,
+      });
+    } else {
+      this.setState({ loading: false });
+    }
+  };
+
   render() {
-    const footer = (
+    const header = (
       <div style={{ textAlign: 'left' }}>
+        <p>Science Workflows</p>
         <MultiSelect
           value={this.state.colsTableScienceWorkflows}
           options={this.colOptionsTableScienceWorkflows}
@@ -62,9 +98,9 @@ export default class TableScienceWorkflows extends Component {
 
     return (
       <DataTable
-        header="Data Instalation"
-        footer={footer}
+        header={header}
         value={this.state.data}
+        // value={this.state.rows}
         resizableColumns={true}
         columnResizeMode="expand"
         reorderableColumns={true}

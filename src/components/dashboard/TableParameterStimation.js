@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Centaurus from '../../api';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -16,6 +17,7 @@ export default class TableParameterStimation extends Component {
     this.state = {
       colsTableParameterStimation: columnsTableParameterStimation,
       data: DADOS,
+      // rows: [],
     };
 
     this.colOptionsTableParameterStimation = [];
@@ -36,9 +38,43 @@ export default class TableParameterStimation extends Component {
     this.setState({ colsTableParameterStimation: event.value });
   }
 
+  componentDidMount() {
+    this.setState({
+      loading: true,
+    });
+
+    this.loadParameterStimation();
+  }
+
+  loadParameterStimation = async () => {
+    const parameterStimation = await Centaurus.getAllParameterStimation();
+    if (
+      parameterStimation &&
+      parameterStimation.pipelinesModulesList &&
+      parameterStimation.pipelinesModulesList.edges
+    ) {
+      const rows = parameterStimation.pipelinesModulesList.edges.map(e => {
+        return {
+          pipeline: e.node.pipeline.displayName,
+          displayName: e.node.module.displayName,
+          moduleId: e.node.module.moduleId,
+          owner: e.node.module.user.displayName,
+          version: e.node.module.version,
+        };
+      });
+      this.setState({
+        rows,
+        loading: false,
+      });
+    } else {
+      this.setState({ loading: false });
+    }
+  };
+
   render() {
-    const footer = (
+    const header = (
       <div style={{ textAlign: 'left' }}>
+        <p>Parameter Stimation</p>
         <MultiSelect
           value={this.state.colsTableParameterStimation}
           options={this.colOptionsTableParameterStimation}
@@ -62,9 +98,9 @@ export default class TableParameterStimation extends Component {
 
     return (
       <DataTable
-        header="Data Instalation"
-        footer={footer}
+        header={header}
         value={this.state.data}
+        // value={this.state.rows}
         resizableColumns={true}
         columnResizeMode="expand"
         reorderableColumns={true}

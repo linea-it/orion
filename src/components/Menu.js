@@ -5,7 +5,7 @@ const Menu = () => {
   return (
     <ul className="navbar-nav mr-auto">
       <li className="nav-item">
-        <Link to="/Dashboard" activeClassName="active" className="nav-link">
+        <Link to="/Dashboard" activeclassname="active" className="nav-link">
           Dashboard
         </Link>
       </li>
