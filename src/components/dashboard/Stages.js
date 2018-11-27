@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
-import Centaurus from '../../api';
+// import Centaurus from '../../api';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
+import Proptypes from 'prop-types';
 
 import columnsTableDashboard from '../../assets/json/columnsTableDashboard.json';
-import DADOS from '../../assets/json/dataDashboard.json';
 
-export default class TableDataInstalation extends Component {
-  constructor() {
-    super();
+export default class Stages extends Component {
+  constructor(props) {
+    super(props);
 
     const columnsTableDataInstalation = columnsTableDashboard;
 
     this.state = {
       colsTableDataInstalation: columnsTableDataInstalation,
-      data: DADOS,
       rows: [],
       loading: false,
     };
@@ -29,47 +28,14 @@ export default class TableDataInstalation extends Component {
         value: col,
       });
     }
-
-    // this.onColumnToggleTableDataInstalation = this.onColumnToggleTableDataInstalation.bind(
-    //   this
-    // );
   }
 
-  onColumnToggleTableDataInstalation = event => {
-    this.setState({ colsTableDataInstalation: event.value });
+  static propTypes = {
+    rows: Proptypes.array,
   };
 
-  componentDidMount() {
-    this.setState({
-      loading: true,
-    });
-
-    this.loadDataInstalation();
-  }
-
-  loadDataInstalation = async () => {
-    const dataInstalation = await Centaurus.getAllDataInstalation();
-    if (
-      dataInstalation &&
-      dataInstalation.pipelinesModulesList &&
-      dataInstalation.pipelinesModulesList.edges
-    ) {
-      const rows = dataInstalation.pipelinesModulesList.edges.map(e => {
-        return {
-          pipeline: e.node.pipeline.displayName,
-          displayName: e.node.module.displayName,
-          moduleId: e.node.module.moduleId,
-          owner: e.node.module.user.displayName,
-          version: e.node.module.version,
-        };
-      });
-      this.setState({
-        rows,
-        loading: false,
-      });
-    } else {
-      this.setState({ loading: false });
-    }
+  onColumnToggleTableDataInstalation = evt => {
+    this.setState({ colsTableDataInstalation: evt.value });
   };
 
   render() {
@@ -100,8 +66,7 @@ export default class TableDataInstalation extends Component {
     return (
       <DataTable
         header={header}
-        value={this.state.data}
-        // value={this.state.rows}
+        value={this.props.rows}
         resizableColumns={true}
         columnResizeMode="expand"
         reorderableColumns={true}

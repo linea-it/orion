@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Proptypes from 'prop-types';
+// import Proptypes from 'prop-types';
 import Dashboard from '../views/Dashboard';
 
 import '../assets/css/App.css';
 
-class App extends Component {
+export default class App extends Component {
   render() {
     return (
       <div className="app">
@@ -21,8 +21,6 @@ class App extends Component {
   }
 }
 
-App.propTypes = {
-  children: Proptypes.object.isRequired,
-};
-
-export default App;
+// App.propTypes = {
+//   children: Proptypes.object.isRequired,
+// };

@@ -6,12 +6,23 @@ import TableDataPreparation from '../components/dashboard/TableDataPreparation';
 import TableScienceReadyCatalogs from '../components/dashboard/TableScienceReadyCatalogs';
 import TableSpecialSamples from '../components/dashboard/TableSpecialSamples';
 import TableScienceWorkflows from '../components/dashboard/TableScienceWorkflows';
-import TableParameterStimation from '../components/dashboard/TableParameterStimation';
 import TableUtilities from '../components/dashboard/TableUtilities';
+import Stages from '../components/dashboard/Stages';
 
 import '../assets/css/dashboard.css';
 
-class Dashboard extends Component {
+export default class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      rows: [],
+    };
+  }
+
+  saveStage = pipelineStages => {
+    this.setState({ rows: pipelineStages });
+  };
+
   render() {
     return (
       <div className="dashboard">
@@ -20,11 +31,12 @@ class Dashboard extends Component {
         </p>
         <div className="row">
           <div className="filter">
-            <ReleaseFilter />
+            <ReleaseFilter saveStage={this.saveStage} />
           </div>
         </div>
         <div className="a01 row">
           <div className="a01-1 col-sm-12 col-md-6 px-0">
+            <Stages rows={this.state.rows} />
             <TableDataInstalation />
             <TableDataPreparation />
             <TableScienceReadyCatalogs />
@@ -32,7 +44,6 @@ class Dashboard extends Component {
           <div className="a01-2 col-sm-12 col-md-6 px-0">
             <TableSpecialSamples />
             <TableScienceWorkflows />
-            <TableParameterStimation />
             <TableUtilities />
           </div>
         </div>
@@ -40,5 +51,3 @@ class Dashboard extends Component {
     );
   }
 }
-
-export default Dashboard;

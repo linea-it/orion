@@ -18,6 +18,7 @@ export default class TableScienceWorkflows extends Component {
       colsTableScienceWorkflows: columnsTableScienceWorkflows,
       data: DADOS,
       // rows: [],
+      loading: false,
     };
 
     this.colOptionsTableScienceWorkflows = [];
@@ -111,6 +112,7 @@ export default class TableScienceWorkflows extends Component {
         onSelectionChange={e => this.setState({ selectedCar1: e.data })}
         scrollable={true}
         scrollHeight="200px"
+        loading={this.state.loading}
       >
         {columnsTableScienceWorkflows}
       </DataTable>

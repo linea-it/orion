@@ -18,6 +18,7 @@ export default class TableUtilities extends Component {
       colsTableUtilities: columnsTableUtilities,
       data: DADOS,
       // rows: [],
+      loading: false,
     };
 
     this.colOptionsTableUtilities = [];
@@ -106,6 +107,7 @@ export default class TableUtilities extends Component {
         onSelectionChange={e => this.setState({ selectedCar1: e.data })}
         scrollable={true}
         scrollHeight="200px"
+        loading={this.state.loading}
       >
         {columnsTableUtilities}
       </DataTable>

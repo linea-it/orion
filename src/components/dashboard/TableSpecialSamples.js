@@ -18,6 +18,7 @@ export default class TableSpecialSamples extends Component {
       colsTableSpecialSamples: columnsTableSpecialSamples,
       data: DADOS,
       // rows: [],
+      loading: false,
     };
 
     this.colOptionsTableSpecialSamples = [];
@@ -111,6 +112,7 @@ export default class TableSpecialSamples extends Component {
         onSelectionChange={e => this.setState({ selectedCar1: e.data })}
         scrollable={true}
         scrollHeight="200px"
+        loading={this.state.loading}
       >
         {columnsTableSpecialSamples}
       </DataTable>

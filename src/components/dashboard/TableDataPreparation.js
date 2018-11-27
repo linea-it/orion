@@ -18,6 +18,7 @@ export default class TableDataPreparation extends Component {
       colsTableDataPreparation: columnsTableDataPreparation,
       data: DADOS,
       // rows: [],
+      loading: false,
     };
 
     this.colOptionsTableDataPreparation = [];
@@ -111,6 +112,7 @@ export default class TableDataPreparation extends Component {
         onSelectionChange={e => this.setState({ selectedCar1: e.data })}
         scrollable={true}
         scrollHeight="200px"
+        loading={this.state.loading}
       >
         {columnsTableDataPreparation}
       </DataTable>

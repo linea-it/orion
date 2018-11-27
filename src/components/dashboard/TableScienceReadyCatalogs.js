@@ -18,6 +18,7 @@ export default class TableScienceReadyCatalogs extends Component {
       colsTableScienceReadyCatalogs: columnsTableScienceReadyCatalogs,
       data: DADOS,
       // rows: [],
+      loading: false,
     };
 
     this.colOptionsTableScienceReadyCatalogs = [];
@@ -111,6 +112,7 @@ export default class TableScienceReadyCatalogs extends Component {
         onSelectionChange={e => this.setState({ selectedCar1: e.data })}
         scrollable={true}
         scrollHeight="200px"
+        loading={this.state.loading}
       >
         {columnsTableScienceReadyCatalogs}
       </DataTable>
