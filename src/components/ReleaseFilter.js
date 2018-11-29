@@ -85,7 +85,6 @@ export default class ReleaseFilter extends Component {
 
   loadStage = async dataStage => {
     const pipelineStage = await Centaurus.getAllPipelineStageList(dataStage);
-    console.log(this.state.pipelineStages);
     if (
       pipelineStage &&
       pipelineStage.pipelineStageList &&
@@ -96,30 +95,31 @@ export default class ReleaseFilter extends Component {
           id: e.node.id,
           displayName: e.node.displayName,
           pipelineStageId: e.node.pipelineStageId,
+          level: e.node.level,
         };
       });
-      this.props.saveStage(pipelineStages);
+      // this.setState({ pipelineStages: pipelineStages });
+      this.loadTableStages(pipelineStages);
     } else {
       this.setState({ loading: false });
     }
   };
 
-  // loadTableStages = async () => {
-  //   const pipelinesStageId = await Centaurus.getAllPipelinesByStageId();
-  //   if (pipelinesStageId && pipelinesStageId.pipelinesByStageId) {
-  //     const items = pipelinesStageId.pipelinesByStageId.map(e => {
-  //       return {
-  //         displayName: e.displayName,
-  //       };
-  //     });
-  //     this.setState({
-  //       items,
-  //       loading: false,
-  //     });
-  //   } else {
-  //     this.setState({ loading: false });
-  //   }
-  // };
+  loadTableStages = async pipelineStages => {
+    const stages = pipelineStages.map(data => {
+      return { id: data.pipelineStageId, name: data.displayName };
+    });
+    const tableStage = await Promise.all(
+      stages.map(async stage => {
+        const rows = await Centaurus.getAllPipelinesByStageId(stage.id);
+        return {
+          tableName: stage.name,
+          rows: rows,
+        };
+      })
+    );
+    this.props.saveStage(tableStage);
+  };
 
   render() {
     return (

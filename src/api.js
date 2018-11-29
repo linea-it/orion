@@ -234,7 +234,8 @@ export default class Centaurus {
               node {
                 id
                 displayName
-                pipelineStageId              
+                pipelineStageId
+                level              
               }
             }
           }
