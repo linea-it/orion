@@ -85,6 +85,7 @@ export default class ReleaseFilter extends Component {
 
   loadStage = async dataStage => {
     const pipelineStage = await Centaurus.getAllPipelineStageList(dataStage);
+
     if (
       pipelineStage &&
       pipelineStage.pipelineStageList &&
@@ -98,7 +99,6 @@ export default class ReleaseFilter extends Component {
           level: e.node.level,
         };
       });
-      // this.setState({ pipelineStages: pipelineStages });
       this.loadTableStages(pipelineStages);
     } else {
       this.setState({ loading: false });
@@ -106,19 +106,28 @@ export default class ReleaseFilter extends Component {
   };
 
   loadTableStages = async pipelineStages => {
+    console.log(pipelineStages);
     const stages = pipelineStages.map(data => {
-      return { id: data.pipelineStageId, name: data.displayName };
+      return {
+        id: data.pipelineStageId,
+        name: data.displayName,
+        level: data.level,
+      };
     });
+    console.log(stages);
     const tableStage = await Promise.all(
       stages.map(async stage => {
         const rows = await Centaurus.getAllPipelinesByStageId(stage.id);
         return {
+          tableLevel: stage.level,
           tableName: stage.name,
           rows: rows,
         };
       })
     );
     this.props.saveStage(tableStage);
+    console.log(tableStage);
+    // this.setState({ loading: false });
   };
 
   render() {

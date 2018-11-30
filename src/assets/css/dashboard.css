@@ -2,7 +2,9 @@
   height: calc(100vh - 65px);
 }*/
 .a01-1, .a01-2 {
-  border: solid 1px #ccc; }
+  border: solid 1px #ccc;
+  height: calc(100vh - 195px);
+  overflow-y: auto; }
 
 .ui-datatable {
   margin: 0 0 10px; }

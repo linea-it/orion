@@ -17,7 +17,7 @@ export default class Stages extends Component {
 
     this.state = {
       colsTable: columnsTable,
-      rows: [],
+      //   rows: [],
       loading: false,
     };
 
@@ -30,13 +30,20 @@ export default class Stages extends Component {
   }
 
   static propTypes = {
-    rows: Proptypes.array,
     title: Proptypes.string,
+    rows: Proptypes.array,
+    // level: Proptypes.number,
   };
 
   onColumnToggleTable = evt => {
     this.setState({ colsTable: evt.value });
   };
+
+  //   componentDidMount() {
+  //     this.setState({
+  //       loading: true,
+  //     });
+  //   }
 
   render() {
     const header = (
