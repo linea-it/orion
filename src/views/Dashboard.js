@@ -42,24 +42,6 @@ export default class Dashboard extends Component {
             <ReleaseFilter saveStage={this.saveStage} />
           </div>
         </div>
-        {/* <div className="row">
-          <div style={styles.grid}>
-            {this.state.tables.map((table, index) => {
-              // const style = index % 2 == 0 ? styles.even : styles.odd;
-              if (table.tableLevel <= 3) {
-                return (
-                  <Stages
-                    key={index}
-                    title={table.tableName}
-                    rows={table.rows.pipelinesByStageId}
-                    level={table.tableLevel}
-                  />
-                );
-              }
-              return null;
-            })}
-          </div>
-        </div> */}
         <div className="a01 row">
           <div className="a01-1 col-sm-12 col-md-6 px-0">
             {this.state.tables.map((table, index) => {

@@ -106,7 +106,6 @@ export default class ReleaseFilter extends Component {
   };
 
   loadTableStages = async pipelineStages => {
-    console.log(pipelineStages);
     const stages = pipelineStages.map(data => {
       return {
         id: data.pipelineStageId,
@@ -114,10 +113,39 @@ export default class ReleaseFilter extends Component {
         level: data.level,
       };
     });
-    console.log(stages);
+
     const tableStage = await Promise.all(
       stages.map(async stage => {
         const rows = await Centaurus.getAllPipelinesByStageId(stage.id);
+
+        // DADOS FIXOS PARA TESTES
+        // let rows = await Centaurus.getAllPipelinesByStageId(stage.id);
+        // rows = {
+        //   pipelinesByStageId: [
+        //     {
+        //       displayName: 'Install',
+        //       start: '2015-11-03 11:39:36',
+        //       duration: '00:00:54',
+        //       runs: '5',
+        //       status: 'success',
+        //     },
+        //     {
+        //       displayName: 'Catalog',
+        //       start: '2018-6-10 13:58:23',
+        //       duration: '02:21:12',
+        //       runs: '8',
+        //       status: 'invalid',
+        //     },
+        //     {
+        //       displayName: 'Zeropoint',
+        //       start: '2017-10-08 05:23:45',
+        //       duration: '10:07:05',
+        //       runs: '2',
+        //       status: 'failure',
+        //     },
+        //   ],
+        // };
+
         return {
           tableLevel: stage.level,
           tableName: stage.name,
@@ -126,7 +154,6 @@ export default class ReleaseFilter extends Component {
       })
     );
     this.props.saveStage(tableStage);
-    console.log(tableStage);
     // this.setState({ loading: false });
   };
 
@@ -141,6 +168,7 @@ export default class ReleaseFilter extends Component {
           onChange={this.handleChangeReleases}
         >
           <option value="" />
+          <option value="all">All</option>
           {this.state.optsRelease.map(opt => {
             return (
               <option key={opt.id} value={opt.tagId}>
@@ -158,6 +186,7 @@ export default class ReleaseFilter extends Component {
           onChange={this.handleChangeFields}
         >
           <option value="" />
+          <option value="all">All</option>
           {this.state.optsFields.map(opt => {
             return (
               <option key={opt.id} value={opt.releaseTagId}>
