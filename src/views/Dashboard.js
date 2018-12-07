@@ -5,20 +5,6 @@ import Stages from '../components/dashboard/Stages';
 
 import '../assets/css/dashboard.css';
 
-// const styles = {
-//   // odd: {},
-//   // even: {},
-//   grid: {
-//     display: 'grid',
-//     gridTemplateColumns: 'auto auto',
-//     gridGap: '10px',
-//     // grid: 'auto auto',
-//     border: 'solid 1px #ccc',
-//     height: 'calc(100vh - 195px)',
-//     width: '100%',
-//   },
-// };
-
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -51,7 +37,6 @@ export default class Dashboard extends Component {
                     key={index}
                     title={table.tableName}
                     rows={table.rows.pipelinesByStageId}
-                    // level={table.tableLevel}
                   />
                 );
               }
@@ -66,7 +51,6 @@ export default class Dashboard extends Component {
                     key={index}
                     title={table.tableName}
                     rows={table.rows.pipelinesByStageId}
-                    // level={table.tableLevel}
                   />
                 );
               }

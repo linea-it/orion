@@ -118,7 +118,6 @@ export default class ReleaseFilter extends Component {
       })
     );
     this.props.saveStage(tableStage);
-    // this.setState({ loading: false });
   };
 
   render() {
