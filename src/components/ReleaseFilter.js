@@ -93,9 +93,8 @@ export default class ReleaseFilter extends Component {
     ) {
       const pipelineStages = pipelineStage.pipelineStageList.edges.map(e => {
         return {
-          id: e.node.id,
-          displayName: e.node.displayName,
-          pipelineStageId: e.node.pipelineStageId,
+          name: e.node.displayName,
+          id: e.node.pipelineStageId,
           level: e.node.level,
         };
       });
@@ -106,45 +105,10 @@ export default class ReleaseFilter extends Component {
   };
 
   loadTableStages = async pipelineStages => {
-    const stages = pipelineStages.map(data => {
-      return {
-        id: data.pipelineStageId,
-        name: data.displayName,
-        level: data.level,
-      };
-    });
-
+    // eslint-disable-next-line
     const tableStage = await Promise.all(
-      stages.map(async stage => {
+      pipelineStages.map(async stage => {
         const rows = await Centaurus.getAllPipelinesByStageId(stage.id);
-
-        // DADOS FIXOS PARA TESTES
-        // let rows = await Centaurus.getAllPipelinesByStageId(stage.id);
-        // rows = {
-        //   pipelinesByStageId: [
-        //     {
-        //       displayName: 'Install',
-        //       start: '2015-11-03 11:39:36',
-        //       duration: '00:00:54',
-        //       runs: '5',
-        //       status: 'success',
-        //     },
-        //     {
-        //       displayName: 'Catalog',
-        //       start: '2018-6-10 13:58:23',
-        //       duration: '02:21:12',
-        //       runs: '8',
-        //       status: 'invalid',
-        //     },
-        //     {
-        //       displayName: 'Zeropoint',
-        //       start: '2017-10-08 05:23:45',
-        //       duration: '10:07:05',
-        //       runs: '2',
-        //       status: 'failure',
-        //     },
-        //   ],
-        // };
 
         return {
           tableLevel: stage.level,
