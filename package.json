@@ -4,6 +4,7 @@
   "homepage": "http://localhost/dashboard",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.6.2",
     "axios": "^0.18.0",
     "classnames": "^2.2.5",
     "history": "^4.7.2",
