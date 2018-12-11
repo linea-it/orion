@@ -8,12 +8,12 @@ import { Button } from 'primereact/button';
 
 const styles = {
   btnStatus: {
-    display: 'inline-block',
+    display: 'table',
     margin: '0 auto',
     width: '7em',
   },
   btnRuns: {
-    display: 'inline-block',
+    display: 'table',
     margin: '0 auto',
     width: '4em',
   },
