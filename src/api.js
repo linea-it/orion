@@ -28,11 +28,11 @@ export default class Centaurus {
     }
   }
 
-  static async getAllFieldsTag(selectRelease) {
+  static async getAllFieldsTag(dataRelease) {
     try {
       const fieldsTag = await client.query(`
         {
-          fieldsByTagId(tagId: ${selectRelease}) {
+          fieldsByTagId(tagId: ${dataRelease}) {
             id
             displayName
             releaseTagId
@@ -67,11 +67,11 @@ export default class Centaurus {
     }
   }
 
-  static async getAllPipelinesByStageId(selectFields) {
+  static async getAllPipelinesByStageId(dataField) {
     try {
       const pipelinesStageId = await client.query(`
         {
-          pipelinesByStageId(stageId: ${selectFields}) {
+          pipelinesByStageId(stageId: ${dataField}) {
             displayName
           }
         }

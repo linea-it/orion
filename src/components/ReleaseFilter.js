@@ -7,28 +7,15 @@ export default class ReleaseFilter extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       optsRelease: [],
       optsFields: [],
       pipelineStages: [],
-      loading: false,
-      selectRelease: '',
-      selectFields: '',
-      selectPipelineStage: '',
     };
   }
 
   static propTypes = {
     saveStage: Proptypes.func.isRequired,
-  };
-
-  handleChangeReleases = evt => {
-    this.setState({ selectRelease: evt.target.value });
-    this.loadFields(evt.target.value);
-  };
-
-  handleChangeFields = evt => {
-    this.setState({ selectFields: evt.target.value });
-    this.loadStage(evt.target.value);
   };
 
   componentDidMount() {
@@ -38,6 +25,19 @@ export default class ReleaseFilter extends Component {
 
     this.loadReleases();
   }
+
+  handleChangeReleases = evt => {
+    this.loadFields(evt.target.value);
+  };
+
+  handleChangeFields = evt => {
+    this.loadStage(evt.target.value);
+  };
+
+  /* Valid field */
+  isValid = () => {
+    return this.state.optsFields.length !== 0;
+  };
 
   loadReleases = async () => {
     const releaseTag = await Centaurus.getAllReleaseTag();
@@ -79,7 +79,7 @@ export default class ReleaseFilter extends Component {
         loading: false,
       });
     } else {
-      this.setState({ loading: false });
+      this.setState({ loading: false, optsFields: [] });
     }
   };
 
@@ -147,6 +147,7 @@ export default class ReleaseFilter extends Component {
         <select
           className="form-control form-control-sm sel"
           onChange={this.handleChangeFields}
+          disabled={!this.isValid()}
         >
           <option value="" />
           <option value="all">All</option>
