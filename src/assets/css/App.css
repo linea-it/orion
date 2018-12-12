@@ -20,6 +20,10 @@
 .app > .footer, .app > .footer a {
   color: #fff; }
 
+/* CLASS */
+.winOpen {
+  cursor: pointer; }
+
 /* LIST */
 ul {
   list-style: none; }
