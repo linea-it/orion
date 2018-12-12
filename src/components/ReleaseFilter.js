@@ -1,52 +1,165 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Proptypes from 'prop-types';
 
-const ReleaseForm = ({ submitHandler }) => {
-  let _releaseName, _releaseDate;
-  const handleSubmit = e => {
-    submitHandler(e, {
-      name: _releaseName.value,
-      date: _releaseDate.value,
+import Centaurus from '../api';
+
+export default class ReleaseFilter extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      optsRelease: [],
+      optsFields: [],
+      pipelineStages: [],
+    };
+  }
+
+  static propTypes = {
+    saveStage: Proptypes.func.isRequired,
+  };
+
+  componentDidMount() {
+    this.setState({
+      loading: true,
     });
-    clearForm();
+
+    this.loadReleases();
+  }
+
+  handleChangeReleases = evt => {
+    this.loadFields(evt.target.value);
   };
 
-  const clearForm = () => {
-    _releaseDate.value = '';
-    _releaseName.value = '';
+  handleChangeFields = evt => {
+    this.loadStage(evt.target.value);
   };
-  return (
-    <form onSubmit={handleSubmit} className="form-inline">
-      <label className="sr-only" htmlFor="inlineFormInput">
-        Release:
-      </label>
-      <select
-        id="inlineFormInput"
-        ref={select => (_releaseName = select)}
-        className="form-control form-control-sm"
-      >
-        <option>Small select</option>
-      </select>
 
-      <label className="sr-only" htmlFor="inlineFormInputGroup">
-        Dataset:
-      </label>
-      <select
-        id="inlineFormInputGroup"
-        ref={select => (_releaseDate = select)}
-        className="form-control form-control-sm"
-      >
-        <option>Small select</option>
-      </select>
-      <button type="submit" className="btn btn-primary">
-        Save
-      </button>
-    </form>
-  );
-};
+  /* Valid field */
+  isValid = () => {
+    return this.state.optsFields.length !== 0;
+  };
 
-ReleaseForm.propTypes = {
-  submitHandler: Proptypes.string.isRequired,
-};
+  loadReleases = async () => {
+    const releaseTag = await Centaurus.getAllReleaseTag();
 
-export default ReleaseForm;
+    if (
+      releaseTag &&
+      releaseTag.releaseTagList &&
+      releaseTag.releaseTagList.edges
+    ) {
+      const optsRelease = releaseTag.releaseTagList.edges.map(e => {
+        return {
+          id: e.node.id,
+          releaseDisplayName: e.node.releaseDisplayName,
+          tagId: e.node.tagId,
+        };
+      });
+      this.setState({
+        optsRelease,
+        loading: false,
+      });
+    } else {
+      this.setState({ loading: false });
+    }
+  };
+
+  loadFields = async dataField => {
+    const fieldsTag = await Centaurus.getAllFieldsTag(dataField);
+
+    if (fieldsTag && fieldsTag.fieldsByTagId) {
+      const optsFields = fieldsTag.fieldsByTagId.map(e => {
+        return {
+          id: e.id,
+          displayName: e.displayName,
+          releaseTagId: e.releaseTagId,
+        };
+      });
+      this.setState({
+        optsFields,
+        loading: false,
+      });
+    } else {
+      this.setState({ loading: false, optsFields: [] });
+    }
+  };
+
+  loadStage = async dataStage => {
+    const pipelineStage = await Centaurus.getAllPipelineStageList(dataStage);
+
+    if (
+      pipelineStage &&
+      pipelineStage.pipelineStageList &&
+      pipelineStage.pipelineStageList.edges
+    ) {
+      const pipelineStages = pipelineStage.pipelineStageList.edges.map(e => {
+        return {
+          name: e.node.displayName,
+          id: e.node.pipelineStageId,
+          level: e.node.level,
+        };
+      });
+      this.loadTableStages(pipelineStages);
+    } else {
+      this.setState({ loading: false });
+    }
+  };
+
+  loadTableStages = async pipelineStages => {
+    // eslint-disable-next-line
+    const tableStage = await Promise.all(
+      pipelineStages.map(async stage => {
+        const rows = await Centaurus.getAllPipelinesByStageId(stage.id);
+
+        return {
+          tableLevel: stage.level,
+          tableName: stage.name,
+          rows: rows,
+        };
+      })
+    );
+    this.props.saveStage(tableStage);
+  };
+
+  render() {
+    return (
+      <form className="form-inline">
+        <label className="sr-only" htmlFor="inlineFormInput">
+          Release:
+        </label>
+        <select
+          className="form-control form-control-sm sel"
+          onChange={this.handleChangeReleases}
+        >
+          <option value="" />
+          <option value="all">All</option>
+          {this.state.optsRelease.map(opt => {
+            return (
+              <option key={opt.id} value={opt.tagId}>
+                {opt.releaseDisplayName}
+              </option>
+            );
+          })}
+        </select>
+
+        <label className="sr-only" htmlFor="inlineFormInputGroup">
+          Dataset:
+        </label>
+        <select
+          className="form-control form-control-sm sel"
+          onChange={this.handleChangeFields}
+          disabled={!this.isValid()}
+        >
+          <option value="" />
+          <option value="all">All</option>
+          {this.state.optsFields.map(opt => {
+            return (
+              <option key={opt.id} value={opt.releaseTagId}>
+                {opt.displayName}
+              </option>
+            );
+          })}
+        </select>
+      </form>
+    );
+  }
+}

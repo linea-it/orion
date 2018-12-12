@@ -4,6 +4,8 @@
 
 .a01-1, .a01-2 {
     border: solid 1px #ccc;
+    height: calc(100vh - 195px);
+    overflow-y: auto;
 }
 
 .ui-datatable {
@@ -28,5 +30,9 @@
         height: auto;
         padding: 0; 
         margin: -1px;
+    }
+
+    .sel {
+        width: 150px;
     }
 }
