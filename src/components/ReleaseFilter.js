@@ -1,9 +1,25 @@
 import React, { Component } from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { FadeLoader } from 'halogenium';
 
 import Centaurus from '../api';
 
-export default class ReleaseFilter extends Component {
+const styles = {
+  fadeLoaderFull: {
+    position: 'absolute',
+    paddingLeft: 'calc((100vw - 40px) / 2)',
+    paddingTop: 'calc(25vh)',
+  },
+  fadeLoader: {
+    position: 'absolute',
+    paddingLeft: 'calc((100vw - 13px) / 2)',
+    paddingTop: 'calc(35vh)',
+    zIndex: '999',
+  },
+};
+
+class ReleaseFilter extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,32 +27,49 @@ export default class ReleaseFilter extends Component {
       optsRelease: [],
       optsFields: [],
       pipelineStages: [],
+      selectRelease: '',
+      selectFild: '',
     };
   }
 
   static propTypes = {
-    saveStage: Proptypes.func.isRequired,
+    classes: PropTypes.object,
+    saveStage: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
-    this.setState({
-      loading: true,
-    });
-
     this.loadReleases();
   }
 
   handleChangeReleases = evt => {
+    const opts = this.state.optsRelease;
+    opts['selectRelease'] = evt.target.value;
+
+    this.setState(opts);
     this.loadFields(evt.target.value);
+    this.props.saveStage([]);
   };
 
   handleChangeFields = evt => {
+    this.setState({ SelectFild: evt.target.value });
     this.loadStage(evt.target.value);
+  };
+
+  clearFields = () => {
+    this.setState({ optsFields: [] });
   };
 
   /* Valid field */
   isValid = () => {
     return this.state.optsFields.length !== 0;
+  };
+
+  loadStart = () => {
+    this.setState({ loading: true });
+  };
+
+  loadEnd = () => {
+    this.setState({ loading: false });
   };
 
   loadReleases = async () => {
@@ -56,10 +89,9 @@ export default class ReleaseFilter extends Component {
       });
       this.setState({
         optsRelease,
-        loading: false,
       });
     } else {
-      this.setState({ loading: false });
+      return null;
     }
   };
 
@@ -76,10 +108,9 @@ export default class ReleaseFilter extends Component {
       });
       this.setState({
         optsFields,
-        loading: false,
       });
     } else {
-      this.setState({ loading: false, optsFields: [] });
+      this.clearFields();
     }
   };
 
@@ -99,8 +130,9 @@ export default class ReleaseFilter extends Component {
         };
       });
       this.loadTableStages(pipelineStages);
+      this.loadStart();
     } else {
-      this.setState({ loading: false });
+      return null;
     }
   };
 
@@ -118,48 +150,82 @@ export default class ReleaseFilter extends Component {
       })
     );
     this.props.saveStage(tableStage);
+    this.loadEnd();
+  };
+
+  renderLoading = () => {
+    const { classes } = this.props;
+
+    if (!this.state.loading) return null;
+    const showControls = this.state.optsRelease || this.state.optsFields;
+    const classLoading = showControls
+      ? styles.fadeLoader
+      : styles.fadeLoaderFull;
+
+    if (
+      this.state.optsRelease.length !== 0 &&
+      this.state.optsFields.length !== 0
+    ) {
+      return (
+        <div className={classes.loading}>
+          <FadeLoader
+            style={classLoading}
+            color="#424242"
+            size="16px"
+            margin="4px"
+          />
+        </div>
+      );
+    }
   };
 
   render() {
     return (
-      <form className="form-inline">
-        <label className="sr-only" htmlFor="inlineFormInput">
-          Release:
-        </label>
-        <select
-          className="form-control form-control-sm sel"
-          onChange={this.handleChangeReleases}
-        >
-          <option value="" />
-          <option value="all">All</option>
-          {this.state.optsRelease.map(opt => {
-            return (
-              <option key={opt.id} value={opt.tagId}>
-                {opt.releaseDisplayName}
-              </option>
-            );
-          })}
-        </select>
+      <div>
+        <form className="form-inline">
+          <label className="sr-only" htmlFor="inlineFormInput">
+            Release:
+          </label>
+          <select
+            className="form-control form-control-sm sel"
+            onChange={this.handleChangeReleases}
+            value={this.state.selectRelease}
+          >
+            <option value="" />
+            <option value="all">All</option>
+            {this.state.optsRelease.map(opt => {
+              return (
+                <option key={opt.id} value={opt.tagId}>
+                  {opt.releaseDisplayName}
+                </option>
+              );
+            })}
+          </select>
 
-        <label className="sr-only" htmlFor="inlineFormInputGroup">
-          Dataset:
-        </label>
-        <select
-          className="form-control form-control-sm sel"
-          onChange={this.handleChangeFields}
-          disabled={!this.isValid()}
-        >
-          <option value="" />
-          <option value="all">All</option>
-          {this.state.optsFields.map(opt => {
-            return (
-              <option key={opt.id} value={opt.releaseTagId}>
-                {opt.displayName}
-              </option>
-            );
-          })}
-        </select>
-      </form>
+          <label className="sr-only" htmlFor="inlineFormInputGroup">
+            Dataset:
+          </label>
+          <select
+            className="form-control form-control-sm sel"
+            onChange={this.handleChangeFields}
+            value={this.state.selectField}
+            disabled={!this.isValid()}
+          >
+            <option value="" />
+            <option value="all">All</option>
+            {this.state.optsFields.map(opt => {
+              return (
+                <option key={opt.id} value={opt.releaseTagId}>
+                  {opt.displayName}
+                </option>
+              );
+            })}
+          </select>
+        </form>
+        {this.renderLoading()}
+      </div>
     );
   }
 }
+
+export default withStyles(styles)(ReleaseFilter);
