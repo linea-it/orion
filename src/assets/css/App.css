@@ -17,6 +17,9 @@
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   background-repeat: repeat-x; }
 
+.app > .header > .fixed-top {
+  z-index: 9; }
+
 .app > .footer, .app > .footer a {
   color: #fff; }
 

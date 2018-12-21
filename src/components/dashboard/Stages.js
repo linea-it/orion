@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
-import Proptypes from 'prop-types';
 import { Button } from 'primereact/button';
+import { withStyles } from '@material-ui/core/styles';
+import { Dialog } from 'primereact/dialog';
+
+import TableProcess from './TableProcess';
 
 const styles = {
   btnStatus: {
@@ -19,7 +23,7 @@ const styles = {
   },
 };
 
-export default class Stages extends Component {
+class Stages extends Component {
   constructor(props) {
     super(props);
 
@@ -53,6 +57,7 @@ export default class Stages extends Component {
     this.state = {
       cols: columns,
       loading: false,
+      visible: false,
     };
 
     for (const col of columns) {
@@ -64,8 +69,9 @@ export default class Stages extends Component {
   }
 
   static propTypes = {
-    title: Proptypes.string,
-    rows: Proptypes.array,
+    title: PropTypes.string,
+    rows: PropTypes.array,
+    classes: PropTypes.object.isRequired,
   };
 
   onColumnToggleTable = evt => {
@@ -73,11 +79,20 @@ export default class Stages extends Component {
   };
 
   openRuns = rowData => {
-    window.open('http://www.linea.gov.br/', rowData, 'width=950, height=650');
+    // window.open(<TableProcess />, rowData, 'width=950, height=650');
+    this.onClick(rowData);
   };
 
   onStatus = rowData => {
     console.log('onStatus: ', rowData);
+  };
+
+  onClick = () => {
+    this.setState({ visible: true });
+  };
+
+  onHide = () => {
+    this.setState({ visible: false });
   };
 
   actionStatus = rowData => {
@@ -136,6 +151,23 @@ export default class Stages extends Component {
     }
   };
 
+  renderModal = () => {
+    return (
+      <Dialog
+        header="Godfather I"
+        visible={this.state.visible}
+        width="auto"
+        minY={70}
+        onHide={this.onHide}
+        maximizable={true}
+        modal={true}
+        style={{ zIndex: '999' }}
+      >
+        <TableProcess />
+      </Dialog>
+    );
+  };
+
   render() {
     const header = (
       <div style={{ textAlign: 'left' }}>
@@ -161,23 +193,28 @@ export default class Stages extends Component {
     });
 
     return (
-      <DataTable
-        header={header}
-        value={this.props.rows}
-        resizableColumns={true}
-        columnResizeMode="expand"
-        reorderableColumns={true}
-        reorderableRows={true}
-        responsive={true}
-        selectionMode="single"
-        selection={this.state.selectedCar1}
-        onSelectionChange={e => this.setState({ selectedCar1: e.data })}
-        scrollable={true}
-        scrollHeight="200px"
-        loading={this.state.loading}
-      >
-        {columns}
-      </DataTable>
+      <div>
+        <DataTable
+          header={header}
+          value={this.props.rows}
+          resizableColumns={true}
+          columnResizeMode="expand"
+          reorderableColumns={true}
+          reorderableRows={true}
+          responsive={true}
+          selectionMode="single"
+          selection={this.state.selectedCar1}
+          onSelectionChange={e => this.setState({ selectedCar1: e.data })}
+          scrollable={true}
+          scrollHeight="200px"
+          loading={this.state.loading}
+        >
+          {columns}
+        </DataTable>
+        {this.renderModal()}
+      </div>
     );
   }
 }
+
+export default withStyles(styles)(Stages);

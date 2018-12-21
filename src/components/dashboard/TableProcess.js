@@ -1,28 +1,25 @@
 import React, { Component } from 'react';
+import Proptypes from 'prop-types';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-// import { MultiSelect } from 'primereact/multiselect';
-import Proptypes from 'prop-types';
-import { Button } from 'primereact/button';
+// import { Button } from 'primereact/button';
 
-const styles = {
-  btnStatus: {
-    textAlign: 'center',
-    width: '100%',
-  },
-  btnRuns: {
-    margin: '0 auto',
-    width: '4em',
-    display: 'block',
-  },
-};
+// const styles = {
+//   btnStatus: {
+//     textAlign: 'center',
+//     width: '100%',
+//   },
+//   btnRuns: {
+//     margin: '0 auto',
+//     width: '4em',
+//     display: 'block',
+//   },
+// };
 
 export default class TableProcess extends Component {
   constructor(props) {
     super(props);
-
-    this.colOptionsTable = [];
 
     const columns = [
       {
@@ -105,13 +102,6 @@ export default class TableProcess extends Component {
       cols: columns,
       loading: false,
     };
-
-    // for (const col of columns) {
-    //   this.colOptionsTable.push({
-    //     label: col.header,
-    //     value: col,
-    //   });
-    // }
   }
 
   static propTypes = {
@@ -119,83 +109,11 @@ export default class TableProcess extends Component {
     rows: Proptypes.array,
   };
 
-  //   onColumnToggleTable = evt => {
-  //     this.setState({ cols: evt.value });
-  //   };
-
-  openRuns = rowData => {
-    window.open('http://www.linea.gov.br/', rowData, 'width=950, height=650');
-  };
-
-  onStatus = rowData => {
-    console.log('onStatus: ', rowData);
-  };
-
-  actionStatus = rowData => {
-    if (rowData.status === 'failure') {
-      return (
-        <Button
-          type="button"
-          label="Failure"
-          title="Failure"
-          className="ui-button-danger"
-          style={styles.btnStatus}
-          // disabled={true}
-          onClick={() => this.onStatus(rowData)}
-        />
-      );
-    } else if (rowData.status === 'invalid') {
-      return (
-        <Button
-          type="button"
-          label="Invalid"
-          title="Invalid"
-          className="ui-button-secondary"
-          style={styles.btnStatus}
-          disabled={true}
-          onClick={() => this.onStatus(rowData)}
-        />
-      );
-    } else {
-      return (
-        <Button
-          type="button"
-          label="Success"
-          title="Success"
-          className="ui-button-success"
-          style={styles.btnStatus}
-          onClick={() => this.onStatus(rowData)}
-        />
-      );
-    }
-  };
-
-  actionRuns = rowData => {
-    if (rowData.runs !== 0) {
-      return (
-        <Button
-          type="button"
-          label={rowData.runs}
-          title={rowData.runs}
-          className="ui-button-info"
-          style={styles.btnRuns}
-          onClick={() => this.openRuns(rowData)}
-        />
-      );
-    } else {
-      return null;
-    }
-  };
-
   render() {
     const header = (
       <div style={{ textAlign: 'left' }}>
-        <p>{this.props.title}</p>
-        {/* <MultiSelect
-          value={this.state.cols}
-          options={this.colOptionsTable}
-          onChange={this.onColumnToggleTable}
-        /> */}
+        {/* <p>{this.props.title}</p> */}
+        <p>Teste</p>
       </div>
     );
 
@@ -214,7 +132,7 @@ export default class TableProcess extends Component {
     return (
       <DataTable
         header={header}
-        value={this.props.rows}
+        // value={this.props.rows}
         resizableColumns={true}
         columnResizeMode="expand"
         reorderableColumns={true}
@@ -224,11 +142,14 @@ export default class TableProcess extends Component {
         selection={this.state.selectedCar1}
         onSelectionChange={e => this.setState({ selectedCar1: e.data })}
         scrollable={true}
-        scrollHeight="200px"
-        loading={this.state.loading}
+        scrollHeight="300px"
+        // loading={this.state.loading}
       >
         {columns}
       </DataTable>
+      // <div>
+      //   <p>TESTE</p>
+      // </div>
     );
   }
 }
