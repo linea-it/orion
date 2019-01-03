@@ -28,7 +28,7 @@ class ReleaseFilter extends Component {
       optsFields: [],
       pipelineStages: [],
       selectRelease: '',
-      selectFild: '',
+      selectField: '',
     };
   }
 
@@ -42,16 +42,13 @@ class ReleaseFilter extends Component {
   }
 
   handleChangeReleases = evt => {
-    const opts = this.state.optsRelease;
-    opts['selectRelease'] = evt.target.value;
-
-    this.setState(opts);
+    this.setState({ selectRelease: evt.target.value });
     this.loadFields(evt.target.value);
     this.props.saveStage([]);
   };
 
   handleChangeFields = evt => {
-    this.setState({ SelectFild: evt.target.value });
+    this.setState({ selectField: evt.target.value });
     this.loadStage(evt.target.value);
   };
 

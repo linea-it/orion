@@ -78,8 +78,7 @@ class Stages extends Component {
     this.setState({ cols: evt.value });
   };
 
-  openRuns = rowData => {
-    // window.open(<TableProcess />, rowData, 'width=950, height=650');
+  onShowRuns = rowData => {
     this.onClick(rowData);
   };
 
@@ -91,7 +90,7 @@ class Stages extends Component {
     this.setState({ visible: true });
   };
 
-  onHide = () => {
+  onHideRuns = () => {
     this.setState({ visible: false });
   };
 
@@ -104,7 +103,6 @@ class Stages extends Component {
           title="Failure"
           className="ui-button-danger"
           style={styles.btnStatus}
-          // disabled={true}
           onClick={() => this.onStatus(rowData)}
         />
       );
@@ -143,7 +141,7 @@ class Stages extends Component {
           title={rowData.runs}
           className="ui-button-info"
           style={styles.btnRuns}
-          onClick={() => this.openRuns(rowData)}
+          onClick={() => this.onShowRuns(rowData)}
         />
       );
     } else {
@@ -154,11 +152,11 @@ class Stages extends Component {
   renderModal = () => {
     return (
       <Dialog
-        header="Godfather I"
+        header="Title Modal"
         visible={this.state.visible}
-        width="auto"
+        width="80%"
         minY={70}
-        onHide={this.onHide}
+        onHide={this.onHideRuns}
         maximizable={true}
         modal={true}
         style={{ zIndex: '999' }}

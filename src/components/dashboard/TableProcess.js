@@ -3,19 +3,6 @@ import Proptypes from 'prop-types';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-// import { Button } from 'primereact/button';
-
-// const styles = {
-//   btnStatus: {
-//     textAlign: 'center',
-//     width: '100%',
-//   },
-//   btnRuns: {
-//     margin: '0 auto',
-//     width: '4em',
-//     display: 'block',
-//   },
-// };
 
 export default class TableProcess extends Component {
   constructor(props) {
@@ -113,7 +100,7 @@ export default class TableProcess extends Component {
     const header = (
       <div style={{ textAlign: 'left' }}>
         {/* <p>{this.props.title}</p> */}
-        <p>Teste</p>
+        <p>Title Table</p>
       </div>
     );
 
@@ -143,13 +130,9 @@ export default class TableProcess extends Component {
         onSelectionChange={e => this.setState({ selectedCar1: e.data })}
         scrollable={true}
         scrollHeight="300px"
-        // loading={this.state.loading}
       >
         {columns}
       </DataTable>
-      // <div>
-      //   <p>TESTE</p>
-      // </div>
     );
   }
 }
