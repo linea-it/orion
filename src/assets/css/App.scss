@@ -21,6 +21,14 @@
   }
 }
 
+.app {
+  > .header {
+    >.fixed-top {
+      z-index: 9;
+    }
+  }
+}
+
 .app > .footer, .app > .footer a{
   color: #fff;
 }

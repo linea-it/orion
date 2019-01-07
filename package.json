@@ -4,8 +4,10 @@
   "homepage": "http://localhost/dashboard",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.6.2",
     "axios": "^0.18.0",
     "classnames": "^2.2.5",
+    "halogenium": "^2.2.3",
     "history": "^4.7.2",
     "lokka": "^1.7.0",
     "lokka-transport-http": "^1.6.1",
