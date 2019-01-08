@@ -37,11 +37,13 @@ ul {
   .a01 .a01-1 {
     margin: 0 10px 0 -10px; }
 
-@media screen and (max-width: 40em) {
+@media screen and (max-width: 767px) {
   .a01 {
     padding: 0; }
     .a01 .a01-1 {
-      margin: 0; } }
+      margin: 0; }
+    .a01 .a01-2 {
+      margin: 8px 0 0; } }
 
 body {
   font-size: .875rem; }

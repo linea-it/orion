@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 import { FadeLoader } from 'halogenium';
 
@@ -100,7 +101,7 @@ class ReleaseFilter extends Component {
         return {
           id: e.id,
           displayName: e.displayName,
-          releaseTagId: e.releaseTagId,
+          fieldId: e.fieldId,
         };
       });
       this.setState({
@@ -212,7 +213,7 @@ class ReleaseFilter extends Component {
             <option value="all">All</option>
             {this.state.optsFields.map(opt => {
               return (
-                <option key={opt.id} value={opt.releaseTagId}>
+                <option key={opt.id} value={opt.fieldId}>
                   {opt.displayName}
                 </option>
               );

@@ -4,22 +4,32 @@ import PropTypes from 'prop-types';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
-import { Button } from 'primereact/button';
-import { withStyles } from '@material-ui/core/styles';
 import { Dialog } from 'primereact/dialog';
+
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 import TableProcess from './TableProcess';
 
 const styles = {
-  btnStatus: {
-    display: 'table',
+  button: {
+    textTransform: 'none',
+    padding: '1px 5px',
+    minWidth: '5em',
+    minHeight: '2em',
+    display: 'block',
     margin: '0 auto',
-    width: '7em',
+  },
+  btnSuccess: {
+    backgroundColor: 'green',
+    color: '#fff',
+  },
+  btnFailure: {
+    backgroundColor: 'red',
+    color: '#fff',
   },
   btnRuns: {
-    display: 'table',
-    margin: '0 auto',
-    width: '4em',
+    minWidth: '2em',
   },
 };
 
@@ -82,8 +92,8 @@ class Stages extends Component {
     this.onClick(rowData);
   };
 
-  onStatus = rowData => {
-    console.log('onStatus: ', rowData);
+  onShowStatus = rowData => {
+    console.log('onShowStatus: ', rowData);
   };
 
   onClick = () => {
@@ -95,54 +105,58 @@ class Stages extends Component {
   };
 
   actionStatus = rowData => {
+    const { classes } = this.props;
     if (rowData.status === 'failure') {
       return (
         <Button
-          type="button"
-          label="Failure"
-          title="Failure"
-          className="ui-button-danger"
-          style={styles.btnStatus}
-          onClick={() => this.onStatus(rowData)}
-        />
+          variant="contained"
+          className={classes.button}
+          style={styles.btnFailure}
+          onClick={() => this.onShowStatus(rowData)}
+        >
+          Failure
+        </Button>
       );
     } else if (rowData.status === 'invalid') {
       return (
         <Button
-          type="button"
-          label="Invalid"
-          title="Invalid"
-          className="ui-button-secondary"
-          style={styles.btnStatus}
-          disabled={true}
-          onClick={() => this.onStatus(rowData)}
-        />
+          variant="contained"
+          color="secondary"
+          className={classes.button}
+          style={styles.btnInvalid}
+          disabled
+          onClick={() => this.onShowStatus(rowData)}
+        >
+          Invalid
+        </Button>
       );
     } else {
       return (
         <Button
-          type="button"
-          label="Success"
-          title="Success"
-          className="ui-button-success"
-          style={styles.btnStatus}
-          onClick={() => this.onStatus(rowData)}
-        />
+          variant="contained"
+          className={classes.button}
+          style={styles.btnSuccess}
+          onClick={() => this.onShowStatus(rowData)}
+        >
+          Success
+        </Button>
       );
     }
   };
 
   actionRuns = rowData => {
+    const { classes } = this.props;
     if (rowData.runs !== 0) {
       return (
         <Button
-          type="button"
-          label={rowData.runs}
-          title={rowData.runs}
-          className="ui-button-info"
+          variant="contained"
+          className={classes.button}
           style={styles.btnRuns}
           onClick={() => this.onShowRuns(rowData)}
-        />
+        >
+          {/* {rowData.runs} */}
+          88
+        </Button>
       );
     } else {
       return null;
@@ -154,7 +168,7 @@ class Stages extends Component {
       <Dialog
         header="Title Modal"
         visible={this.state.visible}
-        width="80%"
+        width="90%"
         minY={70}
         onHide={this.onHideRuns}
         maximizable={true}
