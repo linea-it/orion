@@ -86,7 +86,6 @@ class TableProcess extends Component {
         field: 'process',
         header: 'Process ID',
       },
-      {
         field: 'start',
         header: 'Start time',
       },

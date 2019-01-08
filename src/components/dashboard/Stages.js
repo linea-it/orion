@@ -104,6 +104,14 @@ class Stages extends Component {
     this.setState({ visible: false });
   };
 
+  onClick = () => {
+    this.setState({ visible: true });
+  };
+
+  onHideRuns = () => {
+    this.setState({ visible: false });
+  };
+
   actionStatus = rowData => {
     const { classes } = this.props;
     if (rowData.status === 'failure') {
