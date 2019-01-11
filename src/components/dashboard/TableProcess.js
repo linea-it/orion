@@ -236,14 +236,14 @@ class TableProcess extends Component {
   };
 
   onShowProvenance = rowData => {
-    this.onClick(rowData);
+    this.onClick(rowData, 'provenance');
   };
 
-  onClick = () => {
-    this.setState({ visible: true });
+  onClick = (rowData, modalType) => {
+    this.setState({ visible: true, modalType: modalType, rowData: rowData });
   };
 
-  onHideProvenance = () => {
+  onHideModal = () => {
     this.setState({ visible: false });
   };
 
@@ -415,6 +415,12 @@ class TableProcess extends Component {
     );
   };
 
+  renderContentModal = () => {
+    if (this.state.modalType === 'provenance') {
+      return <TableProvenance />;
+    }
+  };
+
   renderModal = () => {
     return (
       <Dialog
@@ -422,13 +428,13 @@ class TableProcess extends Component {
         visible={this.state.visible}
         width="50%"
         minY={70}
-        onHide={this.onHideProvenance}
+        onHide={this.onHideModal}
         maximizable={true}
         modal={false}
         style={{ zIndex: '999' }}
         contentStyle={{ padding: '0', marginBottom: '-10px' }}
       >
-        <TableProvenance />
+        {this.renderContentModal()}
       </Dialog>
     );
   };
