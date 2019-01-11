@@ -174,6 +174,7 @@ class Stages extends Component {
         maximizable={true}
         modal={true}
         style={{ zIndex: '999' }}
+        contentStyle={{ padding: '0', marginBottom: '-10px' }}
       >
         <TableProcess />
       </Dialog>

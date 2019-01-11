@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Dialog } from 'primereact/dialog';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Tooltip from '@material-ui/core/Tooltip';
+
+import TableProvenance from './TableProvenance';
 
 const styles = {
   btn: {
@@ -218,6 +221,7 @@ class TableProcess extends Component {
       cols: columns,
       data: columnsData,
       loading: false,
+      visible: false,
     };
   }
 
@@ -231,8 +235,16 @@ class TableProcess extends Component {
     console.log('onShowStatus: ', rowData);
   };
 
-  onShowExport = rowData => {
-    console.log('onExport: ', rowData);
+  onShowProvenance = rowData => {
+    this.onClick(rowData);
+  };
+
+  onClick = () => {
+    this.setState({ visible: true });
+  };
+
+  onHideProvenance = () => {
+    this.setState({ visible: false });
   };
 
   actionVersion = rowData => {
@@ -343,6 +355,7 @@ class TableProcess extends Component {
         className={classes.button}
         style={styles.btnIco}
         title={rowData.provenance}
+        onClick={() => this.onShowProvenance(rowData)}
       >
         <Icon>device_hub</Icon>
       </Button>
@@ -402,6 +415,24 @@ class TableProcess extends Component {
     );
   };
 
+  renderModal = () => {
+    return (
+      <Dialog
+        header="Title Modal"
+        visible={this.state.visible}
+        width="50%"
+        minY={70}
+        onHide={this.onHideProvenance}
+        maximizable={true}
+        modal={false}
+        style={{ zIndex: '999' }}
+        contentStyle={{ padding: '0', marginBottom: '-10px' }}
+      >
+        <TableProvenance />
+      </Dialog>
+    );
+  };
+
   render() {
     const header = (
       <div style={{ textAlign: 'left' }}>
@@ -423,23 +454,27 @@ class TableProcess extends Component {
     });
 
     return (
-      <DataTable
-        header={header}
-        // value={this.props.rows}
-        value={this.state.data}
-        resizableColumns={true}
-        columnResizeMode="expand"
-        reorderableColumns={true}
-        reorderableRows={true}
-        responsive={true}
-        selection={this.state.selectedCar1}
-        onSelectionChange={e => this.setState({ selectedCar1: e.data })}
-        scrollable={true}
-        scrollHeight="600px"
-      >
-        <Column selectionMode="multiple" style={{ width: '2.2em' }} />
-        {columns}
-      </DataTable>
+      <div>
+        <DataTable
+          header={header}
+          // value={this.props.rows}
+          value={this.state.data}
+          resizableColumns={true}
+          columnResizeMode="expand"
+          reorderableColumns={true}
+          reorderableRows={true}
+          responsive={true}
+          selection={this.state.selectedCar1}
+          onSelectionChange={e => this.setState({ selectedCar1: e.data })}
+          scrollable={true}
+          scrollHeight="600px"
+          style={{ zIndex: '91' }}
+        >
+          <Column selectionMode="multiple" style={{ width: '2.2em' }} />
+          {columns}
+        </DataTable>
+        {this.renderModal()}
+      </div>
     );
   }
 }
