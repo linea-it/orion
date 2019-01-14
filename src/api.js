@@ -38,7 +38,7 @@ export default class Centaurus {
           fieldsByTagId(tagId: ${dataRelease}) {
             id
             displayName
-            releaseTagId
+            fieldId
           }
         }
       `);
@@ -70,12 +70,19 @@ export default class Centaurus {
     }
   }
 
-  static async getAllPipelinesByStageId(dataField) {
+  static async getAllPipelinesByFieldIdAndStageId(dataField, dataStage) {
     try {
       const pipelinesStageId = await client.query(`
         {
-          pipelinesByStageId(stageId: ${dataField}) {
+          pipelinesByFieldIdAndStageId(fieldId: ${dataField}, stageId: ${dataStage}) {
             displayName
+            process {
+              processCount
+              lastProcessId
+              startTime
+              endTime
+              status
+            }
           }
         }
       `);

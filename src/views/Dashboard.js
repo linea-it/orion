@@ -36,7 +36,7 @@ export default class Dashboard extends Component {
                   <Stages
                     key={index}
                     title={table.tableName}
-                    rows={table.rows.pipelinesByStageId}
+                    rows={table.rows.pipelinesByFieldIdAndStageId}
                   />
                 );
               }
@@ -50,7 +50,7 @@ export default class Dashboard extends Component {
                   <Stages
                     key={index}
                     title={table.tableName}
-                    rows={table.rows.pipelinesByStageId}
+                    rows={table.rows.pipelinesByFieldIdAndStageId}
                   />
                 );
               }

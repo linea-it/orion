@@ -52,7 +52,7 @@ const styles = {
     display: 'block',
     margin: '0 auto',
   },
-  btnInvalid: {
+  btnRunning: {
     textTransform: 'none',
     padding: '1px 5px',
     minWidth: '5em',
@@ -277,15 +277,15 @@ class TableProcess extends Component {
           Failure
         </Button>
       );
-    } else if (rowData.status === 'invalid') {
+    } else if (rowData.status === 'running') {
       return (
         <Button
           variant="contained"
-          style={styles.btnInvalid}
-          disabled
+          color="secondary"
+          style={styles.btnRunning}
           onClick={() => this.onShowStatus(rowData)}
         >
-          Invalid
+          Running
         </Button>
       );
     } else {

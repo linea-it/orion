@@ -41,7 +41,7 @@ class Stages extends Component {
 
     const columns = [
       {
-        field: 'displayName',
+        field: 'pipeline',
         header: 'Pipeline',
       },
       {
@@ -117,17 +117,16 @@ class Stages extends Component {
           Failure
         </Button>
       );
-    } else if (rowData.status === 'invalid') {
+    } else if (rowData.status === 'running') {
       return (
         <Button
           variant="contained"
           color="secondary"
           className={classes.button}
           style={styles.btnInvalid}
-          disabled
           onClick={() => this.onShowStatus(rowData)}
         >
-          Invalid
+          Running
         </Button>
       );
     } else {
@@ -154,8 +153,7 @@ class Stages extends Component {
           style={styles.btnRuns}
           onClick={() => this.onShowRuns(rowData)}
         >
-          {/* {rowData.runs} */}
-          88
+          {rowData.runs}
         </Button>
       );
     } else {
