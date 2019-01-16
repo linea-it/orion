@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { MultiSelect } from 'primereact/multiselect';
 import { Dialog } from 'primereact/dialog';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+
+import Centaurus from '../../api';
+import moment from 'moment';
 
 import TableProcess from './TableProcess';
 
@@ -36,8 +38,6 @@ const styles = {
 class Stages extends Component {
   constructor(props) {
     super(props);
-
-    this.colOptionsTable = [];
 
     const columns = [
       {
@@ -68,14 +68,8 @@ class Stages extends Component {
       cols: columns,
       loading: false,
       visible: false,
+      pipelineProcesses: [],
     };
-
-    for (const col of columns) {
-      this.colOptionsTable.push({
-        label: col.header,
-        value: col,
-      });
-    }
   }
 
   static propTypes = {
@@ -90,6 +84,7 @@ class Stages extends Component {
 
   onShowRuns = rowData => {
     this.onClick(rowData);
+    this.loadTableProcesses(rowData);
   };
 
   onShowStatus = rowData => {
@@ -161,33 +156,71 @@ class Stages extends Component {
     }
   };
 
-  renderModal = () => {
-    return (
-      <Dialog
-        header="Title Modal"
-        visible={this.state.visible}
-        width="90%"
-        minY={70}
-        onHide={this.onHideRuns}
-        maximizable={true}
-        modal={true}
-        style={{ zIndex: '999' }}
-        contentStyle={{ padding: '0', marginBottom: '-10px' }}
-      >
-        <TableProcess />
-      </Dialog>
+  renderProcessModal = () => {
+    if (this.state.currentProcess) {
+      const title =
+        'Processes: ' +
+        this.state.currentProcess.pipeline +
+        ' (' +
+        this.state.currentProcess.runs +
+        ')';
+      return (
+        <Dialog
+          header={title}
+          visible={this.state.visible}
+          width="90%"
+          minY={70}
+          onHide={this.onHideRuns}
+          maximizable={true}
+          modal={true}
+          style={{ zIndex: '999' }}
+          contentStyle={{ padding: '0', marginBottom: '-10px' }}
+        >
+          <TableProcess pipelineProcesses={this.state.pipelineProcesses} />
+        </Dialog>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  loadTableProcesses = async currentProcess => {
+    const pipelineProcesse = await Centaurus.getAllProcessesByFieldIdAndPipelineId(
+      currentProcess.fieldId,
+      currentProcess.pipelineId
     );
+
+    if (pipelineProcesse && pipelineProcesse.processesByFieldIdAndPipelineId) {
+      const pipelineProcessesLocal = pipelineProcesse.processesByFieldIdAndPipelineId.map(
+        row => {
+          const startTime = moment(row.startTime);
+          const endTime = moment(row.endTime);
+          return {
+            process: row.processId,
+            start: row.startTime,
+            end: row.endTime,
+            duration: moment(moment.duration(endTime.diff(startTime))).format(
+              'hh:mm:ss'
+            ),
+            owner: row.session.user.displayName,
+            status: row.processStatus.id,
+            comments: row.comments,
+          };
+        }
+      );
+      this.setState({
+        pipelineProcesses: pipelineProcessesLocal,
+        currentProcess: currentProcess,
+      });
+    } else {
+      return null;
+    }
   };
 
   render() {
     const header = (
       <div style={{ textAlign: 'left' }}>
         <p>{this.props.title}</p>
-        <MultiSelect
-          value={this.state.cols}
-          options={this.colOptionsTable}
-          onChange={this.onColumnToggleTable}
-        />
       </div>
     );
 
@@ -222,7 +255,7 @@ class Stages extends Component {
         >
           {columns}
         </DataTable>
-        {this.renderModal()}
+        {this.renderProcessModal()}
       </div>
     );
   }

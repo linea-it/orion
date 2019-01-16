@@ -115,21 +115,21 @@ class TableProcess extends Component {
         header: 'Status',
         body: this.actionStatus,
       },
-      {
-        field: 'saved',
-        header: 'Saved',
-        body: this.actionSaved,
-      },
-      {
-        field: 'share',
-        header: 'Share',
-        body: this.actionShare,
-      },
-      {
-        field: 'published',
-        header: 'Published',
-        body: this.actionPublished,
-      },
+      // {
+      //   field: 'saved',
+      //   header: 'Saved',
+      //   body: this.actionSaved,
+      // },
+      // {
+      //   field: 'share',
+      //   header: 'Share',
+      //   body: this.actionShare,
+      // },
+      // {
+      //   field: 'published',
+      //   header: 'Published',
+      //   body: this.actionPublished,
+      // },
       {
         field: 'provenance',
         header: 'Provenance',
@@ -140,86 +140,25 @@ class TableProcess extends Component {
         header: 'Comments',
         body: this.actionComments,
       },
-      {
-        field: 'product',
-        header: 'Product Log',
-        body: this.actionProduct,
-      },
-      {
-        field: 'products',
-        header: 'Products',
-        body: this.actionProducts,
-      },
-      {
-        field: 'export',
-        header: 'Export',
-        body: this.actionExport,
-      },
-    ];
-
-    const columnsData = [
-      {
-        release: '',
-        dataset: '',
-        process: '10033035',
-        start: '2018-12-19 16:42:10',
-        end: '2018-02-28 16:45:44',
-        version: '',
-        duration: '00:02:22',
-        owner: 'Carlos Adean',
-        status: '',
-        saved: '',
-        share: '',
-        published: '',
-        provenance: '',
-        comments: '',
-        product: '',
-        products: '',
-        export: '',
-      },
-      {
-        release: '',
-        dataset: '',
-        process: '10033035',
-        start: '2018-12-19 16:42:10',
-        end: '2018-02-28 16:45:44',
-        version: '',
-        duration: '00:02:22',
-        owner: 'Carlos Adean',
-        status: '',
-        saved: '',
-        share: '',
-        published: '',
-        provenance: '',
-        comments: '',
-        product: '',
-        products: '',
-        export: '',
-      },
-      {
-        release: '',
-        dataset: '',
-        process: '10033035',
-        start: '2018-12-19 16:42:10',
-        end: '2018-02-28 16:45:44',
-        version: '',
-        duration: '00:02:22',
-        owner: 'Carlos Adean',
-        status: '',
-        saved: '',
-        share: '',
-        published: '',
-        provenance: '',
-        comments: '',
-        product: '',
-        products: '',
-        export: '',
-      },
+      // {
+      //   field: 'product',
+      //   header: 'Product Log',
+      //   body: this.actionProduct,
+      // },
+      // {
+      //   field: 'products',
+      //   header: 'Products',
+      //   body: this.actionProducts,
+      // },
+      // {
+      //   field: 'export',
+      //   header: 'Export',
+      //   body: this.actionExport,
+      // },
     ];
 
     this.state = {
       cols: columns,
-      data: columnsData,
       loading: false,
       visible: false,
     };
@@ -227,7 +166,7 @@ class TableProcess extends Component {
 
   static propTypes = {
     title: PropTypes.string,
-    rows: PropTypes.array,
+    pipelineProcesses: PropTypes.array,
     classes: PropTypes.object.isRequired,
   };
 
@@ -237,6 +176,10 @@ class TableProcess extends Component {
 
   onShowProvenance = rowData => {
     this.onClick(rowData, 'provenance');
+  };
+
+  onShowComments = rowData => {
+    this.onClick(rowData, 'comments');
   };
 
   onClick = (rowData, modalType) => {
@@ -395,6 +338,7 @@ class TableProcess extends Component {
         className={classes.button}
         style={styles.btnIco}
         title={rowData.comments}
+        onClick={() => this.onShowComments(rowData)}
       >
         <Icon>comment</Icon>
       </Button>
@@ -418,6 +362,8 @@ class TableProcess extends Component {
   renderContentModal = () => {
     if (this.state.modalType === 'provenance') {
       return <TableProvenance />;
+    } else if (this.state.modalType === 'comments') {
+      return <p>Teste</p>;
     }
   };
 
@@ -440,13 +386,6 @@ class TableProcess extends Component {
   };
 
   render() {
-    const header = (
-      <div style={{ textAlign: 'left' }}>
-        {/* <p>{this.props.title}</p> */}
-        <p>Title Table</p>
-      </div>
-    );
-
     const columns = this.state.cols.map((col, i) => {
       return (
         <Column
@@ -462,9 +401,7 @@ class TableProcess extends Component {
     return (
       <div>
         <DataTable
-          header={header}
-          // value={this.props.rows}
-          value={this.state.data}
+          value={this.props.pipelineProcesses}
           resizableColumns={true}
           columnResizeMode="expand"
           reorderableColumns={true}

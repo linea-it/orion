@@ -154,6 +154,8 @@ class ReleaseFilter extends Component {
                 const endTime = moment(row.process.endTime);
                 return {
                   pipeline: row.displayName,
+                  pipelineId: row.pipelineId,
+                  fieldId: this.state.selectField,
                   start: row.process.startTime,
                   duration: moment(
                     moment.duration(endTime.diff(startTime))

@@ -76,6 +76,7 @@ export default class Centaurus {
         {
           pipelinesByFieldIdAndStageId(fieldId: ${dataField}, stageId: ${dataStage}) {
             displayName
+            pipelineId
             process {
               processCount
               lastProcessId
@@ -87,6 +88,35 @@ export default class Centaurus {
         }
       `);
       return pipelinesStageId;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static async getAllProcessesByFieldIdAndPipelineId(
+    dataField,
+    dataPipelineId
+  ) {
+    try {
+      const pipelineProcesse = await client.query(`
+        {
+          processesByFieldIdAndPipelineId(fieldId: ${dataField}, pipelineId: ${dataPipelineId}) {
+            processId
+            startTime
+            endTime
+            comments
+            processStatus {
+              id
+            }
+            session {
+              user {
+                displayName
+              }
+            }
+          }
+        }
+      `);
+      return pipelineProcesse;
     } catch (e) {
       return null;
     }
