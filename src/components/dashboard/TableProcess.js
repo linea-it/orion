@@ -11,6 +11,7 @@ import Icon from '@material-ui/core/Icon';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import TableProvenance from './TableProvenance';
+import TableProducts from './TableProducts';
 
 const styles = {
   btn: {
@@ -145,11 +146,11 @@ class TableProcess extends Component {
       //   header: 'Product Log',
       //   body: this.actionProduct,
       // },
-      // {
-      //   field: 'products',
-      //   header: 'Products',
-      //   body: this.actionProducts,
-      // },
+      {
+        field: 'products',
+        header: 'Products',
+        body: this.actionProducts,
+      },
       // {
       //   field: 'export',
       //   header: 'Export',
@@ -175,14 +176,18 @@ class TableProcess extends Component {
   };
 
   onShowProvenance = rowData => {
-    this.onClick(rowData, 'provenance');
+    this.onClickModal(rowData, 'provenance');
+  };
+
+  onShowProducts = rowData => {
+    this.onClickModal(rowData, 'products');
   };
 
   onShowComments = rowData => {
-    this.onClick(rowData, 'comments');
+    this.onClickModal(rowData, 'comments');
   };
 
-  onClick = (rowData, modalType) => {
+  onClickModal = (rowData, modalType) => {
     this.setState({ visible: true, modalType: modalType, rowData: rowData });
   };
 
@@ -215,6 +220,7 @@ class TableProcess extends Component {
         <Button
           variant="contained"
           style={styles.btnFailure}
+          title="Failure"
           onClick={() => this.onShowStatus(rowData)}
         >
           Failure
@@ -226,6 +232,7 @@ class TableProcess extends Component {
           variant="contained"
           color="secondary"
           style={styles.btnRunning}
+          title="Running"
           onClick={() => this.onShowStatus(rowData)}
         >
           Running
@@ -236,6 +243,7 @@ class TableProcess extends Component {
         <Button
           variant="contained"
           style={styles.btnSuccess}
+          title="Success"
           onClick={() => this.onShowStatus(rowData)}
         >
           Success
@@ -325,6 +333,7 @@ class TableProcess extends Component {
         className={classes.button}
         style={styles.btnIco}
         title={rowData.products}
+        onClick={() => this.onShowProducts(rowData)}
       >
         <Icon>link</Icon>
       </Button>
@@ -362,6 +371,8 @@ class TableProcess extends Component {
   renderContentModal = () => {
     if (this.state.modalType === 'provenance') {
       return <TableProvenance />;
+    } else if (this.state.modalType === 'products') {
+      return <TableProducts />;
     } else if (this.state.modalType === 'comments') {
       return <p>Teste</p>;
     }

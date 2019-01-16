@@ -78,12 +78,8 @@ class Stages extends Component {
     classes: PropTypes.object.isRequired,
   };
 
-  onColumnToggleTable = evt => {
-    this.setState({ cols: evt.value });
-  };
-
   onShowRuns = rowData => {
-    this.onClick(rowData);
+    this.onClickModal(rowData);
     this.loadTableProcesses(rowData);
   };
 
@@ -91,12 +87,31 @@ class Stages extends Component {
     console.log('onShowStatus: ', rowData);
   };
 
-  onClick = () => {
+  onClickModal = () => {
     this.setState({ visible: true });
   };
 
-  onHideRuns = () => {
+  onHideModal = () => {
     this.setState({ visible: false });
+  };
+
+  actionRuns = rowData => {
+    const { classes } = this.props;
+    if (rowData.runs !== 0) {
+      return (
+        <Button
+          variant="contained"
+          className={classes.button}
+          style={styles.btnRuns}
+          title={rowData.runs}
+          onClick={() => this.onShowRuns(rowData)}
+        >
+          {rowData.runs}
+        </Button>
+      );
+    } else {
+      return null;
+    }
   };
 
   actionStatus = rowData => {
@@ -107,6 +122,7 @@ class Stages extends Component {
           variant="contained"
           className={classes.button}
           style={styles.btnFailure}
+          title="Failure"
           onClick={() => this.onShowStatus(rowData)}
         >
           Failure
@@ -119,6 +135,7 @@ class Stages extends Component {
           color="secondary"
           className={classes.button}
           style={styles.btnInvalid}
+          title="Running"
           onClick={() => this.onShowStatus(rowData)}
         >
           Running
@@ -130,29 +147,12 @@ class Stages extends Component {
           variant="contained"
           className={classes.button}
           style={styles.btnSuccess}
+          title="Success"
           onClick={() => this.onShowStatus(rowData)}
         >
           Success
         </Button>
       );
-    }
-  };
-
-  actionRuns = rowData => {
-    const { classes } = this.props;
-    if (rowData.runs !== 0) {
-      return (
-        <Button
-          variant="contained"
-          className={classes.button}
-          style={styles.btnRuns}
-          onClick={() => this.onShowRuns(rowData)}
-        >
-          {rowData.runs}
-        </Button>
-      );
-    } else {
-      return null;
     }
   };
 
@@ -170,7 +170,7 @@ class Stages extends Component {
           visible={this.state.visible}
           width="90%"
           minY={70}
-          onHide={this.onHideRuns}
+          onHide={this.onHideModal}
           maximizable={true}
           modal={true}
           style={{ zIndex: '999' }}

@@ -55,7 +55,7 @@ class ReleaseFilter extends Component {
   };
 
   clearFields = () => {
-    this.setState({ optsFields: [] });
+    this.setState({ optsFields: [], selectField: '' });
   };
 
   /* Valid field */
