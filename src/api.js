@@ -38,7 +38,7 @@ export default class Centaurus {
           fieldsByTagId(tagId: ${dataRelease}) {
             id
             displayName
-            releaseTagId
+            fieldId
           }
         }
       `);
@@ -70,16 +70,53 @@ export default class Centaurus {
     }
   }
 
-  static async getAllPipelinesByStageId(dataField) {
+  static async getAllPipelinesByFieldIdAndStageId(dataField, dataStage) {
     try {
       const pipelinesStageId = await client.query(`
         {
-          pipelinesByStageId(stageId: ${dataField}) {
+          pipelinesByFieldIdAndStageId(fieldId: ${dataField}, stageId: ${dataStage}) {
             displayName
+            pipelineId
+            process {
+              processCount
+              lastProcessId
+              startTime
+              endTime
+              status
+            }
           }
         }
       `);
       return pipelinesStageId;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static async getAllProcessesByFieldIdAndPipelineId(
+    dataField,
+    dataPipelineId
+  ) {
+    try {
+      const pipelineProcesse = await client.query(`
+        {
+          processesByFieldIdAndPipelineId(fieldId: ${dataField}, pipelineId: ${dataPipelineId}) {
+            processId
+            startTime
+            endTime
+            comments
+            processStatus {
+              id
+            }
+            session {
+              user {
+                displayName
+              }
+            }
+          }
+        }
+      `);
+      return pipelineProcesse;
     } catch (e) {
       return null;
     }

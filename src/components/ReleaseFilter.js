@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 import { FadeLoader } from 'halogenium';
 
 import Centaurus from '../api';
+import moment from 'moment';
 
 const styles = {
   fadeLoaderFull: {
@@ -53,7 +55,7 @@ class ReleaseFilter extends Component {
   };
 
   clearFields = () => {
-    this.setState({ optsFields: [] });
+    this.setState({ optsFields: [], selectField: '' });
   };
 
   /* Valid field */
@@ -77,7 +79,7 @@ class ReleaseFilter extends Component {
       releaseTag.releaseTagList &&
       releaseTag.releaseTagList.edges
     ) {
-      const optsRelease = releaseTag.releaseTagList.edges.map(e => {
+      const optsReleaseLocal = releaseTag.releaseTagList.edges.map(e => {
         return {
           id: e.node.id,
           releaseDisplayName: e.node.releaseDisplayName,
@@ -85,7 +87,7 @@ class ReleaseFilter extends Component {
         };
       });
       this.setState({
-        optsRelease,
+        optsRelease: optsReleaseLocal,
       });
     } else {
       return null;
@@ -96,15 +98,15 @@ class ReleaseFilter extends Component {
     const fieldsTag = await Centaurus.getAllFieldsTag(dataField);
 
     if (fieldsTag && fieldsTag.fieldsByTagId) {
-      const optsFields = fieldsTag.fieldsByTagId.map(e => {
+      const optsFieldsLocal = fieldsTag.fieldsByTagId.map(e => {
         return {
           id: e.id,
           displayName: e.displayName,
-          releaseTagId: e.releaseTagId,
+          fieldId: e.fieldId,
         };
       });
       this.setState({
-        optsFields,
+        optsFields: optsFieldsLocal,
       });
     } else {
       this.clearFields();
@@ -137,12 +139,33 @@ class ReleaseFilter extends Component {
     // eslint-disable-next-line
     const tableStage = await Promise.all(
       pipelineStages.map(async stage => {
-        const rows = await Centaurus.getAllPipelinesByStageId(stage.id);
+        const rows = await Centaurus.getAllPipelinesByFieldIdAndStageId(
+          this.state.selectField,
+          stage.id
+        );
 
         return {
           tableLevel: stage.level,
           tableName: stage.name,
-          rows: rows,
+          rows: {
+            pipelinesByFieldIdAndStageId: rows.pipelinesByFieldIdAndStageId.map(
+              row => {
+                const startTime = moment(row.process.startTime);
+                const endTime = moment(row.process.endTime);
+                return {
+                  pipeline: row.displayName,
+                  pipelineId: row.pipelineId,
+                  fieldId: this.state.selectField,
+                  start: row.process.startTime,
+                  duration: moment(
+                    moment.duration(endTime.diff(startTime))
+                  ).format('hh:mm:ss'),
+                  runs: row.process.processCount,
+                  status: row.process.status,
+                };
+              }
+            ),
+          },
         };
       })
     );
@@ -212,7 +235,7 @@ class ReleaseFilter extends Component {
             <option value="all">All</option>
             {this.state.optsFields.map(opt => {
               return (
-                <option key={opt.id} value={opt.releaseTagId}>
+                <option key={opt.id} value={opt.fieldId}>
                   {opt.displayName}
                 </option>
               );

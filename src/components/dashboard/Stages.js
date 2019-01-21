@@ -3,23 +3,35 @@ import PropTypes from 'prop-types';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { MultiSelect } from 'primereact/multiselect';
-import { Button } from 'primereact/button';
-import { withStyles } from '@material-ui/core/styles';
 import { Dialog } from 'primereact/dialog';
+
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+
+import Centaurus from '../../api';
+import moment from 'moment';
 
 import TableProcess from './TableProcess';
 
 const styles = {
-  btnStatus: {
-    display: 'table',
+  button: {
+    textTransform: 'none',
+    padding: '1px 5px',
+    minWidth: '5em',
+    minHeight: '2em',
+    display: 'block',
     margin: '0 auto',
-    width: '7em',
+  },
+  btnSuccess: {
+    backgroundColor: 'green',
+    color: '#fff',
+  },
+  btnFailure: {
+    backgroundColor: 'red',
+    color: '#fff',
   },
   btnRuns: {
-    display: 'table',
-    margin: '0 auto',
-    width: '4em',
+    minWidth: '2em',
   },
 };
 
@@ -27,11 +39,9 @@ class Stages extends Component {
   constructor(props) {
     super(props);
 
-    this.colOptionsTable = [];
-
     const columns = [
       {
-        field: 'displayName',
+        field: 'pipeline',
         header: 'Pipeline',
       },
       {
@@ -58,14 +68,8 @@ class Stages extends Component {
       cols: columns,
       loading: false,
       visible: false,
+      pipelineProcesses: [],
     };
-
-    for (const col of columns) {
-      this.colOptionsTable.push({
-        label: col.header,
-        value: col,
-      });
-    }
   }
 
   static propTypes = {
@@ -74,107 +78,149 @@ class Stages extends Component {
     classes: PropTypes.object.isRequired,
   };
 
-  onColumnToggleTable = evt => {
-    this.setState({ cols: evt.value });
-  };
-
   onShowRuns = rowData => {
-    this.onClick(rowData);
+    this.onClickModal(rowData);
+    this.loadTableProcesses(rowData);
   };
 
-  onStatus = rowData => {
-    console.log('onStatus: ', rowData);
+  onShowStatus = rowData => {
+    console.log('onShowStatus: ', rowData);
   };
 
-  onClick = () => {
+  onClickModal = () => {
     this.setState({ visible: true });
   };
 
-  onHideRuns = () => {
+  onHideModal = () => {
     this.setState({ visible: false });
   };
 
-  actionStatus = rowData => {
-    if (rowData.status === 'failure') {
-      return (
-        <Button
-          type="button"
-          label="Failure"
-          title="Failure"
-          className="ui-button-danger"
-          style={styles.btnStatus}
-          onClick={() => this.onStatus(rowData)}
-        />
-      );
-    } else if (rowData.status === 'invalid') {
-      return (
-        <Button
-          type="button"
-          label="Invalid"
-          title="Invalid"
-          className="ui-button-secondary"
-          style={styles.btnStatus}
-          disabled={true}
-          onClick={() => this.onStatus(rowData)}
-        />
-      );
-    } else {
-      return (
-        <Button
-          type="button"
-          label="Success"
-          title="Success"
-          className="ui-button-success"
-          style={styles.btnStatus}
-          onClick={() => this.onStatus(rowData)}
-        />
-      );
-    }
-  };
-
   actionRuns = rowData => {
+    const { classes } = this.props;
     if (rowData.runs !== 0) {
       return (
         <Button
-          type="button"
-          label={rowData.runs}
-          title={rowData.runs}
-          className="ui-button-info"
+          variant="contained"
+          className={classes.button}
           style={styles.btnRuns}
+          title={rowData.runs}
           onClick={() => this.onShowRuns(rowData)}
-        />
+        >
+          {rowData.runs}
+        </Button>
       );
     } else {
       return null;
     }
   };
 
-  renderModal = () => {
-    return (
-      <Dialog
-        header="Title Modal"
-        visible={this.state.visible}
-        width="80%"
-        minY={70}
-        onHide={this.onHideRuns}
-        maximizable={true}
-        modal={true}
-        style={{ zIndex: '999' }}
-      >
-        <TableProcess />
-      </Dialog>
+  actionStatus = rowData => {
+    const { classes } = this.props;
+    if (rowData.status === 'failure') {
+      return (
+        <Button
+          variant="contained"
+          className={classes.button}
+          style={styles.btnFailure}
+          title="Failure"
+          onClick={() => this.onShowStatus(rowData)}
+        >
+          Failure
+        </Button>
+      );
+    } else if (rowData.status === 'running') {
+      return (
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.button}
+          style={styles.btnInvalid}
+          title="Running"
+          onClick={() => this.onShowStatus(rowData)}
+        >
+          Running
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          variant="contained"
+          className={classes.button}
+          style={styles.btnSuccess}
+          title="Success"
+          onClick={() => this.onShowStatus(rowData)}
+        >
+          Success
+        </Button>
+      );
+    }
+  };
+
+  renderProcessModal = () => {
+    if (this.state.currentProcess) {
+      const title =
+        'Processes: ' +
+        this.state.currentProcess.pipeline +
+        ' (' +
+        this.state.currentProcess.runs +
+        ')';
+      return (
+        <Dialog
+          header={title}
+          visible={this.state.visible}
+          width="90%"
+          minY={70}
+          onHide={this.onHideModal}
+          maximizable={true}
+          modal={true}
+          style={{ zIndex: '999' }}
+          contentStyle={{ padding: '0', marginBottom: '-10px' }}
+        >
+          <TableProcess pipelineProcesses={this.state.pipelineProcesses} />
+        </Dialog>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  loadTableProcesses = async currentProcess => {
+    const pipelineProcesse = await Centaurus.getAllProcessesByFieldIdAndPipelineId(
+      currentProcess.fieldId,
+      currentProcess.pipelineId
     );
+
+    if (pipelineProcesse && pipelineProcesse.processesByFieldIdAndPipelineId) {
+      const pipelineProcessesLocal = pipelineProcesse.processesByFieldIdAndPipelineId.map(
+        row => {
+          const startTime = moment(row.startTime);
+          const endTime = moment(row.endTime);
+          return {
+            process: row.processId,
+            start: row.startTime,
+            end: row.endTime,
+            duration: moment(moment.duration(endTime.diff(startTime))).format(
+              'hh:mm:ss'
+            ),
+            owner: row.session.user.displayName,
+            status: row.processStatus.id,
+            comments: row.comments,
+          };
+        }
+      );
+      this.setState({
+        pipelineProcesses: pipelineProcessesLocal,
+        currentProcess: currentProcess,
+      });
+    } else {
+      return null;
+    }
   };
 
   render() {
     const header = (
       <div style={{ textAlign: 'left' }}>
         <p>{this.props.title}</p>
-        <MultiSelect
-          value={this.state.cols}
-          options={this.colOptionsTable}
-          onChange={this.onColumnToggleTable}
-        />
       </div>
     );
 
@@ -209,7 +255,7 @@ class Stages extends Component {
         >
           {columns}
         </DataTable>
-        {this.renderModal()}
+        {this.renderProcessModal()}
       </div>
     );
   }
