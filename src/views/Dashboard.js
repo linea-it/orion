@@ -20,9 +20,6 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div className="dashboard">
-        <p className="h6 text-center headerTitle">
-          DES Science Portal Dashboard
-        </p>
         <div className="row">
           <div className="filter">
             <ReleaseFilter saveStage={this.saveStage} />

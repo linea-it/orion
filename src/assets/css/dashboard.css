@@ -1,22 +1,14 @@
-/*.dashboard .a01 {
-  height: calc(100vh - 65px);
-}*/
-.a01-1, .a01-2 {
-  border: solid 1px #ccc;
-  height: calc(100vh - 195px);
-  overflow-y: auto; }
-
 .ui-datatable {
   margin: 0 0 10px; }
 
 .headerTitle {
-  padding: .5rem 0;
-  margin: 0 -15px 0 -15px;
-  border-bottom: solid 1px #ccc; }
+  color: #fff;
+  margin: 0; }
 
 .filter {
-  padding: .5rem 0;
-  margin: 0 0 .5rem;
+  background: #ececec;
+  padding: .6rem 0;
+  margin: 0 0 .6rem;
   border-bottom: solid 1px #ccc;
   width: 100%; }
   .filter .sr-only {

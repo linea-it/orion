@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Menu from './Menu';
-
 import logo from '../assets/img/icon-des.png';
 
 const Header = () => {
@@ -23,7 +21,9 @@ const Header = () => {
           <img src={logo} alt="Portal" />
         </a>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <Menu />
+          <p className="h6 text-center headerTitle">
+            DES Science Portal Dashboard
+          </p>
         </div>
       </nav>
     </header>
