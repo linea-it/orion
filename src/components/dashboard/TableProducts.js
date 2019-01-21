@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Dialog } from 'primereact/dialog';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -118,8 +119,20 @@ class TableProducts extends Component {
     this.onClickModal(rowData, 'database');
   };
 
+  actionExported = rowData => {
+    this.onClickModal(rowData, 'export');
+  };
+
   onShowDownload = rowData => {
     this.onClickModal(rowData, 'download');
+  };
+
+  onClickModal = (rowData, modalType) => {
+    this.setState({ visible: true, modalType: modalType, rowData: rowData });
+  };
+
+  onHideModal = () => {
+    this.setState({ visible: false });
   };
 
   actionProvenance = rowData => {
@@ -191,6 +204,36 @@ class TableProducts extends Component {
     );
   };
 
+  renderContentModal = () => {
+    if (this.state.modalType === 'provenance') {
+      return <p>Teste</p>;
+    } else if (this.state.modalType === 'viewer') {
+      return <p>Teste</p>;
+    } else if (this.state.modalType === 'dataBase') {
+      return <p>Teste</p>;
+    } else if (this.state.modalType === 'export') {
+      return <p>Teste</p>;
+    }
+  };
+
+  renderModal = () => {
+    return (
+      <Dialog
+        header="Title Modal"
+        visible={this.state.visible}
+        width="50%"
+        minY={70}
+        onHide={this.onHideModal}
+        maximizable={true}
+        modal={false}
+        style={{ zIndex: '999' }}
+        contentStyle={{ padding: '0', marginBottom: '-10px' }}
+      >
+        {this.renderContentModal()}
+      </Dialog>
+    );
+  };
+
   render() {
     const header = (
       <div style={{ textAlign: 'left' }}>
@@ -212,24 +255,27 @@ class TableProducts extends Component {
     });
 
     return (
-      <DataTable
-        header={header}
-        // value={this.props.rows}
-        value={this.state.data}
-        resizableColumns={true}
-        columnResizeMode="expand"
-        reorderableColumns={true}
-        reorderableRows={true}
-        responsive={true}
-        selectionMode="single"
-        selection={this.state.selectedCar1}
-        onSelectionChange={e => this.setState({ selectedCar1: e.data })}
-        scrollable={true}
-        scrollHeight="600px"
-        style={{ zIndex: '95' }}
-      >
-        {columns}
-      </DataTable>
+      <div>
+        <DataTable
+          header={header}
+          // value={this.props.rows}
+          value={this.state.data}
+          resizableColumns={true}
+          columnResizeMode="expand"
+          reorderableColumns={true}
+          reorderableRows={true}
+          responsive={true}
+          selectionMode="single"
+          selection={this.state.selectedCar1}
+          onSelectionChange={e => this.setState({ selectedCar1: e.data })}
+          scrollable={true}
+          scrollHeight="600px"
+          style={{ zIndex: '95' }}
+        >
+          {columns}
+        </DataTable>
+        {this.renderModal()}
+      </div>
     );
   }
 }
