@@ -33,6 +33,11 @@ const styles = {
   btnRuns: {
     minWidth: '2em',
   },
+  stageTitle: {
+    margin: '0',
+    fontSize: '1.3em',
+    textAlign: 'left',
+  },
 };
 
 class Stages extends Component {
@@ -219,8 +224,8 @@ class Stages extends Component {
 
   render() {
     const header = (
-      <div style={{ textAlign: 'left' }}>
-        <p>{this.props.title}</p>
+      <div>
+        <p style={styles.stageTitle}>{this.props.title}</p>
       </div>
     );
 

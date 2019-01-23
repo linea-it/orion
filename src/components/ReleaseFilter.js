@@ -212,7 +212,7 @@ class ReleaseFilter extends Component {
             value={this.state.selectRelease}
           >
             <option value="" />
-            <option value="all">All</option>
+            {/* <option value="all">All</option> */}
             {this.state.optsRelease.map(opt => {
               return (
                 <option key={opt.id} value={opt.tagId}>
@@ -232,7 +232,7 @@ class ReleaseFilter extends Component {
             disabled={!this.isValid()}
           >
             <option value="" />
-            <option value="all">All</option>
+            {/* <option value="all">All</option> */}
             {this.state.optsFields.map(opt => {
               return (
                 <option key={opt.id} value={opt.fieldId}>

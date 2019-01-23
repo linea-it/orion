@@ -53,57 +53,47 @@ class TableProducts extends Component {
         field: 'class',
         header: 'Class',
       },
-      {
-        field: 'provenance',
-        header: 'Provenance',
-        body: this.actionProvenance,
-      },
-      {
-        field: 'viewer',
-        header: 'Viewer',
-        body: this.actionViewer,
-      },
-      {
-        field: 'database',
-        header: 'Database',
-        body: this.actionDatabase,
-      },
-      {
-        field: 'exported',
-        header: 'Exported',
-        body: this.actionExported,
-      },
-      {
-        field: 'productType',
-        header: 'Product Type',
-      },
-      {
-        field: 'download',
-        header: 'Download',
-        body: this.actionDownload,
-      },
-    ];
-
-    const columnsData = [
-      {
-        process: 'Teste',
-        product: 'Teste',
-        class: 'Teste',
-        type: 'Teste',
-        productType: 'Teste',
-      },
+      // {
+      //   field: 'provenance',
+      //   header: 'Provenance',
+      //   body: this.actionProvenance,
+      // },
+      // {
+      //   field: 'viewer',
+      //   header: 'Viewer',
+      //   body: this.actionViewer,
+      // },
+      // {
+      //   field: 'database',
+      //   header: 'Database',
+      //   body: this.actionDatabase,
+      // },
+      // {
+      //   field: 'exported',
+      //   header: 'Exported',
+      //   body: this.actionExported,
+      // },
+      // {
+      //   field: 'productType',
+      //   header: 'Product Type',
+      // },
+      // {
+      //   field: 'download',
+      //   header: 'Download',
+      //   body: this.actionDownload,
+      // },
     ];
 
     this.state = {
       cols: columns,
-      data: columnsData,
       loading: false,
+      visible: false,
     };
   }
 
   static propTypes = {
     title: PropTypes.string,
-    rows: PropTypes.array,
+    productsProcess: PropTypes.array,
     classes: PropTypes.object.isRequired,
   };
 
@@ -258,8 +248,7 @@ class TableProducts extends Component {
       <div>
         <DataTable
           header={header}
-          // value={this.props.rows}
-          value={this.state.data}
+          value={this.props.productsProcess}
           resizableColumns={true}
           columnResizeMode="expand"
           reorderableColumns={true}

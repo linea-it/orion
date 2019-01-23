@@ -121,4 +121,25 @@ export default class Centaurus {
       return null;
     }
   }
+
+  static async getAllProductsByProcessId(dataProcessId) {
+    try {
+      const productsProcess = await client.query(`
+        {
+          productsByProcessId(processId: ${dataProcessId}) {
+            displayName
+            Class {
+              displayName
+              productType {
+                displayName
+              }
+            }
+          }
+        }
+      `);
+      return productsProcess;
+    } catch (e) {
+      return null;
+    }
+  }
 }
