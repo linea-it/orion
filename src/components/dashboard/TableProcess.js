@@ -10,6 +10,8 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import Centaurus from '../../api';
+
 import TableProvenance from './TableProvenance';
 import TableProducts from './TableProducts';
 
@@ -162,6 +164,7 @@ class TableProcess extends Component {
       cols: columns,
       loading: false,
       visible: false,
+      productsProcess: [],
     };
   }
 
@@ -181,6 +184,7 @@ class TableProcess extends Component {
 
   onShowProducts = rowData => {
     this.onClickModal(rowData, 'products');
+    this.loadTableProducts(rowData.process);
   };
 
   onShowComments = rowData => {
@@ -372,7 +376,7 @@ class TableProcess extends Component {
     if (this.state.modalType === 'provenance') {
       return <TableProvenance />;
     } else if (this.state.modalType === 'products') {
-      return <TableProducts />;
+      return <TableProducts productsProcess={this.state.productsProcess} />;
     } else if (this.state.modalType === 'comments') {
       return <p>Teste</p>;
     }
@@ -394,6 +398,31 @@ class TableProcess extends Component {
         {this.renderContentModal()}
       </Dialog>
     );
+  };
+
+  loadTableProducts = async currentProducts => {
+    const productsProcess = await Centaurus.getAllProductsByProcessId(
+      currentProducts
+    );
+
+    if (productsProcess && productsProcess.productsByProcessId) {
+      const productsProcessLocal = productsProcess.productsByProcessId.map(
+        row => {
+          return {
+            process: row.processId,
+            product: row.displayName,
+            type: row.Class.productType.displayName,
+            class: row.Class.displayName,
+          };
+        }
+      );
+      this.setState({
+        productsProcess: productsProcessLocal,
+        currentProducts: currentProducts,
+      });
+    } else {
+      return null;
+    }
   };
 
   render() {

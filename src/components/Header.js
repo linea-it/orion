@@ -21,9 +21,7 @@ const Header = () => {
           <img src={logo} alt="Portal" />
         </a>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <p className="h6 text-center headerTitle">
-            DES Science Portal Dashboard
-          </p>
+          <p className="headerTitle">DES Science Portal Dashboard</p>
         </div>
       </nav>
     </header>

@@ -3,12 +3,13 @@
 }
 
 .headerTitle {
+    font-size: 1.5em;
     color: #fff;
     margin: 0;
 }
 
 .filter {
-    background: #ececec;
+    background: #ebedf0;
     padding: .6rem 0;
     margin: 0 0 .6rem;
     border-bottom: solid 1px #ccc;
@@ -20,6 +21,7 @@
         height: auto;
         padding: 0; 
         margin: -1px;
+        font-weight: bold;
     }
 
     .sel {
