@@ -179,16 +179,16 @@ class TableProcess extends Component {
   };
 
   onShowProvenance = rowData => {
-    this.onClickModal(rowData, 'provenance');
+    this.onClickModal(rowData, 'Provenance');
   };
 
   onShowProducts = rowData => {
-    this.onClickModal(rowData, 'products');
+    this.onClickModal(rowData, 'Products');
     this.loadTableProducts(rowData.process);
   };
 
   onShowComments = rowData => {
-    this.onClickModal(rowData, 'comments');
+    this.onClickModal(rowData, 'Comments');
   };
 
   onClickModal = (rowData, modalType) => {
@@ -373,11 +373,11 @@ class TableProcess extends Component {
   };
 
   renderContentModal = () => {
-    if (this.state.modalType === 'provenance') {
+    if (this.state.modalType === 'Provenance') {
       return <TableProvenance />;
-    } else if (this.state.modalType === 'products') {
+    } else if (this.state.modalType === 'Products') {
       return <TableProducts productsProcess={this.state.productsProcess} />;
-    } else if (this.state.modalType === 'comments') {
+    } else if (this.state.modalType === 'Comments') {
       return <p>Teste</p>;
     }
   };
@@ -385,7 +385,7 @@ class TableProcess extends Component {
   renderModal = () => {
     return (
       <Dialog
-        header="Title Modal"
+        header={this.state.modalType}
         visible={this.state.visible}
         width="50%"
         minY={70}
@@ -395,7 +395,7 @@ class TableProcess extends Component {
         style={{ zIndex: '999' }}
         contentStyle={{ padding: '0', marginBottom: '-10px' }}
       >
-        {this.renderContentModal()}
+        {this.renderContentModal({})}
       </Dialog>
     );
   };
@@ -409,7 +409,7 @@ class TableProcess extends Component {
       const productsProcessLocal = productsProcess.productsByProcessId.map(
         row => {
           return {
-            process: row.processId,
+            process: currentProducts,
             product: row.displayName,
             type: row.Class.productType.displayName,
             class: row.Class.displayName,
@@ -434,6 +434,11 @@ class TableProcess extends Component {
           header={col.header}
           sortable={true}
           body={col.body}
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
         />
       );
     });

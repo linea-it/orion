@@ -237,6 +237,11 @@ class Stages extends Component {
           header={col.header}
           sortable={true}
           body={col.body}
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
         />
       );
     });
