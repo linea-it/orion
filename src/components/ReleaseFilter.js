@@ -45,13 +45,21 @@ class ReleaseFilter extends Component {
 
   handleChangeReleases = evt => {
     this.setState({ selectRelease: evt.target.value });
-    this.loadFields(evt.target.value);
-    this.props.saveStage([]);
+    if (evt.target.value !== '') {
+      this.loadFields(evt.target.value);
+    } else {
+      this.props.saveStage([]);
+      this.clearFields();
+    }
   };
 
   handleChangeFields = evt => {
     this.setState({ selectField: evt.target.value });
-    this.loadStage(evt.target.value);
+    if (evt.target.value !== '') {
+      this.loadStage(evt.target.value);
+    } else {
+      this.props.saveStage([]);
+    }
   };
 
   clearFields = () => {

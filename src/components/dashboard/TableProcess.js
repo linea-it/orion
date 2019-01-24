@@ -8,10 +8,10 @@ import { Dialog } from 'primereact/dialog';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import Tooltip from '@material-ui/core/Tooltip';
 
 import Centaurus from '../../api';
 
+import TableVersion from './TableVersion';
 import TableProvenance from './TableProvenance';
 import TableProducts from './TableProducts';
 
@@ -165,6 +165,7 @@ class TableProcess extends Component {
       loading: false,
       visible: false,
       productsProcess: [],
+      versionProcess: [],
     };
   }
 
@@ -172,6 +173,11 @@ class TableProcess extends Component {
     title: PropTypes.string,
     pipelineProcesses: PropTypes.array,
     classes: PropTypes.object.isRequired,
+  };
+
+  onShowVersion = rowData => {
+    this.onClickModal(rowData, 'Version');
+    this.loadTableVersion(rowData.process);
   };
 
   onShowStatus = rowData => {
@@ -200,21 +206,14 @@ class TableProcess extends Component {
   };
 
   actionVersion = rowData => {
-    const { classes } = this.props;
     return (
-      <Tooltip
-        title="Description"
-        placement="right-end"
-        classes={{ tooltip: classes.tooltipText }}
+      <Button
+        style={styles.btnIco}
+        title={rowData.version}
+        onClick={() => this.onShowVersion(rowData)}
       >
-        <Button
-          className={classes.buttonPointer}
-          style={styles.btnIco}
-          title={rowData.version}
-        >
-          <Icon>format_list_bulleted</Icon>
-        </Button>
-      </Tooltip>
+        <Icon>format_list_bulleted</Icon>
+      </Button>
     );
   };
 
@@ -373,7 +372,9 @@ class TableProcess extends Component {
   };
 
   renderContentModal = () => {
-    if (this.state.modalType === 'Provenance') {
+    if (this.state.modalType === 'Version') {
+      return <TableVersion versionProcess={this.state.versionProcess} />;
+    } else if (this.state.modalType === 'Provenance') {
       return <TableProvenance />;
     } else if (this.state.modalType === 'Products') {
       return <TableProducts productsProcess={this.state.productsProcess} />;
@@ -395,7 +396,7 @@ class TableProcess extends Component {
         style={{ zIndex: '999' }}
         contentStyle={{ padding: '0', marginBottom: '-10px' }}
       >
-        {this.renderContentModal({})}
+        {this.renderContentModal()}
       </Dialog>
     );
   };
@@ -425,6 +426,30 @@ class TableProcess extends Component {
     }
   };
 
+  loadTableVersion = async currentVersion => {
+    const versionProcess = await Centaurus.getAllProcessComponentsByProcessId(
+      currentVersion
+    );
+
+    if (versionProcess && versionProcess.processComponentsByProcessId) {
+      const versionProcessLocal = versionProcess.processComponentsByProcessId.map(
+        row => {
+          return {
+            name: row.module.displayName,
+            version: row.version,
+            last_version: row.module.version,
+          };
+        }
+      );
+      this.setState({
+        versionProcess: versionProcessLocal,
+        currentVersion: currentVersion,
+      });
+    } else {
+      return null;
+    }
+  };
+
   render() {
     const columns = this.state.cols.map((col, i) => {
       return (
@@ -438,6 +463,7 @@ class TableProcess extends Component {
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            width: '2.2em',
           }}
         />
       );
@@ -452,13 +478,13 @@ class TableProcess extends Component {
           reorderableColumns={true}
           reorderableRows={true}
           responsive={true}
+          selectionMode="single"
           selection={this.state.selectedCar1}
           onSelectionChange={e => this.setState({ selectedCar1: e.data })}
           scrollable={true}
           scrollHeight="600px"
           style={{ zIndex: '91' }}
         >
-          <Column selectionMode="multiple" style={{ width: '2.2em' }} />
           {columns}
         </DataTable>
         {this.renderModal()}

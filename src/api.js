@@ -142,4 +142,23 @@ export default class Centaurus {
       return null;
     }
   }
+
+  static async getAllProcessComponentsByProcessId(dataProcessId) {
+    try {
+      const versionProcess = await client.query(`
+        {
+          processComponentsByProcessId(processId: ${dataProcessId}) {
+            version
+            module {
+              displayName
+              version
+            }
+          }
+        }
+      `);
+      return versionProcess;
+    } catch (e) {
+      return null;
+    }
+  }
 }
