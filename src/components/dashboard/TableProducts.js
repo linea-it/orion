@@ -225,13 +225,6 @@ class TableProducts extends Component {
   };
 
   render() {
-    const header = (
-      <div style={{ textAlign: 'left' }}>
-        {/* <p>{this.props.title}</p> */}
-        <p>Title Table</p>
-      </div>
-    );
-
     const columns = this.state.cols.map((col, i) => {
       return (
         <Column
@@ -240,6 +233,11 @@ class TableProducts extends Component {
           header={col.header}
           sortable={true}
           body={col.body}
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
         />
       );
     });
@@ -247,7 +245,6 @@ class TableProducts extends Component {
     return (
       <div>
         <DataTable
-          header={header}
           value={this.props.productsProcess}
           resizableColumns={true}
           columnResizeMode="expand"
