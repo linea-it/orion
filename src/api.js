@@ -106,7 +106,7 @@ export default class Centaurus {
             endTime
             comments
             processStatus {
-              id
+              name
             }
             session {
               user {
