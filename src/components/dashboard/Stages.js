@@ -32,6 +32,7 @@ const styles = {
   },
   btnRuns: {
     minWidth: '2em',
+    background: '#fff',
   },
   stageTitle: {
     margin: '0',
@@ -204,11 +205,9 @@ class Stages extends Component {
             process: row.processId,
             start: row.startTime,
             end: row.endTime,
-            duration: moment(moment.duration(endTime.diff(startTime))).format(
-              'hh:mm:ss'
-            ),
+            duration: moment(endTime.diff(startTime)).format('hh:mm:ss'),
             owner: row.session.user.displayName,
-            status: row.processStatus.id,
+            status: row.processStatus.name,
             comments: row.comments,
           };
         }

@@ -165,9 +165,7 @@ class ReleaseFilter extends Component {
                   pipelineId: row.pipelineId,
                   fieldId: this.state.selectField,
                   start: row.process.startTime,
-                  duration: moment(
-                    moment.duration(endTime.diff(startTime))
-                  ).format('hh:mm:ss'),
+                  duration: moment(endTime.diff(startTime)).format('hh:mm:ss'),
                   runs: row.process.processCount,
                   status: row.process.status,
                 };
