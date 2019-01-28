@@ -212,10 +212,9 @@ class TableProducts extends Component {
         header="Title Modal"
         visible={this.state.visible}
         width="50%"
-        minY={70}
         onHide={this.onHideModal}
         maximizable={true}
-        modal={false}
+        modal={true}
         style={{ zIndex: '999' }}
         contentStyle={{ padding: '0', marginBottom: '-10px' }}
       >

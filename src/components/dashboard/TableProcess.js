@@ -389,13 +389,22 @@ class TableProcess extends Component {
         header={this.state.modalType}
         visible={this.state.visible}
         width="50%"
-        minY={70}
         onHide={this.onHideModal}
         maximizable={true}
         modal={false}
-        style={{ zIndex: '999' }}
         contentStyle={{ padding: '0', marginBottom: '-10px' }}
       >
+        <div
+          style={{
+            position: 'fixed',
+            width: '100%',
+            height: '100%',
+            background: 'rgba(102, 102, 102, 0.5)',
+            top: '0',
+            left: '0',
+            zIndex: '-1',
+          }}
+        />
         {this.renderContentModal()}
       </Dialog>
     );
@@ -483,7 +492,6 @@ class TableProcess extends Component {
           onSelectionChange={e => this.setState({ selectedCar1: e.data })}
           scrollable={true}
           scrollHeight="600px"
-          style={{ zIndex: '91' }}
         >
           {columns}
         </DataTable>

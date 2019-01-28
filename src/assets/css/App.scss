@@ -28,7 +28,7 @@ body {
 .app {
   > .header {
     >.fixed-top {
-      z-index: 9;
+      z-index: initial;
     }
   }
 }
