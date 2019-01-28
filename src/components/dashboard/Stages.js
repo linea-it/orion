@@ -175,11 +175,9 @@ class Stages extends Component {
           header={title}
           visible={this.state.visible}
           width="90%"
-          minY={70}
           onHide={this.onHideModal}
           maximizable={true}
           modal={true}
-          style={{ zIndex: '999' }}
           contentStyle={{ padding: '0', marginBottom: '-10px' }}
         >
           <TableProcess pipelineProcesses={this.state.pipelineProcesses} />

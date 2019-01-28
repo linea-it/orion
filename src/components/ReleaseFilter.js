@@ -47,6 +47,7 @@ class ReleaseFilter extends Component {
     this.setState({ selectRelease: evt.target.value });
     if (evt.target.value !== '') {
       this.loadFields(evt.target.value);
+      this.props.saveStage([]);
     } else {
       this.props.saveStage([]);
       this.clearFields();

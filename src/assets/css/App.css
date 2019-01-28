@@ -21,7 +21,7 @@ body {
   background-repeat: repeat-x; }
 
 .app > .header > .fixed-top {
-  z-index: 9; }
+  z-index: initial; }
 
 .app > .footer, .app > .footer a {
   color: #fff; }
