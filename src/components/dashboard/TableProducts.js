@@ -63,20 +63,20 @@ class TableProducts extends Component {
       //   header: 'Viewer',
       //   body: this.actionViewer,
       // },
-      // {
-      //   field: 'database',
-      //   header: 'Database',
-      //   body: this.actionDatabase,
-      // },
+      {
+        field: 'database',
+        header: 'Database',
+        body: this.actionDatabase,
+      },
       // {
       //   field: 'exported',
       //   header: 'Exported',
       //   body: this.actionExported,
       // },
-      // {
-      //   field: 'productType',
-      //   header: 'Product Type',
-      // },
+      {
+        field: 'dataType',
+        header: 'Data Type',
+      },
       // {
       //   field: 'download',
       //   header: 'Download',
@@ -106,7 +106,7 @@ class TableProducts extends Component {
   };
 
   onShowDatabase = rowData => {
-    this.onClickModal(rowData, 'database');
+    window.open(rowData, 'Database');
   };
 
   actionExported = rowData => {
@@ -155,16 +155,20 @@ class TableProducts extends Component {
 
   actionDatabase = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.database}
-        onClick={() => this.onShowDatabase(rowData)}
-      >
-        <Icon>device_hub</Icon>
-      </Button>
-    );
+    if (rowData.database !== null) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.database}
+          onClick={() => this.onShowDatabase(rowData.database)}
+        >
+          <Icon>link</Icon>
+        </Button>
+      );
+    } else {
+      return <span style={styles.mark}>-</span>;
+    }
   };
 
   actionExported = rowData => {
@@ -198,8 +202,6 @@ class TableProducts extends Component {
     if (this.state.modalType === 'provenance') {
       return <p>Teste</p>;
     } else if (this.state.modalType === 'viewer') {
-      return <p>Teste</p>;
-    } else if (this.state.modalType === 'dataBase') {
       return <p>Teste</p>;
     } else if (this.state.modalType === 'export') {
       return <p>Teste</p>;

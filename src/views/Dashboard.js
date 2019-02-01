@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import ReleaseFilter from '../components/ReleaseFilter';
 import Stages from '../components/dashboard/Stages';
 
-import '../assets/css/dashboard.css';
-
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);

@@ -10,6 +10,9 @@ import 'primereact/resources/themes/omega/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 
+import './assets/css/App.css';
+import './assets/css/dashboard.css';
+
 import registerServiceWorker from './registerServiceWorker';
 const history = createHistory();
 

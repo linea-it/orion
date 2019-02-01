@@ -8,11 +8,13 @@ import { Dialog } from 'primereact/dialog';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import moment from 'moment';
 
 import Centaurus from '../../api';
 
 import TableVersion from './TableVersion';
 import TableProvenance from './TableProvenance';
+import Comments from './comments';
 import TableProducts from './TableProducts';
 
 const styles = {
@@ -73,6 +75,15 @@ const styles = {
   tooltipText: {
     fontSize: '1em',
   },
+  mark: {
+    padding: '0px',
+    minWidth: '30px',
+    minHeight: '30px',
+    display: 'block',
+    margin: '0px auto',
+    lineHeight: '2',
+    textAlign: 'center',
+  },
 };
 
 class TableProcess extends Component {
@@ -118,21 +129,21 @@ class TableProcess extends Component {
         header: 'Status',
         body: this.actionStatus,
       },
-      // {
-      //   field: 'saved',
-      //   header: 'Saved',
-      //   body: this.actionSaved,
-      // },
+      {
+        field: 'saved',
+        header: 'Saved',
+        body: this.actionSaved,
+      },
       // {
       //   field: 'share',
       //   header: 'Share',
       //   body: this.actionShare,
       // },
-      // {
-      //   field: 'published',
-      //   header: 'Published',
-      //   body: this.actionPublished,
-      // },
+      {
+        field: 'published',
+        header: 'Published',
+        body: this.actionPublished,
+      },
       {
         field: 'provenance',
         header: 'Provenance',
@@ -143,11 +154,11 @@ class TableProcess extends Component {
         header: 'Comments',
         body: this.actionComments,
       },
-      // {
-      //   field: 'product',
-      //   header: 'Product Log',
-      //   body: this.actionProduct,
-      // },
+      {
+        field: 'product',
+        header: 'Product Log',
+        body: this.actionProduct,
+      },
       {
         field: 'products',
         header: 'Products',
@@ -166,6 +177,7 @@ class TableProcess extends Component {
       visible: false,
       productsProcess: [],
       versionProcess: [],
+      commentsProcess: [],
     };
   }
 
@@ -181,11 +193,15 @@ class TableProcess extends Component {
   };
 
   onShowStatus = rowData => {
-    console.log('onShowStatus: ', rowData);
+    console.log(rowData, 'onShowStatus: ');
   };
 
   onShowProvenance = rowData => {
     this.onClickModal(rowData, 'Provenance');
+  };
+
+  onShowProductLog = rowData => {
+    window.open(rowData, 'Product Log');
   };
 
   onShowProducts = rowData => {
@@ -195,6 +211,7 @@ class TableProcess extends Component {
 
   onShowComments = rowData => {
     this.onClickModal(rowData, 'Comments');
+    this.loadComments(rowData.process);
   };
 
   onClickModal = (rowData, modalType) => {
@@ -257,22 +274,14 @@ class TableProcess extends Component {
 
   actionSaved = rowData => {
     const { classes } = this.props;
-    if (rowData.saved !== 0) {
+    if (rowData.saved !== false) {
       return (
-        <Button
-          className={classes.buttonCheck}
-          style={styles.btnIco}
-          title={rowData.saved}
-        >
+        <Button className={classes.buttonCheck} style={styles.btnIco}>
           <Icon>check</Icon>
         </Button>
       );
     } else {
-      return (
-        <Button style={styles.btnIco} title={rowData.saved}>
-          <Icon>more_horiz</Icon>
-        </Button>
-      );
+      return <span style={styles.mark}>-</span>;
     }
   };
 
@@ -291,15 +300,15 @@ class TableProcess extends Component {
 
   actionPublished = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.buttonCheck}
-        style={styles.btnIco}
-        title={rowData.published}
-      >
-        <Icon>check</Icon>
-      </Button>
-    );
+    if (rowData.published !== false) {
+      return (
+        <Button className={classes.buttonCheck} style={styles.btnIco}>
+          <Icon>check</Icon>
+        </Button>
+      );
+    } else {
+      return <span style={styles.mark}>-</span>;
+    }
   };
 
   actionProvenance = rowData => {
@@ -318,15 +327,20 @@ class TableProcess extends Component {
 
   actionProduct = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.product}
-      >
-        <Icon>link</Icon>
-      </Button>
-    );
+    if (rowData.product !== null) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.product}
+          onClick={() => this.onShowProductLog(rowData.product)}
+        >
+          <Icon>link</Icon>
+        </Button>
+      );
+    } else {
+      return <span style={styles.mark}>-</span>;
+    }
   };
 
   actionProducts = rowData => {
@@ -338,7 +352,7 @@ class TableProcess extends Component {
         title={rowData.products}
         onClick={() => this.onShowProducts(rowData)}
       >
-        <Icon>link</Icon>
+        <Icon>view_list</Icon>
       </Button>
     );
   };
@@ -379,7 +393,7 @@ class TableProcess extends Component {
     } else if (this.state.modalType === 'Products') {
       return <TableProducts productsProcess={this.state.productsProcess} />;
     } else if (this.state.modalType === 'Comments') {
-      return <p>Teste</p>;
+      return <Comments commentsProcess={this.state.commentsProcess} />;
     }
   };
 
@@ -410,31 +424,6 @@ class TableProcess extends Component {
     );
   };
 
-  loadTableProducts = async currentProducts => {
-    const productsProcess = await Centaurus.getAllProductsByProcessId(
-      currentProducts
-    );
-
-    if (productsProcess && productsProcess.productsByProcessId) {
-      const productsProcessLocal = productsProcess.productsByProcessId.map(
-        row => {
-          return {
-            process: currentProducts,
-            product: row.displayName,
-            type: row.Class.productType.displayName,
-            class: row.Class.displayName,
-          };
-        }
-      );
-      this.setState({
-        productsProcess: productsProcessLocal,
-        currentProducts: currentProducts,
-      });
-    } else {
-      return null;
-    }
-  };
-
   loadTableVersion = async currentVersion => {
     const versionProcess = await Centaurus.getAllProcessComponentsByProcessId(
       currentVersion
@@ -453,6 +442,56 @@ class TableProcess extends Component {
       this.setState({
         versionProcess: versionProcessLocal,
         currentVersion: currentVersion,
+      });
+    } else {
+      return null;
+    }
+  };
+
+  loadComments = async currentComments => {
+    const commentsProcess = await Centaurus.getAllCommentsByProcessId(
+      currentComments
+    );
+
+    if (commentsProcess && commentsProcess.commentsByProcessId) {
+      const commentsProcessLocal = commentsProcess.commentsByProcessId.map(
+        row => {
+          return {
+            date: moment(row.date).format('DD/MM/YYYY hh:mm:ss'),
+            user: row.user.displayName,
+            comments: row.comments,
+          };
+        }
+      );
+      this.setState({
+        commentsProcess: commentsProcessLocal,
+      });
+    } else {
+      return null;
+    }
+  };
+
+  loadTableProducts = async currentProducts => {
+    const productsProcess = await Centaurus.getAllProductsByProcessId(
+      currentProducts
+    );
+
+    if (productsProcess && productsProcess.productsByProcessId) {
+      const productsProcessLocal = productsProcess.productsByProcessId.map(
+        row => {
+          return {
+            process: currentProducts,
+            product: row.displayName,
+            type: row.Class.productType.displayName,
+            class: row.Class.displayName,
+            database: row.table.dachsUrl,
+            dataType: row.dataType,
+          };
+        }
+      );
+      this.setState({
+        productsProcess: productsProcessLocal,
+        currentProducts: currentProducts,
       });
     } else {
       return null;
@@ -492,6 +531,7 @@ class TableProcess extends Component {
           onSelectionChange={e => this.setState({ selectedCar1: e.data })}
           scrollable={true}
           scrollHeight="600px"
+          style={{ background: '#ccc' }}
         >
           {columns}
         </DataTable>
