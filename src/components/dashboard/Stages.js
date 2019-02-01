@@ -199,7 +199,6 @@ class Stages extends Component {
         row => {
           const startTime = moment(row.startTime);
           const endTime = moment(row.endTime);
-          console.log(row);
           return {
             release: row.fields.edges
               .map(edge => {
