@@ -30,6 +30,15 @@ const styles = {
   buttonPointer: {
     cursor: 'default',
   },
+  mark: {
+    padding: '0px',
+    minWidth: '30px',
+    minHeight: '30px',
+    display: 'block',
+    margin: '0px auto',
+    lineHeight: '2',
+    textAlign: 'center',
+  },
 };
 
 class TableProducts extends Component {
