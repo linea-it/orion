@@ -219,7 +219,7 @@ class Stages extends Component {
             saved: row.flagPublished,
             published: row.flagPublished,
             comments: row.comments,
-            product: row.productLog,
+            product: row ? row.productLog : null,
           };
         }
       );

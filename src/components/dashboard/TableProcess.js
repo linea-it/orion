@@ -484,7 +484,7 @@ class TableProcess extends Component {
             product: row.displayName,
             type: row.Class.productType.displayName,
             class: row.Class.displayName,
-            database: row.table.dachsUrl,
+            database: row.table ? row.table.dachsUrl : null,
             dataType: row.dataType,
           };
         }
