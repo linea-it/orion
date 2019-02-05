@@ -178,7 +178,7 @@ class Stages extends Component {
           onHide={this.onHideModal}
           maximizable={true}
           modal={true}
-          contentStyle={{ padding: '0', marginBottom: '-10px' }}
+          contentStyle={{ padding: '0', marginBottom: '-10px', zIndex: '99' }}
         >
           <TableProcess pipelineProcesses={this.state.pipelineProcesses} />
         </Dialog>
@@ -200,13 +200,26 @@ class Stages extends Component {
           const startTime = moment(row.startTime);
           const endTime = moment(row.endTime);
           return {
+            release: row.fields.edges
+              .map(edge => {
+                return edge.node.releaseTag.releaseDisplayName;
+              })
+              .join(', '),
+            dataset: row.fields.edges
+              .map(edge => {
+                return edge.node.displayName;
+              })
+              .join(', '),
             process: row.processId,
             start: row.startTime,
             end: row.endTime,
             duration: moment(endTime.diff(startTime)).format('hh:mm:ss'),
             owner: row.session.user.displayName,
             status: row.processStatus.name,
+            saved: row.flagPublished,
+            published: row.flagPublished,
             comments: row.comments,
+            product: row.productLog,
           };
         }
       );

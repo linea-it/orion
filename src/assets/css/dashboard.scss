@@ -28,3 +28,13 @@
         width: 150px;
     }
 }
+
+/* SELECAO DA LINHA NA TABELA DO PRIMEREACT */
+.ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
+    background-color: #E2E2E2;
+    color: #222;
+}
+
+// .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight td .MuiButton-label-9 {
+//     color: #fff;
+// }

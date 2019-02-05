@@ -104,13 +104,26 @@ export default class Centaurus {
             processId
             startTime
             endTime
+            flagPublished
             comments
+            productLog
             processStatus {
               name
             }
             session {
               user {
                 displayName
+              }
+            }
+            fields {
+              edges {
+                node {
+                  id
+                  displayName
+                  releaseTag {
+                    releaseDisplayName
+                  }
+                }
               }
             }
           }
@@ -128,6 +141,10 @@ export default class Centaurus {
         {
           productsByProcessId(processId: ${dataProcessId}) {
             displayName
+            dataType
+            table {
+              dachsUrl
+            }
             Class {
               displayName
               productType {
@@ -157,6 +174,25 @@ export default class Centaurus {
         }
       `);
       return versionProcess;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static async getAllCommentsByProcessId(dataProcessId) {
+    try {
+      const commentsProcess = await client.query(`
+        {
+          commentsByProcessId(processId: ${dataProcessId}) {
+            comments
+            date
+            user {
+              displayName
+            }
+          }
+        }
+      `);
+      return commentsProcess;
     } catch (e) {
       return null;
     }
