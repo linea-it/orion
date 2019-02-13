@@ -178,6 +178,7 @@ class TableProcess extends Component {
       productsProcess: [],
       versionProcess: [],
       commentsProcess: [],
+      processByProcessId: [],
     };
   }
 
@@ -198,6 +199,7 @@ class TableProcess extends Component {
 
   onShowProvenance = rowData => {
     this.onClickModal(rowData, 'Provenance');
+    this.loadTableProvenance(rowData.process);
   };
 
   onShowProductLog = rowData => {
@@ -389,7 +391,10 @@ class TableProcess extends Component {
     if (this.state.modalType === 'Version') {
       return <TableVersion versionProcess={this.state.versionProcess} />;
     } else if (this.state.modalType === 'Provenance') {
-      return <TableProvenance />;
+      return (
+        // <TableProvenance processByProcessId={this.state.processByProcessId} />
+        <TableProvenance process={this.state.rowData} />
+      );
     } else if (this.state.modalType === 'Products') {
       return <TableProducts productsProcess={this.state.productsProcess} />;
     } else if (this.state.modalType === 'Comments') {
@@ -492,6 +497,31 @@ class TableProcess extends Component {
       this.setState({
         productsProcess: productsProcessLocal,
         currentProducts: currentProducts,
+      });
+    } else {
+      return null;
+    }
+  };
+
+  loadTableProvenance = async currentProvenance => {
+    const processByProcessId = await Centaurus.getAllProcessByProcessId(
+      currentProvenance
+    );
+
+    if (processByProcessId && processByProcessId.processByProcessId) {
+      const processByProcessIdLocal = processByProcessId.processByProcessId.inputs.edges.map(
+        row => {
+          return {
+            name: row.node.process.name,
+            process: row.node.process.processId,
+            product: row.node.process.productLog,
+            inputs: row.node.process.inputs.edges,
+          };
+        }
+      );
+      this.setState({
+        processByProcessId: processByProcessIdLocal,
+        currentProvenance: currentProvenance,
       });
     } else {
       return null;

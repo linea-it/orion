@@ -1,116 +1,228 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import { TreeDataState, CustomTreeData } from '@devexpress/dx-react-grid';
+import {
+  Grid,
+  VirtualTable,
+  TableHeaderRow,
+  TableTreeColumn,
+} from '@devexpress/dx-react-grid-material-ui';
+import CircularProgress from '@material-ui/core/CircularProgress';
+// import { Loading } from '../../../theme-sources/material-ui/components/loading';
 
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import Centaurus from '../../api';
 
-import { withStyles } from '@material-ui/core/styles';
+// const URL = 'https://js.devexpress.com/Demos/Mvc/api/treeListData';
+const ROOT_ID = '';
+
+const getRowId = row => row.process;
+const getChildRows = (row, rootRows) => {
+  console.log(row)
+  const childRows = rootRows.filter(
+    r => r.parentId === (row ? row.process : ROOT_ID)
+  );
+  if (childRows.length) {
+    return childRows;
+  }
+  return row && row.hasItems ? [] : null;
+};
 
 const styles = {
-  btn: {
-    margin: '0 auto',
-    width: '4em',
+  btnIco: {
+    padding: '0',
+    minWidth: '30px',
+    minHeight: '30px',
     display: 'block',
+    lineHeight: '.5',
+  },
+  mark: {
+    padding: '0px',
+    minWidth: '30px',
+    minHeight: '30px',
+    display: 'block',
+    margin: '0px auto',
+    lineHeight: '2',
+    textAlign: 'center',
   },
 };
 
-class TableProvenance extends Component {
+export default class Demo extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const columns = [
-      {
-        field: 'name',
-        header: 'Name',
-      },
-      {
-        field: 'process',
-        header: 'Process ID',
-      },
-      {
-        field: 'product',
-        header: 'Product Log',
-      },
-      {
-        field: 'comments',
-        header: 'Comments',
-      },
-    ];
-
-    const columnsData = [
-      {
-        name: 'Teste',
-        process: 'Teste',
-        product: 'Teste',
-        comments: 'Teste',
-      },
-    ];
-
     this.state = {
-      cols: columns,
-      data: columnsData,
+      visible: false,
+      columns: [
+        { name: 'name', title: 'Name' },
+        { name: 'process', title: 'Process ID' },
+        { name: 'product', title: 'Product Log' },
+        { name: 'comments', title: 'Comments' },
+      ],
+      tableColumnExtensions: [{ columnName: 'name', width: 300 }],
+      expandedRowIds: [],
       loading: false,
+      data: [],
     };
   }
 
   static propTypes = {
-    title: PropTypes.string,
-    rows: PropTypes.array,
-    classes: PropTypes.object.isRequired,
+    // processByProcessId: PropTypes.array,
+    loadTableProvenance: PropTypes.func,
+    process: PropTypes.object,
   };
 
-  //   onShowStatus = rowData => {
-  //     console.log('onShowStatus: ', rowData);
-  //   };
+  componentDidMount() {
+    console.log('DidMount: ', this.props.process);
+    this.loadData();
+  }
 
-  //   actionShare = rowData => {
-  //     const { classes } = this.props;
-  //     return (
+  componentDidUpdate() {
 
-  //     );
-  //   };
+  }
+
+  renderButtonProduct = rowData => {
+    if (rowData !== null) {
+      return (
+        <Button
+          style={styles.btnIco}
+          title={rowData}
+          onClick={() => this.handleClickProductLog(rowData)}
+        >
+          <Icon>link</Icon>
+        </Button>
+      );
+    } else {
+      return <span style={styles.mark}>-</span>;
+    }
+  };
+
+  renderButtonComments = ({ rowData }) => {
+    return (
+      <Button
+        style={styles.btnIco}
+        onClick={this.handleClickComments.bind(this, { rowData: rowData })}
+      >
+        <Icon>comment</Icon>
+      </Button>
+    );
+  };
+
+  handleClickProductLog = rowData => {
+    window.open(rowData, 'Product Log');
+  };
+
+  handleClickComments = ({ rowData }) => {
+    console.log(rowData, 'handleClickButton');
+  };
+
+  changeExpandedRowIds = expandedRowIds => {
+    this.setState({ expandedRowIds });
+  };
+
+  loadData = async () => {
+    const { expandedRowIds, data, loading } = this.state;
+
+    if (loading) {
+      return;
+    }
+
+    if (data.length === 0) {
+      //  Primeira vez, carrega a provenance do processo que recebeu pela prop. 
+
+      console.log('Primeira Vez');
+
+      var processId = this.props.process.process;
+
+      // TODO carregar a provenance
+      let [result] = await Promise.all([Centaurus.getAllProcessByProcessId(processId)])
+
+      let rows = this.formatRows(result);
+
+      // Depois de carregar os filhos setar o estado
+      this.setState({
+        data: rows,
+        loading: false,
+      })
+
+    } else {
+
+      // Descobrir o id de todos as linhas que nao tem filhos carregados. 
+      const rowIdsWithNotLoadedChilds = [ROOT_ID, ...expandedRowIds].filter(
+        rowId => data.findIndex(row => row.parentId === rowId) === -1
+      );
+      console.log('rowIdsWithNotLoadedChilds: ', rowIdsWithNotLoadedChilds);
+
+      //  para cada linha que não tem filho fazer o load do filho. 
+      if (rowIdsWithNotLoadedChilds.length) {
+        if (loading) return;
+        this.setState({ loading: true });
+
+        rowIdsWithNotLoadedChilds.map(rowId => {
+          // Fazer a requisicao para cada um dos filhos usando
+          // Usar a mesma funcao que usou na primeira vez mais passando o proccess id do filho. 
+          console.log("Fazer o request para o id: ", rowId)
+        })
+      }
+    }
+
+
+  };
+
+  formatRows = (data) => {
+
+    if (data && data.processByProcessId) {
+      const rows = data.processByProcessId.inputs.edges.map(
+        row => {
+          return {
+            name: row.node.process.name,
+            process: row.node.process.processId,
+            product: row.node.process.productLog,
+            inputs: row.node.process.inputs.edges,
+            items: [],
+          };
+        }
+      );
+      return rows;
+    } else {
+      return [];
+    }
+  }
 
   render() {
-    const header = (
-      <div style={{ textAlign: 'left' }}>
-        {/* <p>{this.props.title}</p> */}
-        <p>Title Table</p>
-      </div>
-    );
+    const {
+      data,
+      columns,
+      tableColumnExtensions,
+      expandedRowIds,
+      loading,
+    } = this.state;
 
-    const columns = this.state.cols.map((col, i) => {
-      return (
-        <Column
-          key={i}
-          field={col.field}
-          header={col.header}
-          sortable={true}
-          body={col.body}
-        />
-      );
-    });
+    console.log('Data: ', data);
+
+    // this.props.processByProcessId.map(el => {
+    //   eprocessl['product'] = this.renderButtonProduct(el.product);
+    //   el['comments'] = this.renderButtonComments.call(this, { rowData: el });
+    //   return el;
+    // });
+    // console.log(this.props.processByProcessId);
 
     return (
-      <DataTable
-        header={header}
-        // value={this.props.rows}
-        value={this.state.data}
-        resizableColumns={true}
-        columnResizeMode="expand"
-        reorderableColumns={true}
-        reorderableRows={true}
-        responsive={true}
-        selectionMode="single"
-        selection={this.state.selectedCar1}
-        onSelectionChange={e => this.setState({ selectedCar1: e.data })}
-        scrollable={true}
-        scrollHeight="600px"
-        style={{ zIndex: '95' }}
-      >
-        {columns}
-      </DataTable>
+      <Paper style={{ position: 'relative' }}>
+        <Grid rows={data} columns={columns} getRowId={getRowId}>
+          <TreeDataState
+            expandedRowIds={expandedRowIds}
+            onExpandedRowIdsChange={this.changeExpandedRowIds}
+          />
+          <CustomTreeData getChildRows={getChildRows} />
+          <VirtualTable columnExtensions={tableColumnExtensions} />
+          <TableHeaderRow />
+          <TableTreeColumn for="name" />
+        </Grid>
+        {loading && <CircularProgress />}
+      </Paper>
     );
   }
 }
-
-export default withStyles(styles)(TableProvenance);

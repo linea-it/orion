@@ -197,4 +197,39 @@ export default class Centaurus {
       return null;
     }
   }
+
+  static async getAllProcessByProcessId(dataProcessId) {
+    try {
+      const processByProcessId = await client.query(`
+        {
+          processByProcessId(processId: ${dataProcessId}) {
+            name
+            processId
+            productLog
+            inputs {
+              edges {
+                node {
+                  process {
+                    name
+                    processId
+                    productLog
+                    inputs {
+                      edges {
+                        node {
+                          id
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `);
+      return processByProcessId;
+    } catch (e) {
+      return null;
+    }
+  }
 }
