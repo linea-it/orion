@@ -6,29 +6,21 @@ import Icon from '@material-ui/core/Icon';
 import { TreeDataState, CustomTreeData } from '@devexpress/dx-react-grid';
 import {
   Grid,
-  VirtualTable,
+  Table,
   TableHeaderRow,
   TableTreeColumn,
 } from '@devexpress/dx-react-grid-material-ui';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Provenance from './provenance';
 // import { Loading } from '../../../theme-sources/material-ui/components/loading';
 
 import Centaurus from '../../api';
 
-// const URL = 'https://js.devexpress.com/Demos/Mvc/api/treeListData';
-const ROOT_ID = '';
-
-const getRowId = row => row.process;
-const getChildRows = (row, rootRows) => {
-  console.log(row)
-  const childRows = rootRows.filter(
-    r => r.parentId === (row ? row.process : ROOT_ID)
-  );
-  if (childRows.length) {
-    return childRows;
-  }
-  return row && row.hasItems ? [] : null;
+const getRowId = row => {
+  return row.id;
 };
+
+const getChildRows = (row, rootRows) => (row ? row.items : rootRows);
 
 const styles = {
   btnIco: {
@@ -79,8 +71,11 @@ export default class Demo extends React.PureComponent {
     this.loadData();
   }
 
-  componentDidUpdate() {
-
+  componentWillReceiveProps(nextProps) {
+    if ((nextProps.process.process, this.props.process.process)) {
+      this.setState({ loading: true });
+      this.loadData();
+    }
   }
 
   renderButtonProduct = rowData => {
@@ -118,78 +113,75 @@ export default class Demo extends React.PureComponent {
     console.log(rowData, 'handleClickButton');
   };
 
+  findProduct = async processId => {
+    const data = this.state.data;
+    this.setState({ loading: true, data: [] });
+    // eslint-disable-next-line
+    const newData = await Promise.all(
+      data.map(async p => {
+        await p.findProvenance(processId);
+        return p;
+      })
+    );
+    this.setState({ data: newData, loading: false });
+  };
+
   changeExpandedRowIds = expandedRowIds => {
+    const added = expandedRowIds.filter(
+      e => !this.state.expandedRowIds.includes(e)
+    );
+    if (added.length > 0) this.findProduct(added[0]);
     this.setState({ expandedRowIds });
   };
 
   loadData = async () => {
-    const { expandedRowIds, data, loading } = this.state;
+    const { loading } = this.state;
 
     if (loading) {
       return;
     }
 
-    if (data.length === 0) {
-      //  Primeira vez, carrega a provenance do processo que recebeu pela prop. 
+    var processId = this.props.process.process;
 
-      console.log('Primeira Vez');
-
-      var processId = this.props.process.process;
-
-      // TODO carregar a provenance
-      let [result] = await Promise.all([Centaurus.getAllProcessByProcessId(processId)])
-
-      let rows = this.formatRows(result);
-
-      // Depois de carregar os filhos setar o estado
-      this.setState({
-        data: rows,
-        loading: false,
-      })
-
-    } else {
-
-      // Descobrir o id de todos as linhas que nao tem filhos carregados. 
-      const rowIdsWithNotLoadedChilds = [ROOT_ID, ...expandedRowIds].filter(
-        rowId => data.findIndex(row => row.parentId === rowId) === -1
-      );
-      console.log('rowIdsWithNotLoadedChilds: ', rowIdsWithNotLoadedChilds);
-
-      //  para cada linha que não tem filho fazer o load do filho. 
-      if (rowIdsWithNotLoadedChilds.length) {
-        if (loading) return;
-        this.setState({ loading: true });
-
-        rowIdsWithNotLoadedChilds.map(rowId => {
-          // Fazer a requisicao para cada um dos filhos usando
-          // Usar a mesma funcao que usou na primeira vez mais passando o proccess id do filho. 
-          console.log("Fazer o request para o id: ", rowId)
-        })
-      }
-    }
-
-
+    const result = await Centaurus.getAllProcessByProcessId(processId);
+    const rows =
+      result.processByProcessId.inputs.edges.length > 0
+        ? result.processByProcessId.inputs.edges.map(
+            e =>
+              new Provenance(
+                Math.random()
+                  .toString(36)
+                  .substr(2, 9),
+                e.node.process.name,
+                e.node.process.processId,
+                e.node.process.productLog,
+                '',
+                e.node.process.inputs.edges.length > 0 ? [] : undefined
+              )
+          )
+        : undefined;
+    this.setState({
+      data: rows,
+      loading: false,
+    });
   };
 
-  formatRows = (data) => {
-
+  formatRows = data => {
     if (data && data.processByProcessId) {
-      const rows = data.processByProcessId.inputs.edges.map(
-        row => {
-          return {
-            name: row.node.process.name,
-            process: row.node.process.processId,
-            product: row.node.process.productLog,
-            inputs: row.node.process.inputs.edges,
-            items: [],
-          };
-        }
-      );
+      const rows = data.processByProcessId.inputs.edges.map(row => {
+        return {
+          name: row.node.process.name,
+          process: row.node.process.processId,
+          product: row.node.process.productLog,
+          inputs: row.node.process.inputs.edges,
+          items: [],
+        };
+      });
       return rows;
     } else {
       return [];
     }
-  }
+  };
 
   render() {
     const {
@@ -200,15 +192,6 @@ export default class Demo extends React.PureComponent {
       loading,
     } = this.state;
 
-    console.log('Data: ', data);
-
-    // this.props.processByProcessId.map(el => {
-    //   eprocessl['product'] = this.renderButtonProduct(el.product);
-    //   el['comments'] = this.renderButtonComments.call(this, { rowData: el });
-    //   return el;
-    // });
-    // console.log(this.props.processByProcessId);
-
     return (
       <Paper style={{ position: 'relative' }}>
         <Grid rows={data} columns={columns} getRowId={getRowId}>
@@ -217,7 +200,7 @@ export default class Demo extends React.PureComponent {
             onExpandedRowIdsChange={this.changeExpandedRowIds}
           />
           <CustomTreeData getChildRows={getChildRows} />
-          <VirtualTable columnExtensions={tableColumnExtensions} />
+          <Table columnExtensions={tableColumnExtensions} />
           <TableHeaderRow />
           <TableTreeColumn for="name" />
         </Grid>
