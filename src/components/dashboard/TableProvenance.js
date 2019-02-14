@@ -115,7 +115,7 @@ export default class Demo extends React.PureComponent {
 
   findProduct = async processId => {
     const data = this.state.data;
-    this.setState({ loading: true, data: [] });
+    this.setState({ loading: true });
     // eslint-disable-next-line
     const newData = await Promise.all(
       data.map(async p => {
