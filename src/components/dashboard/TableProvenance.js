@@ -12,7 +12,6 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Provenance from './provenance';
-// import { Loading } from '../../../theme-sources/material-ui/components/loading';
 
 import Centaurus from '../../api';
 
@@ -61,13 +60,10 @@ export default class Demo extends React.PureComponent {
   }
 
   static propTypes = {
-    // processByProcessId: PropTypes.array,
-    loadTableProvenance: PropTypes.func,
     process: PropTypes.object,
   };
 
   componentDidMount() {
-    console.log('DidMount: ', this.props.process);
     this.loadData();
   }
 
@@ -166,21 +162,18 @@ export default class Demo extends React.PureComponent {
     });
   };
 
-  formatRows = data => {
-    if (data && data.processByProcessId) {
-      const rows = data.processByProcessId.inputs.edges.map(row => {
-        return {
-          name: row.node.process.name,
-          process: row.node.process.processId,
-          product: row.node.process.productLog,
-          inputs: row.node.process.inputs.edges,
-          items: [],
-        };
+  InsertButton = data => {
+    data.map(el => {
+      el.product = this.renderButtonProduct(el.product);
+      el.comments = this.renderButtonComments.call(this, {
+        rowData: el,
       });
-      return rows;
-    } else {
-      return [];
-    }
+      if (el.items && el.items.length > 0) {
+        const items = this.InsertButton(el.items);
+        el.items = items;
+      }
+    });
+    return data;
   };
 
   render() {
@@ -191,6 +184,8 @@ export default class Demo extends React.PureComponent {
       expandedRowIds,
       loading,
     } = this.state;
+
+    this.InsertButton(data);
 
     return (
       <Paper style={{ position: 'relative' }}>
@@ -204,7 +199,16 @@ export default class Demo extends React.PureComponent {
           <TableHeaderRow />
           <TableTreeColumn for="name" />
         </Grid>
-        {loading && <CircularProgress />}
+        {loading && (
+          <CircularProgress
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              margin: '10px 0 0 -20px',
+            }}
+          />
+        )}
       </Paper>
     );
   }
