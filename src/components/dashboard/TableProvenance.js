@@ -40,6 +40,37 @@ const styles = {
   },
 };
 
+const Cell = ({ style, ...restProps }) => (
+  <Table.Cell
+    {...restProps}
+    style={{
+      fontSize: '1em',
+      ...style,
+    }}
+  />
+);
+
+const tableHeaderRowCell = ({ style, ...restProps }) => (
+  <TableHeaderRow.Cell
+    {...restProps}
+    style={{
+      color: '#555555',
+      fontSize: '1em',
+      ...style,
+    }}
+  />
+);
+
+const tableTreeColumnCell = ({ style, ...restProps }) => (
+  <TableTreeColumn.Cell
+    {...restProps}
+    style={{
+      fontSize: '1em',
+      ...style,
+    }}
+  />
+);
+
 export default class Demo extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -195,9 +226,12 @@ export default class Demo extends React.PureComponent {
             onExpandedRowIdsChange={this.changeExpandedRowIds}
           />
           <CustomTreeData getChildRows={getChildRows} />
-          <Table columnExtensions={tableColumnExtensions} />
-          <TableHeaderRow />
-          <TableTreeColumn for="name" />
+          <Table
+            columnExtensions={tableColumnExtensions}
+            cellComponent={Cell}
+          />
+          <TableHeaderRow cellComponent={tableHeaderRowCell} />
+          <TableTreeColumn for="name" cellComponent={tableTreeColumnCell} />
         </Grid>
         {loading && (
           <CircularProgress
