@@ -40,6 +40,17 @@ const styles = {
   },
 };
 
+const tableContainerComponent = ({ style, ...restProps }) => (
+  <Table.Container
+    {...restProps}
+    style={{
+      maxHeight: '530px',
+      overflow: 'auto',
+      ...style,
+    }}
+  />
+);
+
 const Cell = ({ style, ...restProps }) => (
   <Table.Cell
     {...restProps}
@@ -182,7 +193,7 @@ export default class Demo extends React.PureComponent {
                 e.node.process.name,
                 e.node.process.processId,
                 e.node.process.productLog,
-                '',
+                e.node.process.comments,
                 e.node.process.inputs.edges.length > 0 ? [] : undefined
               )
           )
@@ -229,6 +240,7 @@ export default class Demo extends React.PureComponent {
           <Table
             columnExtensions={tableColumnExtensions}
             cellComponent={Cell}
+            containerComponent={tableContainerComponent}
           />
           <TableHeaderRow cellComponent={tableHeaderRowCell} />
           <TableTreeColumn for="name" cellComponent={tableTreeColumnCell} />

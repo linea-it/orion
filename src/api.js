@@ -206,6 +206,7 @@ export default class Centaurus {
             name
             processId
             productLog
+            comments
             inputs {
               edges {
                 node {
@@ -213,6 +214,7 @@ export default class Centaurus {
                     name
                     processId
                     productLog
+                    comments
                     inputs {
                       edges {
                         node {

@@ -35,7 +35,7 @@ export default class Provenance {
                 e.node.process.name,
                 e.node.process.processId,
                 e.node.process.productLog,
-                '',
+                e.node.process.comments,
                 e.node.process.inputs.edges.length > 0 ? [] : undefined
               )
           )
