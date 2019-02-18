@@ -36,7 +36,6 @@ const styles = {
     display: 'block',
     margin: '0px auto',
     lineHeight: '2',
-    textAlign: 'center',
   },
 };
 
@@ -132,23 +131,28 @@ export default class Demo extends React.PureComponent {
     }
   };
 
-  renderButtonComments = ({ rowData }) => {
-    return (
-      <Button
-        style={styles.btnIco}
-        onClick={this.handleClickComments.bind(this, { rowData: rowData })}
-      >
-        <Icon>comment</Icon>
-      </Button>
-    );
+  renderButtonComments = rowData => {
+    if (rowData !== null && rowData.length > 0) {
+      return (
+        <Button
+          style={styles.btnIco}
+          title={rowData}
+          onClick={() => this.handleClickComments(rowData)}
+        >
+          <Icon>comment</Icon>
+        </Button>
+      );
+    } else {
+      return <span style={styles.mark}>-</span>;
+    }
   };
 
   handleClickProductLog = rowData => {
     window.open(rowData, 'Product Log');
   };
 
-  handleClickComments = ({ rowData }) => {
-    console.log(rowData, 'handleClickButton');
+  handleClickComments = rowData => {
+    console.log(rowData, 'Comments');
   };
 
   findProduct = async processId => {
@@ -207,9 +211,7 @@ export default class Demo extends React.PureComponent {
   InsertButton = data => {
     data.map(el => {
       el.product = this.renderButtonProduct(el.product);
-      el.comments = this.renderButtonComments.call(this, {
-        rowData: el,
-      });
+      el.comments = this.renderButtonComments(el.comments);
       if (el.items && el.items.length > 0) {
         const items = this.InsertButton(el.items);
         el.items = items;
@@ -230,7 +232,7 @@ export default class Demo extends React.PureComponent {
     this.InsertButton(data);
 
     return (
-      <Paper style={{ position: 'relative' }}>
+      <Paper style={{ position: 'relative', zIndex: '999' }}>
         <Grid rows={data} columns={columns} getRowId={getRowId}>
           <TreeDataState
             expandedRowIds={expandedRowIds}
