@@ -30,6 +30,10 @@ const styles = {
     backgroundColor: 'red',
     color: '#fff',
   },
+  btnRunning: {
+    backgroundColor: '#ffba01',
+    color: '#000',
+  },
   btnRuns: {
     minWidth: '2em',
     background: '#fff',
@@ -138,9 +142,8 @@ class Stages extends Component {
       return (
         <Button
           variant="contained"
-          color="secondary"
           className={classes.button}
-          style={styles.btnInvalid}
+          style={styles.btnRunning}
           title="Running"
           onClick={() => this.onShowStatus(rowData)}
         >
