@@ -223,7 +223,7 @@ class TableProcess extends Component {
       );
     } else if (rowData.status === 'running') {
       return (
-        <span className={classes.btnRunning} style={styles.btnSuccess}>
+        <span className={classes.btnStatus} style={styles.btnRunning}>
           Running
         </span>
       );
