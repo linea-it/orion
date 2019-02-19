@@ -116,7 +116,6 @@ export default class Demo extends React.PureComponent {
   }
 
   renderButtonProduct = rowData => {
-    console.log('rowData: ', rowData);
     if (rowData !== null) {
       return (
         <Button
