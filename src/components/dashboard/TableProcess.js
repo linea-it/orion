@@ -18,11 +18,6 @@ import Comments from './comments';
 import TableProducts from './TableProducts';
 
 const styles = {
-  btn: {
-    margin: '0 auto',
-    width: '4em',
-    display: 'block',
-  },
   btnIco: {
     padding: '0',
     minWidth: '30px',
@@ -32,48 +27,35 @@ const styles = {
     lineHeight: '.5',
   },
   btnStatus: {
-    display: 'table',
+    textTransform: 'none',
+    padding: '1px 5px',
+    width: '5em',
+    minHeight: '1em',
+    display: 'block',
     margin: '0 auto',
-    width: '7em',
-    padding: '0',
+    textAlign: 'center',
+    lineHeight: '2',
+    boxShadow:
+      '0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)',
+    borderRadius: '4px',
+    boxSizing: 'border-box',
   },
   btnSuccess: {
-    textTransform: 'none',
     backgroundColor: 'green',
     color: '#fff',
-    padding: '1px 5px',
-    minWidth: '5em',
-    minHeight: '1em',
-    display: 'block',
-    margin: '0 auto',
   },
   btnFailure: {
-    textTransform: 'none',
     backgroundColor: 'red',
     color: '#fff',
-    padding: '1px 5px',
-    minWidth: '5em',
-    minHeight: '1em',
-    display: 'block',
-    margin: '0 auto',
   },
   btnRunning: {
-    textTransform: 'none',
-    padding: '1px 5px',
-    minWidth: '5em',
-    minHeight: '1em',
-    display: 'block',
-    margin: '0 auto',
+    backgroundColor: '#ffba01',
+    color: '#000',
   },
-  buttonCheck: {
+  icoCheck: {
     color: 'green',
     cursor: 'default',
-  },
-  buttonPointer: {
-    cursor: 'default',
-  },
-  tooltipText: {
-    fontSize: '1em',
+    textAlign: 'center',
   },
   mark: {
     padding: '0px',
@@ -178,6 +160,7 @@ class TableProcess extends Component {
       productsProcess: [],
       versionProcess: [],
       commentsProcess: [],
+      processByProcessId: [],
     };
   }
 
@@ -190,10 +173,6 @@ class TableProcess extends Component {
   onShowVersion = rowData => {
     this.onClickModal(rowData, 'Version');
     this.loadTableVersion(rowData.process);
-  };
-
-  onShowStatus = rowData => {
-    console.log(rowData, 'onShowStatus: ');
   };
 
   onShowProvenance = rowData => {
@@ -235,39 +214,24 @@ class TableProcess extends Component {
   };
 
   actionStatus = rowData => {
+    const { classes } = this.props;
     if (rowData.status === 'failure') {
       return (
-        <Button
-          variant="contained"
-          style={styles.btnFailure}
-          title="Failure"
-          onClick={() => this.onShowStatus(rowData)}
-        >
+        <span className={classes.btnStatus} style={styles.btnFailure}>
           Failure
-        </Button>
+        </span>
       );
     } else if (rowData.status === 'running') {
       return (
-        <Button
-          variant="contained"
-          color="secondary"
-          style={styles.btnRunning}
-          title="Running"
-          onClick={() => this.onShowStatus(rowData)}
-        >
+        <span className={classes.btnStatus} style={styles.btnRunning}>
           Running
-        </Button>
+        </span>
       );
     } else {
       return (
-        <Button
-          variant="contained"
-          style={styles.btnSuccess}
-          title="Success"
-          onClick={() => this.onShowStatus(rowData)}
-        >
+        <span className={classes.btnStatus} style={styles.btnSuccess}>
           Success
-        </Button>
+        </span>
       );
     }
   };
@@ -276,9 +240,9 @@ class TableProcess extends Component {
     const { classes } = this.props;
     if (rowData.saved !== false) {
       return (
-        <Button className={classes.buttonCheck} style={styles.btnIco}>
+        <span className={classes.icoCheck} style={styles.btnIco}>
           <Icon>check</Icon>
-        </Button>
+        </span>
       );
     } else {
       return <span style={styles.mark}>-</span>;
@@ -302,9 +266,9 @@ class TableProcess extends Component {
     const { classes } = this.props;
     if (rowData.published !== false) {
       return (
-        <Button className={classes.buttonCheck} style={styles.btnIco}>
+        <span className={classes.icoCheck} style={styles.btnIco}>
           <Icon>check</Icon>
-        </Button>
+        </span>
       );
     } else {
       return <span style={styles.mark}>-</span>;
@@ -389,7 +353,7 @@ class TableProcess extends Component {
     if (this.state.modalType === 'Version') {
       return <TableVersion versionProcess={this.state.versionProcess} />;
     } else if (this.state.modalType === 'Provenance') {
-      return <TableProvenance />;
+      return <TableProvenance process={this.state.rowData} />;
     } else if (this.state.modalType === 'Products') {
       return <TableProducts productsProcess={this.state.productsProcess} />;
     } else if (this.state.modalType === 'Comments') {
