@@ -216,6 +216,7 @@ export default class Demo extends React.PureComponent {
         const items = this.InsertButton(el.items);
         el.items = items;
       }
+      return data;
     });
     return data;
   };
