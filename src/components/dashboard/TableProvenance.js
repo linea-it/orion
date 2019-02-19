@@ -43,7 +43,7 @@ const tableContainerComponent = ({ style, ...restProps }) => (
   <Table.Container
     {...restProps}
     style={{
-      maxHeight: '530px',
+      maxHeight: '500px',
       overflow: 'auto',
       ...style,
     }}
@@ -90,7 +90,7 @@ export default class Demo extends React.PureComponent {
       columns: [
         { name: 'name', title: 'Name' },
         { name: 'process', title: 'Process ID' },
-        { name: 'product', title: 'Product Log' },
+        { name: 'product_btn', title: 'Product Log' },
         { name: 'comments', title: 'Comments' },
       ],
       tableColumnExtensions: [{ columnName: 'name', width: 300 }],
@@ -116,6 +116,7 @@ export default class Demo extends React.PureComponent {
   }
 
   renderButtonProduct = rowData => {
+    console.log('rowData: ', rowData);
     if (rowData !== null) {
       return (
         <Button
@@ -210,7 +211,7 @@ export default class Demo extends React.PureComponent {
 
   InsertButton = data => {
     data.map(el => {
-      el.product = this.renderButtonProduct(el.product);
+      el.product_btn = this.renderButtonProduct(el.product);
       el.comments = this.renderButtonComments(el.comments);
       if (el.items && el.items.length > 0) {
         const items = this.InsertButton(el.items);
