@@ -19,8 +19,8 @@ pipeline {
         stage('Building and push image') {
             when {
                 allOf {
-                    not expression {
-                        env.TAG_NAME != null
+                    expression {
+                        env.TAG_NAME == null
                     }
                     expression {
                         env.BRANCH_NAME.toString().equals('master')
