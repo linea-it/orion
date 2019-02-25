@@ -57,6 +57,7 @@ pipeline {
                     sh 'docker push $registry:$TAG_NAME'
                     sh 'docker rmi $registry:$TAG_NAME'
                 }
+
                 sh """
                   curl -D - -X \"POST\" \
                     -H \"content-type: application/json\" \
