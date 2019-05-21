@@ -2,24 +2,97 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
-import { FadeLoader } from 'halogenium';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import InputBase from '@material-ui/core/InputBase';
 
-import Centaurus from '../api';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import Centaurus from '../../api';
 import moment from 'moment';
 
-const styles = {
+const BootstrapInput = withStyles(theme => ({
+  root: {
+    'label + &': {
+      marginLeft: theme.spacing.unit * 8,
+    },
+  },
+  input: {
+    borderRadius: 4,
+    position: 'relative',
+    backgroundColor: theme.palette.background.paper,
+    border: '1px solid #ced4da',
+    fontSize: 16,
+    width: '120px',
+    padding: '5px 25px 5px 5px',
+    transition: theme.transitions.create(['border-color', 'box-shadow']),
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+    '&:focus': {
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: 4,
+      borderColor: '#80bdff',
+      boxShadow: '0 0 0 0.1rem rgba(0,123,255,.25)',
+    },
+  },
+}))(InputBase);
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
   fadeLoaderFull: {
     position: 'absolute',
-    paddingLeft: 'calc((100vw - 40px) / 2)',
-    paddingTop: 'calc(25vh)',
+    paddingLeft: 'calc((100vw - 100px) / 2)',
+    paddingTop: 'calc(100vh - 300px)',
   },
   fadeLoader: {
     position: 'absolute',
     paddingLeft: 'calc((100vw - 13px) / 2)',
-    paddingTop: 'calc(35vh)',
+    paddingTop: 'calc(100vh - 300px)',
     zIndex: '999',
   },
-};
+  margin: {
+    margin: '0 15px 0 0',
+  },
+  bootstrapFormLabel: {
+    color: '#fff',
+    top: '50%',
+    margin: '-8px 0 0',
+    fontSize: '20px',
+    fontWeight: 'bold',
+  },
+  filter: {
+    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.primary.light,
+    marginTop: '53px',
+    position: 'fixed',
+    top: 0,
+    width: '100%',
+    zIndex: '9',
+  },
+  loading: {
+    position: 'absolute',
+    top: '50vh',
+    left: '50vw',
+    margin: '-50px 0 0 -20px',
+    zIndex: '99',
+  },
+});
 
 class ReleaseFilter extends Component {
   constructor(props) {
@@ -184,39 +257,37 @@ class ReleaseFilter extends Component {
     const { classes } = this.props;
 
     if (!this.state.loading) return null;
-    const showControls = this.state.optsRelease || this.state.optsFields;
-    const classLoading = showControls
-      ? styles.fadeLoader
-      : styles.fadeLoaderFull;
 
     if (
       this.state.optsRelease.length !== 0 &&
       this.state.optsFields.length !== 0
     ) {
-      return (
-        <div className={classes.loading}>
-          <FadeLoader
-            style={classLoading}
-            color="#424242"
-            size="16px"
-            margin="4px"
-          />
-        </div>
-      );
+      return <CircularProgress className={classes.loading} />;
     }
   };
 
-  render() {
+  renderFilter = () => {
+    const { classes } = this.props;
     return (
-      <div>
-        <form className="form-inline">
-          <label className="sr-only" htmlFor="inlineFormInput">
+      <form>
+        <FormControl className={classes.margin}>
+          <InputLabel
+            shrink
+            htmlFor="age-customized-native-simple"
+            className={classes.bootstrapFormLabel}
+            focused={false}
+          >
             Release:
-          </label>
-          <select
-            className="form-control form-control-sm sel"
-            onChange={this.handleChangeReleases}
+          </InputLabel>
+          <NativeSelect
             value={this.state.selectRelease}
+            onChange={this.handleChangeReleases}
+            input={
+              <BootstrapInput
+                name="release"
+                id="age-customized-native-simple"
+              />
+            }
           >
             <option value="" />
             {/* <option value="all">All</option> */}
@@ -227,16 +298,27 @@ class ReleaseFilter extends Component {
                 </option>
               );
             })}
-          </select>
-
-          <label className="sr-only" htmlFor="inlineFormInputGroup">
+          </NativeSelect>
+        </FormControl>
+        <FormControl className={classes.margin}>
+          <InputLabel
+            shrink
+            htmlFor="age-customized-native-simple"
+            className={classes.bootstrapFormLabel}
+            focused={false}
+          >
             Dataset:
-          </label>
-          <select
-            className="form-control form-control-sm sel"
-            onChange={this.handleChangeFields}
+          </InputLabel>
+          <NativeSelect
             value={this.state.selectField}
+            onChange={this.handleChangeFields}
             disabled={!this.isValid()}
+            input={
+              <BootstrapInput
+                name="dataset"
+                id="age-customized-native-simple"
+              />
+            }
           >
             <option value="" />
             {/* <option value="all">All</option> */}
@@ -247,10 +329,22 @@ class ReleaseFilter extends Component {
                 </option>
               );
             })}
-          </select>
-        </form>
-        {this.renderLoading()}
-      </div>
+          </NativeSelect>
+        </FormControl>
+      </form>
+    );
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <AppBar position="static" color="default" className={classes.filter}>
+        <Toolbar variant="dense" style={{ position: 'relative' }}>
+          {this.renderFilter()}
+          {this.renderLoading()}
+        </Toolbar>
+      </AppBar>
     );
   }
 }

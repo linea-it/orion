@@ -1,31 +1,50 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
+import Logo from '../assets/img/icon-des.png';
 
-import logo from '../assets/img/icon-des.png';
-
-const Header = () => {
-  return (
-    <header className="header">
-      <nav className="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
-        <button
-          className="navbar-toggler navbar-toggler-right"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
-        <a href="http://testing.linea.gov.br" className="navbar-brand">
-          <img src={logo} alt="Portal" />
-        </a>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <p className="headerTitle">DES Science Portal Dashboard</p>
-        </div>
-      </nav>
-    </header>
-  );
+const styles = {
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginLeft: -13,
+    marginRight: 10,
+  },
+  AppBar: {
+    boxShadow: 'none',
+  },
 };
 
-export default Header;
+class Header extends React.Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <header className={classes.root}>
+        <AppBar className={classes.AppBar} position="fixed">
+          <Toolbar variant="dense">
+            <IconButton
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Menu"
+            >
+              <img src={Logo} alt="Portal" />
+            </IconButton>
+
+            <Typography variant="h6" color="inherit">
+              DES Science Portal Dashboard
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </header>
+    );
+  }
+}
+
+export default withStyles(styles)(Header);
