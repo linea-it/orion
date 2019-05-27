@@ -1,19 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import theme from '../theme/MaterialTheme';
+import Home from '../views/home/home';
 
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Dashboard from '../views/Dashboard';
-
-export default class App extends Component {
-  render() {
-    return (
-      <div className="app">
-        <Header />
-        <main role="main" className="container-fluid">
-          <Dashboard />
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+function App() {
+  return (
+    <MuiThemeProvider theme={theme}>
+      <Home />
+    </MuiThemeProvider>
+  );
 }
+
+export default App;
