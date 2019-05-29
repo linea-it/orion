@@ -181,7 +181,7 @@ class Stages extends Component {
           onHide={this.onHideModal}
           maximizable={true}
           modal={true}
-          contentStyle={{ padding: '0', marginBottom: '-10px', zIndex: '99' }}
+          contentStyle={{ padding: '0', position: 'relative', zIndex: '10000' }}
         >
           <TableProcess pipelineProcesses={this.state.pipelineProcesses} />
         </Dialog>

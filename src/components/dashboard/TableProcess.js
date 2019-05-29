@@ -475,7 +475,7 @@ class TableProcess extends Component {
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            width: '2.2em',
+            width: 'auto',
           }}
         />
       );
