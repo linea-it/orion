@@ -12,6 +12,7 @@ const styles = {
   appBar: {
     top: 'auto',
     bottom: 0,
+    zIndex: '999',
   },
   toolbar: {
     alignItems: 'center',
