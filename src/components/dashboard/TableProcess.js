@@ -76,22 +76,27 @@ class TableProcess extends Component {
       {
         field: 'release',
         header: 'Release',
+        body: this.renderRelease,
       },
       {
         field: 'dataset',
         header: 'Dataset',
+        body: this.renderDataset,
       },
       {
         field: 'process',
         header: 'Process ID',
+        body: this.renderProcess,
       },
       {
         field: 'start',
         header: 'Start time',
+        body: this.renderStartTime,
       },
       {
         field: 'end',
         header: 'End time',
+        body: this.renderEndTime,
       },
       {
         field: 'version',
@@ -101,10 +106,12 @@ class TableProcess extends Component {
       {
         field: 'duration',
         header: 'Duration',
+        body: this.renderDuration,
       },
       {
         field: 'owner',
         header: 'Owner',
+        body: this.renderOwner,
       },
       {
         field: 'status',
@@ -199,6 +206,34 @@ class TableProcess extends Component {
 
   onHideModal = () => {
     this.setState({ visible: false });
+  };
+
+  renderRelease = rowData => {
+    return <span title={rowData.release}>{rowData.release}</span>;
+  };
+
+  renderDataset = rowData => {
+    return <span title={rowData.dataset}>{rowData.dataset}</span>;
+  };
+
+  renderProcess = rowData => {
+    return <span title={rowData.process}>{rowData.process}</span>;
+  };
+
+  renderStartTime = rowData => {
+    return <span title={rowData.start}>{rowData.start}</span>;
+  };
+
+  renderEndTime = rowData => {
+    return <span title={rowData.end}>{rowData.end}</span>;
+  };
+
+  renderOwner = rowData => {
+    return <span title={rowData.owner}>{rowData.owner}</span>;
+  };
+
+  renderDuration = rowData => {
+    return <span title={rowData.duration}>{rowData.duration}</span>;
   };
 
   actionVersion = rowData => {

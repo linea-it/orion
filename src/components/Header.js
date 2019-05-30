@@ -14,7 +14,7 @@ const styles = {
   },
   AppBar: {
     boxShadow: 'none',
-    zIndex: '999',
+    zIndex: '99',
   },
 };
 
