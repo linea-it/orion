@@ -55,17 +55,6 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
-  fadeLoaderFull: {
-    position: 'absolute',
-    paddingLeft: 'calc((100vw - 100px) / 2)',
-    paddingTop: 'calc(100vh - 300px)',
-  },
-  fadeLoader: {
-    position: 'absolute',
-    paddingLeft: 'calc((100vw - 13px) / 2)',
-    paddingTop: 'calc(100vh - 300px)',
-    zIndex: '999',
-  },
   margin: {
     margin: '0 15px 0 0',
   },
