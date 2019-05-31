@@ -172,6 +172,13 @@ export default class Demo extends React.PureComponent {
     this.setState({ expandedRowIds });
   };
 
+  clearData = () => {
+    this.setState({
+      data: [],
+      loading: false,
+    });
+  };
+
   loadData = async () => {
     const { loading } = this.state;
 
@@ -182,39 +189,34 @@ export default class Demo extends React.PureComponent {
     var processId = this.props.process.process;
 
     const result = await Centaurus.getAllProcessByProcessId(processId);
-    const rows =
-      result.processByProcessId.inputs.edges.length > 0
-        ? result.processByProcessId.inputs.edges.map(
-            e =>
-              new Provenance(
-                Math.random()
-                  .toString(36)
-                  .substr(2, 9),
-                e.node.process.name,
-                e.node.process.processId,
-                e.node.process.productLog,
-                e.node.process.comments,
-                e.node.process.inputs.edges.length > 0 ? [] : undefined
-              )
-          )
-        : undefined;
-    this.setState({
-      data: rows,
-      loading: false,
-    });
-  };
-
-  InsertButton = data => {
-    data.map(el => {
-      el.product_btn = this.renderButtonProduct(el.product);
-      el.comments = this.renderButtonComments(el.comments);
-      if (el.items && el.items.length > 0) {
-        const items = this.InsertButton(el.items);
-        el.items = items;
-      }
-      return data;
-    });
-    return data;
+    if (
+      result &&
+      result.processByProcessId.inputs &&
+      result.processByProcessId.inputs.edges
+    ) {
+      const rows =
+        result.processByProcessId.inputs.edges.length > 0
+          ? result.processByProcessId.inputs.edges.map(
+              e =>
+                new Provenance(
+                  Math.random()
+                    .toString(36)
+                    .substr(2, 9),
+                  e.node.process.name,
+                  e.node.process.processId,
+                  e.node.process.productLog,
+                  e.node.process.comments,
+                  e.node.process.inputs.edges.length > 0 ? [] : undefined
+                )
+            )
+          : undefined;
+      this.setState({
+        data: rows,
+        loading: false,
+      });
+    } else {
+      this.clearData();
+    }
   };
 
   render() {
@@ -226,7 +228,11 @@ export default class Demo extends React.PureComponent {
       loading,
     } = this.state;
 
-    this.InsertButton(data);
+    data.map(row => {
+      row.product_btn = this.renderButtonProduct(row.product);
+      row.comments = this.renderButtonComments(row.comments);
+      return row;
+    });
 
     return (
       <Paper style={{ position: 'relative', zIndex: '999' }}>
