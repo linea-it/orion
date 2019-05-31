@@ -53,14 +53,17 @@ class Stages extends Component {
       {
         field: 'pipeline',
         header: 'Pipeline',
+        body: this.renderPipeline,
       },
       {
         field: 'start',
         header: 'Start',
+        body: this.renderStart,
       },
       {
         field: 'duration',
         header: 'Duration',
+        body: this.renderDuration,
       },
       {
         field: 'runs',
@@ -103,6 +106,18 @@ class Stages extends Component {
 
   onHideModal = () => {
     this.setState({ visible: false });
+  };
+
+  renderPipeline = rowData => {
+    return <span title={rowData.pipeline}>{rowData.pipeline}</span>;
+  };
+
+  renderStart = rowData => {
+    return <span title={rowData.start}>{rowData.start}</span>;
+  };
+
+  renderDuration = rowData => {
+    return <span title={rowData.duration}>{rowData.duration}</span>;
   };
 
   actionRuns = rowData => {
