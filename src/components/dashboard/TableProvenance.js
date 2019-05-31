@@ -39,44 +39,40 @@ const styles = {
   },
 };
 
-const tableContainerComponent = ({ style, ...restProps }) => (
+const tableContainerComponent = ({ ...restProps }) => (
   <Table.Container
     {...restProps}
     style={{
       maxHeight: '500px',
       overflow: 'auto',
-      ...style,
     }}
   />
 );
 
-const Cell = ({ style, ...restProps }) => (
+const Cell = ({ ...restProps }) => (
   <Table.Cell
     {...restProps}
     style={{
       fontSize: '1em',
-      ...style,
     }}
   />
 );
 
-const tableHeaderRowCell = ({ style, ...restProps }) => (
+const tableHeaderRowCell = ({ ...restProps }) => (
   <TableHeaderRow.Cell
     {...restProps}
     style={{
       color: '#555555',
       fontSize: '1em',
-      ...style,
     }}
   />
 );
 
-const tableTreeColumnCell = ({ style, ...restProps }) => (
+const tableTreeColumnCell = ({ ...restProps }) => (
   <TableTreeColumn.Cell
     {...restProps}
     style={{
       fontSize: '1em',
-      ...style,
     }}
   />
 );
