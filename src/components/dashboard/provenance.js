@@ -24,21 +24,29 @@ export default class Provenance {
 
   async getChild() {
     const inputs = await Centaurus.getAllProcessByProcessId(this.process);
-    this.items =
-      inputs.processByProcessId.inputs.edges.length > 0
-        ? inputs.processByProcessId.inputs.edges.map(
-            e =>
-              new Provenance(
-                Math.random()
-                  .toString(36)
-                  .substr(2, 9),
-                e.node.process.name,
-                e.node.process.processId,
-                e.node.process.productLog,
-                e.node.process.comments,
-                e.node.process.inputs.edges.length > 0 ? [] : undefined
-              )
-          )
-        : undefined;
+    if (
+      inputs &&
+      inputs.processByProcessId.inputs &&
+      inputs.processByProcessId.inputs.edges
+    ) {
+      this.items =
+        inputs.processByProcessId.inputs.edges.length > 0
+          ? inputs.processByProcessId.inputs.edges.map(
+              e =>
+                new Provenance(
+                  Math.random()
+                    .toString(36)
+                    .substr(2, 9),
+                  e.node.process.name,
+                  e.node.process.processId,
+                  e.node.process.productLog,
+                  e.node.process.comments,
+                  e.node.process.inputs.edges.length > 0 ? [] : undefined
+                )
+            )
+          : undefined;
+    } else {
+      return [];
+    }
   }
 }

@@ -49,18 +49,22 @@ class TableProducts extends Component {
       {
         field: 'process',
         header: 'Process ID',
+        body: this.renderProcess,
       },
       {
         field: 'product',
         header: 'Product Name',
+        body: this.renderProductName,
       },
       {
         field: 'type',
         header: 'Type',
+        body: this.renderType,
       },
       {
         field: 'class',
         header: 'Class',
+        body: this.renderClass,
       },
       // {
       //   field: 'provenance',
@@ -85,6 +89,7 @@ class TableProducts extends Component {
       {
         field: 'dataType',
         header: 'Data Type',
+        body: this.renderDataType,
       },
       // {
       //   field: 'download',
@@ -132,6 +137,26 @@ class TableProducts extends Component {
 
   onHideModal = () => {
     this.setState({ visible: false });
+  };
+
+  renderProcess = rowData => {
+    return <span title={rowData.process}>{rowData.process}</span>;
+  };
+
+  renderProductName = rowData => {
+    return <span title={rowData.product}>{rowData.product}</span>;
+  };
+
+  renderType = rowData => {
+    return <span title={rowData.type}>{rowData.type}</span>;
+  };
+
+  renderClass = rowData => {
+    return <span title={rowData.class}>{rowData.class}</span>;
+  };
+
+  renderDataType = rowData => {
+    return <span title={rowData.dataType}>{rowData.dataType}</span>;
   };
 
   actionProvenance = rowData => {

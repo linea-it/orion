@@ -2,9 +2,10 @@ import Lokka from 'lokka';
 import Transport from 'lokka-transport-http';
 
 const apiUrl =
-  process.env.NODE_ENV !== 'development'
-    ? window.origin + '/api/graphql'
-    : process.env.REACT_APP_API;
+  process.env.NODE_ENV === 'production'
+    ? window._env_.REACT_APP_API_URL
+    : process.env.REACT_APP_API_URL;
+
 const client = new Lokka({
   transport: new Transport(apiUrl),
 });
@@ -27,6 +28,8 @@ export default class Centaurus {
       `);
       return releaseTag;
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       return null;
     }
   }
@@ -44,6 +47,8 @@ export default class Centaurus {
       `);
       return fieldsTag;
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       return null;
     }
   }
@@ -66,6 +71,8 @@ export default class Centaurus {
       `);
       return pipelineStage;
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       return null;
     }
   }
@@ -89,6 +96,8 @@ export default class Centaurus {
       `);
       return pipelinesStageId;
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       return null;
     }
   }
@@ -131,6 +140,8 @@ export default class Centaurus {
       `);
       return pipelineProcesse;
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       return null;
     }
   }
@@ -156,6 +167,8 @@ export default class Centaurus {
       `);
       return productsProcess;
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       return null;
     }
   }
@@ -175,6 +188,8 @@ export default class Centaurus {
       `);
       return versionProcess;
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       return null;
     }
   }
@@ -194,6 +209,8 @@ export default class Centaurus {
       `);
       return commentsProcess;
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       return null;
     }
   }
@@ -231,6 +248,8 @@ export default class Centaurus {
       `);
       return processByProcessId;
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       return null;
     }
   }

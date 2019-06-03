@@ -55,17 +55,6 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
-  fadeLoaderFull: {
-    position: 'absolute',
-    paddingLeft: 'calc((100vw - 100px) / 2)',
-    paddingTop: 'calc(100vh - 300px)',
-  },
-  fadeLoader: {
-    position: 'absolute',
-    paddingLeft: 'calc((100vw - 13px) / 2)',
-    paddingTop: 'calc(100vh - 300px)',
-    zIndex: '999',
-  },
   margin: {
     margin: '0 15px 0 0',
   },
@@ -234,12 +223,17 @@ class ReleaseFilter extends Component {
               row => {
                 const startTime = moment(row.process.startTime);
                 const endTime = moment(row.process.endTime);
+                const diff = endTime.diff(startTime);
+                const duration = moment.utc(diff).format('HH:mm:ss');
                 return {
                   pipeline: row.displayName,
                   pipelineId: row.pipelineId,
                   fieldId: this.state.selectField,
                   start: row.process.startTime,
-                  duration: moment(endTime.diff(startTime)).format('hh:mm:ss'),
+                  duration:
+                    row.process.startTime && row.process.endTime !== null
+                      ? duration
+                      : '-',
                   runs: row.process.processCount,
                   status: row.process.status,
                 };
