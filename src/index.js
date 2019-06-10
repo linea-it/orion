@@ -13,6 +13,8 @@ import 'primeicons/primeicons.css';
 import './assets/css/dashboard.css';
 
 import registerServiceWorker from './registerServiceWorker';
+require('dotenv').config();
+
 const history = createBrowserHistory();
 
 ReactDOM.render(
