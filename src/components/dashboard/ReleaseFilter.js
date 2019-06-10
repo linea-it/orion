@@ -17,7 +17,7 @@ import moment from 'moment';
 const BootstrapInput = withStyles(theme => ({
   root: {
     'label + &': {
-      marginLeft: theme.spacing.unit * 8,
+      marginLeft: theme.spacing.unit * 9,
     },
   },
   input: {
@@ -61,9 +61,8 @@ const styles = theme => ({
   bootstrapFormLabel: {
     color: '#fff',
     top: '50%',
-    margin: '-8px 0 0',
-    fontSize: '20px',
-    fontWeight: 'bold',
+    margin: '-10px 0 0',
+    fontSize: '23px',
   },
   filter: {
     color: theme.palette.primary.contrastText,
