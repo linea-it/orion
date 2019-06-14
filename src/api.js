@@ -114,8 +114,13 @@ export default class Centaurus {
             startTime
             endTime
             flagPublished
+            publishedDate
             comments
             productLog
+            savedProcesses {
+              savedDate
+              savedDateEnd
+            }
             processStatus {
               name
             }

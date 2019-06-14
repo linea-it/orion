@@ -220,6 +220,12 @@ class ReleaseFilter extends Component {
           rows: {
             pipelinesByFieldIdAndStageId: rows.pipelinesByFieldIdAndStageId.map(
               row => {
+                const startDateSplit = row.process.startTime
+                  ? row.process.startTime.split('T')[1]
+                  : null;
+                const startTimeSplit = row.process.startTime
+                  ? row.process.startTime.split('T')[0]
+                  : null;
                 const startTime = moment(row.process.startTime);
                 const endTime = moment(row.process.endTime);
                 const diff = endTime.diff(startTime);
@@ -228,7 +234,8 @@ class ReleaseFilter extends Component {
                   pipeline: row.displayName,
                   pipelineId: row.pipelineId,
                   fieldId: this.state.selectField,
-                  start: row.process.startTime,
+                  start: startDateSplit,
+                  startTime: startTimeSplit,
                   duration:
                     row.process.startTime && row.process.endTime !== null
                       ? duration

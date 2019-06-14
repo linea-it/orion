@@ -21,6 +21,7 @@ const styles = {
     minHeight: '2em',
     display: 'block',
     margin: '0 auto',
+    fontSize: '1em',
   },
   btnSuccess: {
     backgroundColor: 'green',
@@ -113,7 +114,7 @@ class Stages extends Component {
   };
 
   renderStart = rowData => {
-    return <span title={rowData.start}>{rowData.start}</span>;
+    return <span title={rowData.start}>{rowData.startTime}</span>;
   };
 
   renderDuration = rowData => {
@@ -188,16 +189,23 @@ class Stages extends Component {
         ' (' +
         this.state.currentProcess.runs +
         ')';
+      const header = (
+        <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>{title}</span>
+      );
       return (
         <Dialog
-          header={title}
+          header={header}
           visible={this.state.visible}
           width="90%"
           onHide={this.onHideModal}
           maximizable={true}
           modal={true}
           style={{ zIndex: '999' }}
-          contentStyle={{ padding: '0', position: 'relative', zIndex: '10000' }}
+          contentStyle={{
+            padding: '0',
+            position: 'relative',
+            zIndex: '10000',
+          }}
         >
           <TableProcess pipelineProcesses={this.state.pipelineProcesses} />
         </Dialog>
@@ -216,6 +224,12 @@ class Stages extends Component {
     if (pipelineProcesse && pipelineProcesse.processesByFieldIdAndPipelineId) {
       const pipelineProcessesLocal = pipelineProcesse.processesByFieldIdAndPipelineId.map(
         row => {
+          const startDateSplit = row.startTime
+            ? row.startTime.split('T')[0]
+            : null;
+          const startTimeSplit = row.startTime
+            ? row.startTime.split('T')[1]
+            : null;
           const startTime = moment(row.startTime);
           const endTime = moment(row.endTime);
           const diff = endTime.diff(startTime);
@@ -232,13 +246,14 @@ class Stages extends Component {
               })
               .join(', '),
             process: row.processId,
-            start: row.startTime,
+            start: startDateSplit,
             end: row.endTime,
+            time: startTimeSplit,
             duration: row.startTime && row.endTime !== null ? duration : '-',
             owner: row.session.user.displayName,
             status: row.processStatus.name,
-            saved: row.flagPublished,
-            published: row.flagPublished,
+            saved: row.savedProcesses,
+            published: row.publishedDate,
             comments: row.comments,
             product: row.productLog,
           };
@@ -266,12 +281,13 @@ class Stages extends Component {
           key={i}
           field={col.field}
           header={col.header}
-          sortable={true}
+          // sortable={true}
           body={col.body}
           style={{
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            padding: '0.25em 0.857em',
           }}
         />
       );
@@ -291,7 +307,7 @@ class Stages extends Component {
           selection={this.state.selectedCar1}
           onSelectionChange={e => this.setState({ selectedCar1: e.data })}
           scrollable={true}
-          scrollHeight="200px"
+          // scrollHeight="200px"
           loading={this.state.loading}
         >
           {columns}

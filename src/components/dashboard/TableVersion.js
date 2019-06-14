@@ -52,7 +52,7 @@ class TableVersion extends Component {
           key={i}
           field={col.field}
           header={col.header}
-          sortable={true}
+          // sortable={true}
           body={col.body}
         />
       );

@@ -8,6 +8,7 @@ import { Dialog } from 'primereact/dialog';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import moment from 'moment';
 
 import Centaurus from '../../api';
@@ -90,23 +91,28 @@ class TableProcess extends Component {
       },
       {
         field: 'start',
-        header: 'Start time',
-        body: this.renderStartTime,
+        header: 'Start Date',
+        body: this.renderStartDate,
       },
       {
-        field: 'end',
-        header: 'End time',
-        body: this.renderEndTime,
+        field: 'time',
+        header: 'Start Time',
+        body: this.renderStartTime,
+      },
+      // {
+      //   field: 'end',
+      //   header: 'End time',
+      //   body: this.renderEndTime,
+      // },
+      {
+        field: 'duration',
+        header: 'Duration',
+        body: this.renderDuration,
       },
       {
         field: 'version',
         header: 'Version',
         body: this.actionVersion,
-      },
-      {
-        field: 'duration',
-        header: 'Duration',
-        body: this.renderDuration,
       },
       {
         field: 'owner',
@@ -220,8 +226,12 @@ class TableProcess extends Component {
     return <span title={rowData.process}>{rowData.process}</span>;
   };
 
-  renderStartTime = rowData => {
+  renderStartDate = rowData => {
     return <span title={rowData.start}>{rowData.start}</span>;
+  };
+
+  renderStartTime = rowData => {
+    return <span title={rowData.time}>{rowData.time}</span>;
   };
 
   renderEndTime = rowData => {
@@ -238,11 +248,7 @@ class TableProcess extends Component {
 
   actionVersion = rowData => {
     return (
-      <Button
-        style={styles.btnIco}
-        title={rowData.version}
-        onClick={() => this.onShowVersion(rowData)}
-      >
+      <Button style={styles.btnIco} onClick={() => this.onShowVersion(rowData)}>
         <Icon>format_list_bulleted</Icon>
       </Button>
     );
@@ -252,19 +258,31 @@ class TableProcess extends Component {
     const { classes } = this.props;
     if (rowData.status === 'failure') {
       return (
-        <span className={classes.btnStatus} style={styles.btnFailure}>
+        <span
+          title={rowData.status}
+          className={classes.btnStatus}
+          style={styles.btnFailure}
+        >
           Failure
         </span>
       );
     } else if (rowData.status === 'running') {
       return (
-        <span className={classes.btnStatus} style={styles.btnRunning}>
+        <span
+          title={rowData.status}
+          className={classes.btnStatus}
+          style={styles.btnRunning}
+        >
           Running
         </span>
       );
     } else {
       return (
-        <span className={classes.btnStatus} style={styles.btnSuccess}>
+        <span
+          title={rowData.status}
+          className={classes.btnStatus}
+          style={styles.btnSuccess}
+        >
           Success
         </span>
       );
@@ -273,14 +291,26 @@ class TableProcess extends Component {
 
   actionSaved = rowData => {
     const { classes } = this.props;
-    if (rowData.saved !== false) {
-      return (
-        <span className={classes.icoCheck} style={styles.btnIco}>
-          <Icon>check</Icon>
-        </span>
-      );
-    } else {
-      return <span style={styles.mark}>-</span>;
+
+    if (rowData.saved) {
+      const tooltDate = rowData.saved.savedDateEnd.split('T')[0];
+
+      if (rowData.saved.savedDateEnd === null) {
+        return (
+          <CircularProgress
+            disableShrink
+            style={{ width: '25px', height: '25px' }}
+          />
+        );
+      } else {
+        return (
+          <Icon title={tooltDate} className={classes.icoCheck}>
+            check
+          </Icon>
+        );
+      }
+    } else if (rowData.saved === null) {
+      return '-';
     }
   };
 
@@ -299,9 +329,15 @@ class TableProcess extends Component {
 
   actionPublished = rowData => {
     const { classes } = this.props;
-    if (rowData.published !== false) {
+
+    if (rowData.published) {
+      const publishedDate = rowData.saved.savedDateEnd.split('T')[0];
       return (
-        <span className={classes.icoCheck} style={styles.btnIco}>
+        <span
+          title={publishedDate}
+          className={classes.icoCheck}
+          style={styles.btnIco}
+        >
           <Icon>check</Icon>
         </span>
       );
@@ -397,9 +433,13 @@ class TableProcess extends Component {
   };
 
   renderModal = () => {
+    const title = this.state.modalType;
+    const header = (
+      <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>{title}</span>
+    );
     return (
       <Dialog
-        header={this.state.modalType}
+        header={header}
         visible={this.state.visible}
         width="50%"
         onHide={this.onHideModal}
@@ -504,13 +544,14 @@ class TableProcess extends Component {
           key={i}
           field={col.field}
           header={col.header}
-          sortable={true}
+          // sortable={true}
           body={col.body}
           style={{
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             width: 'auto',
+            padding: '0.25em 0.857em',
           }}
         />
       );
