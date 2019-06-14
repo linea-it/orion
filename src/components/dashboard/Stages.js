@@ -21,6 +21,7 @@ const styles = {
     minHeight: '2em',
     display: 'block',
     margin: '0 auto',
+    fontSize: '1em',
   },
   btnSuccess: {
     backgroundColor: 'green',
@@ -306,7 +307,7 @@ class Stages extends Component {
           selection={this.state.selectedCar1}
           onSelectionChange={e => this.setState({ selectedCar1: e.data })}
           scrollable={true}
-          scrollHeight="200px"
+          // scrollHeight="200px"
           loading={this.state.loading}
         >
           {columns}
