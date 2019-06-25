@@ -9,8 +9,8 @@ This App is LIneA's Science Portal Dashboard
 **1. Clone the repository and create .env**
 
 ```bash
-git clone https://github.com/linea-it/polaris.git
-cd polaris
+git clone https://github.com/linea-it/orion.git
+cd orion
 cp .env.template .env
 ```
 
