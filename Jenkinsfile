@@ -16,6 +16,11 @@ pipeline {
                 sh 'yarn lint'
             }
         }
+        stage('Creating version.json') {
+            steps {
+                sh './version.sh && cat ./src/assets/json/version.json'
+            }
+        }
         stage('Building and push image') {
             when {
                 allOf {
