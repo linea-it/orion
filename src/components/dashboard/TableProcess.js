@@ -432,7 +432,6 @@ class TableProcess extends Component {
   };
 
   renderContentModal = () => {
-    console.log(this.state.modalType);
     if (this.state.modalType === 'Version') {
       return <TableVersion versionProcess={this.state.versionProcess} />;
     } else if (this.state.modalType === 'Provenance') {
@@ -494,8 +493,6 @@ class TableProcess extends Component {
           dataset: datasets[i],
         };
       });
-
-      console.log(rows);
 
       this.setState({
         rowsDatasetProcess: rows,

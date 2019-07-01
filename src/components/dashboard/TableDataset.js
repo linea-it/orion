@@ -42,8 +42,6 @@ class TableDataset extends Component {
   };
 
   render() {
-    // console.log(this.props);
-
     const columns = this.state.cols.map((col, i) => {
       return (
         <Column
