@@ -303,7 +303,7 @@ class TableProcess extends Component {
   actionSaved = rowData => {
     const { classes } = this.props;
 
-    if (rowData.saved) {
+    if (rowData.saved && rowData.saved.savedDateEnd) {
       const tooltDate = rowData.saved.savedDateEnd.split('T')[0];
 
       if (rowData.saved.savedDateEnd === null) {
@@ -341,7 +341,7 @@ class TableProcess extends Component {
   actionPublished = rowData => {
     const { classes } = this.props;
 
-    if (rowData.published) {
+    if (rowData.saved && rowData.saved.savedDateEnd) {
       const publishedDate = rowData.saved.savedDateEnd.split('T')[0];
       return (
         <span
