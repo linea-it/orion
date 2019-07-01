@@ -480,12 +480,8 @@ class TableProcess extends Component {
 
   loadTableDatasets = rowData => {
     if (rowData) {
-      let releases = rowData.release.split(', ');
-      let datasets = rowData.dataset.split(', ');
-
-      releases = releases.filter((el, i) => releases.indexOf(el) === i);
-
-      datasets = datasets.filter((el, i) => datasets.indexOf(el) === i);
+      const releases = rowData.release.split(', ');
+      const datasets = rowData.dataset.split(', ');
 
       const rows = releases.map((el, i) => {
         return {
