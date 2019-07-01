@@ -17,6 +17,7 @@ import TableVersion from './TableVersion';
 import TableProvenance from './TableProvenance';
 import Comments from './comments';
 import TableProducts from './TableProducts';
+import TableDataset from './TableDataset';
 
 const styles = {
   btnIco: {
@@ -75,16 +76,6 @@ class TableProcess extends Component {
 
     const columns = [
       {
-        field: 'release',
-        header: 'Release',
-        body: this.renderRelease,
-      },
-      {
-        field: 'dataset',
-        header: 'Dataset',
-        body: this.renderDataset,
-      },
-      {
         field: 'process',
         header: 'Process ID',
         body: this.renderProcess,
@@ -140,6 +131,11 @@ class TableProcess extends Component {
         body: this.actionPublished,
       },
       {
+        field: 'dataset',
+        header: 'Dataset',
+        body: this.renderDataset,
+      },
+      {
         field: 'provenance',
         header: 'Provenance',
         body: this.actionProvenance,
@@ -171,6 +167,7 @@ class TableProcess extends Component {
       loading: false,
       visible: false,
       productsProcess: [],
+      rowsDatasetProcess: {},
       versionProcess: [],
       commentsProcess: [],
       processByProcessId: [],
@@ -186,6 +183,11 @@ class TableProcess extends Component {
   onShowVersion = rowData => {
     this.onClickModal(rowData, 'Version');
     this.loadTableVersion(rowData.process);
+  };
+
+  onShowDatasets = rowData => {
+    this.onClickModal(rowData, 'Datasets');
+    this.loadTableDatasets(rowData);
   };
 
   onShowProvenance = rowData => {
@@ -214,12 +216,21 @@ class TableProcess extends Component {
     this.setState({ visible: false });
   };
 
-  renderRelease = rowData => {
-    return <span title={rowData.release}>{rowData.release}</span>;
-  };
-
   renderDataset = rowData => {
-    return <span title={rowData.dataset}>{rowData.dataset}</span>;
+    const datasets = rowData.dataset.split(', ');
+    if (datasets.length <= 1) {
+      return <span title={rowData.dataset}>{rowData.dataset}</span>;
+    }
+    return (
+      <React.Fragment>
+        <Button
+          style={styles.btnIco}
+          onClick={() => this.onShowDatasets(rowData)}
+        >
+          <Icon>format_list_bulleted</Icon>
+        </Button>
+      </React.Fragment>
+    );
   };
 
   renderProcess = rowData => {
@@ -421,6 +432,7 @@ class TableProcess extends Component {
   };
 
   renderContentModal = () => {
+    console.log(this.state.modalType);
     if (this.state.modalType === 'Version') {
       return <TableVersion versionProcess={this.state.versionProcess} />;
     } else if (this.state.modalType === 'Provenance') {
@@ -429,6 +441,10 @@ class TableProcess extends Component {
       return <TableProducts productsProcess={this.state.productsProcess} />;
     } else if (this.state.modalType === 'Comments') {
       return <Comments commentsProcess={this.state.commentsProcess} />;
+    } else if (this.state.modalType === 'Datasets') {
+      return (
+        <TableDataset rowsDatasetProcess={this.state.rowsDatasetProcess} />
+      );
     }
   };
 
@@ -461,6 +477,32 @@ class TableProcess extends Component {
         {this.renderContentModal()}
       </Dialog>
     );
+  };
+
+  loadTableDatasets = rowData => {
+    if (rowData) {
+      let releases = rowData.release.split(', ');
+      let datasets = rowData.dataset.split(', ');
+
+      releases = releases.filter((el, i) => releases.indexOf(el) === i);
+
+      datasets = datasets.filter((el, i) => datasets.indexOf(el) === i);
+
+      const rows = releases.map((el, i) => {
+        return {
+          release: el,
+          dataset: datasets[i],
+        };
+      });
+
+      console.log(rows);
+
+      this.setState({
+        rowsDatasetProcess: rows,
+      });
+    } else {
+      return null;
+    }
   };
 
   loadTableVersion = async currentVersion => {
