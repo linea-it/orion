@@ -220,49 +220,82 @@ class TableProcess extends Component {
     const datasets = rowData.dataset.split(', ');
     if (datasets.length <= 1) {
       return <span title={rowData.dataset}>{rowData.dataset}</span>;
+    } else if (rowData) {
+      return (
+        <React.Fragment>
+          <Button
+            style={styles.btnIco}
+            onClick={() => this.onShowDatasets(rowData)}
+          >
+            <Icon>format_list_bulleted</Icon>
+          </Button>
+        </React.Fragment>
+      );
     }
-    return (
-      <React.Fragment>
-        <Button
-          style={styles.btnIco}
-          onClick={() => this.onShowDatasets(rowData)}
-        >
-          <Icon>format_list_bulleted</Icon>
-        </Button>
-      </React.Fragment>
-    );
+    return '-';
   };
 
   renderProcess = rowData => {
-    return <span title={rowData.process}>{rowData.process}</span>;
+    if (rowData && rowData.process) {
+      return <span title={rowData.process}>{rowData.process}</span>;
+    } else {
+      return '-';
+    }
   };
 
   renderStartDate = rowData => {
-    return <span title={rowData.start}>{rowData.start}</span>;
+    if (rowData && rowData.start) {
+      return <span title={rowData.start}>{rowData.start}</span>;
+    } else {
+      return '-';
+    }
   };
 
   renderStartTime = rowData => {
-    return <span title={rowData.time}>{rowData.time}</span>;
+    if (rowData && rowData.time) {
+      return <span title={rowData.time}>{rowData.time}</span>;
+    } else {
+      return '-';
+    }
   };
 
   renderEndTime = rowData => {
-    return <span title={rowData.end}>{rowData.end}</span>;
+    if (rowData && rowData.end) {
+      return <span title={rowData.end}>{rowData.end}</span>;
+    } else {
+      return '-';
+    }
   };
 
   renderOwner = rowData => {
-    return <span title={rowData.owner}>{rowData.owner}</span>;
+    if (rowData && rowData.owner) {
+      return <span title={rowData.owner}>{rowData.owner}</span>;
+    } else {
+      return '-';
+    }
   };
 
   renderDuration = rowData => {
-    return <span title={rowData.duration}>{rowData.duration}</span>;
+    if (rowData && rowData.duration) {
+      return <span title={rowData.duration}>{rowData.duration}</span>;
+    } else {
+      return '-';
+    }
   };
 
   actionVersion = rowData => {
-    return (
-      <Button style={styles.btnIco} onClick={() => this.onShowVersion(rowData)}>
-        <Icon>format_list_bulleted</Icon>
-      </Button>
-    );
+    if (rowData && rowData.duration) {
+      return (
+        <Button
+          style={styles.btnIco}
+          onClick={() => this.onShowVersion(rowData)}
+        >
+          <Icon>format_list_bulleted</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
   };
 
   actionStatus = rowData => {
@@ -303,7 +336,7 @@ class TableProcess extends Component {
   actionSaved = rowData => {
     const { classes } = this.props;
 
-    if (rowData.saved) {
+    if (rowData && rowData.saved && rowData.saved.savedDateEnd) {
       const tooltDate = rowData.saved.savedDateEnd.split('T')[0];
 
       if (rowData.saved.savedDateEnd === null) {
@@ -327,21 +360,25 @@ class TableProcess extends Component {
 
   actionShare = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.share}
-      >
-        <Icon>share</Icon>
-      </Button>
-    );
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.share}
+        >
+          <Icon>share</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
   };
 
   actionPublished = rowData => {
     const { classes } = this.props;
 
-    if (rowData.published) {
+    if (rowData && rowData.saved && rowData.saved.savedDateEnd) {
       const publishedDate = rowData.saved.savedDateEnd.split('T')[0];
       return (
         <span
@@ -359,21 +396,24 @@ class TableProcess extends Component {
 
   actionProvenance = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.provenance}
-        onClick={() => this.onShowProvenance(rowData)}
-      >
-        <Icon>device_hub</Icon>
-      </Button>
-    );
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.provenance}
+          onClick={() => this.onShowProvenance(rowData)}
+        >
+          <Icon>device_hub</Icon>
+        </Button>
+      );
+    }
+    return '-';
   };
 
   actionProduct = rowData => {
     const { classes } = this.props;
-    if (rowData.product !== null) {
+    if (rowData && rowData.product !== null) {
       return (
         <Button
           className={classes.button}
@@ -391,44 +431,56 @@ class TableProcess extends Component {
 
   actionProducts = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.products}
-        onClick={() => this.onShowProducts(rowData)}
-      >
-        <Icon>view_list</Icon>
-      </Button>
-    );
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.products}
+          onClick={() => this.onShowProducts(rowData)}
+        >
+          <Icon>view_list</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
   };
 
   actionComments = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.comments}
-        onClick={() => this.onShowComments(rowData)}
-      >
-        <Icon>comment</Icon>
-      </Button>
-    );
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.comments}
+          onClick={() => this.onShowComments(rowData)}
+        >
+          <Icon>comment</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
   };
 
   actionExport = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.export}
-        onClick={() => this.onShowExport(rowData)}
-      >
-        <Icon>import_export</Icon>
-      </Button>
-    );
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.export}
+          onClick={() => this.onShowExport(rowData)}
+        >
+          <Icon>import_export</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
   };
 
   renderContentModal = () => {

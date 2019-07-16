@@ -140,51 +140,80 @@ class TableProducts extends Component {
   };
 
   renderProcess = rowData => {
-    return <span title={rowData.process}>{rowData.process}</span>;
+    if (rowData && rowData.process) {
+      return <span title={rowData.process}>{rowData.process}</span>;
+    } else {
+      return '-';
+    }
   };
 
   renderProductName = rowData => {
-    return <span title={rowData.product}>{rowData.product}</span>;
+    if (rowData && rowData.product) {
+      return <span title={rowData.product}>{rowData.product}</span>;
+    } else {
+      return '-';
+    }
   };
 
   renderType = rowData => {
-    return <span title={rowData.type}>{rowData.type}</span>;
+    if (rowData && rowData.type) {
+      return <span title={rowData.type}>{rowData.type}</span>;
+    } else {
+      return '-';
+    }
   };
 
   renderClass = rowData => {
-    return <span title={rowData.class}>{rowData.class}</span>;
+    if (rowData && rowData.class) {
+      return <span title={rowData.class}>{rowData.class}</span>;
+    } else {
+      return '-';
+    }
   };
 
   renderDataType = rowData => {
-    return <span title={rowData.dataType}>{rowData.dataType}</span>;
+    if (rowData && rowData.dataType) {
+      return <span title={rowData.dataType}>{rowData.dataType}</span>;
+    } else {
+      return '-';
+    }
   };
 
   actionProvenance = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.provenance}
-        onClick={() => this.onShowProvenance(rowData)}
-      >
-        <Icon>device_hub</Icon>
-      </Button>
-    );
+
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.provenance}
+          onClick={() => this.onShowProvenance(rowData)}
+        >
+          <Icon>device_hub</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
   };
 
   actionViewer = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.viewer}
-        onClick={() => this.onShowViewer(rowData)}
-      >
-        <Icon>warning</Icon>
-      </Button>
-    );
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.viewer}
+          onClick={() => this.onShowViewer(rowData)}
+        >
+          <Icon>warning</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
   };
 
   actionDatabase = rowData => {
@@ -207,29 +236,36 @@ class TableProducts extends Component {
 
   actionExported = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.exported}
-      >
-        <Icon>more_horiz</Icon>
-      </Button>
-    );
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.exported}
+        >
+          <Icon>more_horiz</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
   };
 
   actionDownload = rowData => {
     const { classes } = this.props;
-    return (
-      <Button
-        className={classes.button}
-        style={styles.btnIco}
-        title={rowData.provenance}
-        onClick={() => this.onShowDownload(rowData)}
-      >
-        <Icon>cloud_download</Icon>
-      </Button>
-    );
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.provenance}
+          onClick={() => this.onShowDownload(rowData)}
+        >
+          <Icon>cloud_download</Icon>
+        </Button>
+      );
+    }
+    return '-';
   };
 
   renderContentModal = () => {
