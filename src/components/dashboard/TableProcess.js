@@ -131,6 +131,11 @@ class TableProcess extends Component {
         body: this.actionPublished,
       },
       {
+        field: 'release',
+        header: 'Release',
+        body: this.renderRelease,
+      },
+      {
         field: 'dataset',
         header: 'Dataset',
         body: this.renderDataset,
@@ -214,6 +219,10 @@ class TableProcess extends Component {
 
   onHideModal = () => {
     this.setState({ visible: false });
+  };
+
+  renderProcess = rowData => {
+    return <span title={rowData.release}>{rowData.release}</span>;
   };
 
   renderDataset = rowData => {
