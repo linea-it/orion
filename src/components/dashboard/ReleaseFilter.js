@@ -106,6 +106,7 @@ class ReleaseFilter extends Component {
 
   handleChangeReleases = evt => {
     this.setState({ selectRelease: evt.target.value });
+
     if (evt.target.value !== '') {
       this.loadFields(evt.target.value);
       this.props.saveStage([]);
@@ -157,7 +158,13 @@ class ReleaseFilter extends Component {
         };
       });
       this.setState({
-        optsRelease: optsReleaseLocal,
+        optsRelease: [
+          {
+            id: 0,
+            releaseDisplayName: 'All',
+            tagId: 0,
+          },
+        ].concat(optsReleaseLocal),
       });
     } else {
       return null;
@@ -176,7 +183,13 @@ class ReleaseFilter extends Component {
         };
       });
       this.setState({
-        optsFields: optsFieldsLocal,
+        optsFields: [
+          {
+            id: 0,
+            displayName: 'All',
+            fieldId: 0,
+          },
+        ].concat(optsFieldsLocal),
       });
     } else {
       this.clearFields();
@@ -210,6 +223,7 @@ class ReleaseFilter extends Component {
     const tableStage = await Promise.all(
       pipelineStages.map(async stage => {
         const rows = await Centaurus.getAllPipelinesByFieldIdAndStageId(
+          this.state.selectRelease,
           this.state.selectField,
           stage.id
         );
@@ -233,6 +247,7 @@ class ReleaseFilter extends Component {
                 return {
                   pipeline: row.displayName,
                   pipelineId: row.pipelineId,
+                  tagId: this.state.selectRelease,
                   fieldId: this.state.selectField,
                   start: startDateSplit,
                   startTime: startTimeSplit,
@@ -249,6 +264,7 @@ class ReleaseFilter extends Component {
         };
       })
     );
+
     this.props.saveStage(tableStage);
     this.loadEnd();
   };

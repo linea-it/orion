@@ -216,13 +216,17 @@ class Stages extends Component {
   };
 
   loadTableProcesses = async currentProcess => {
-    const pipelineProcesse = await Centaurus.getAllProcessesByFieldIdAndPipelineId(
+    const pipelineProcesses = await Centaurus.getAllProcessesByFieldIdAndPipelineId(
+      currentProcess.tagId,
       currentProcess.fieldId,
       currentProcess.pipelineId
     );
 
-    if (pipelineProcesse && pipelineProcesse.processesByFieldIdAndPipelineId) {
-      const pipelineProcessesLocal = pipelineProcesse.processesByFieldIdAndPipelineId.map(
+    if (
+      pipelineProcesses &&
+      pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
+    ) {
+      const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId.map(
         row => {
           const startDateSplit = row.startTime
             ? row.startTime.split('T')[0]

@@ -36,15 +36,40 @@ export default class Centaurus {
 
   static async getAllFieldsTag(dataRelease) {
     try {
-      const fieldsTag = await client.query(`
+      let fieldsTag = [];
+      if (dataRelease === '0') {
+        fieldsTag = await client.query(`
         {
-          fieldsByTagId(tagId: ${dataRelease}) {
-            id
-            displayName
-            fieldId
+          fieldsList {
+            edges {
+              node {
+                id
+                displayName
+                fieldId
+              }
+            }
           }
         }
       `);
+
+        fieldsTag = {
+          fieldsByTagId: fieldsTag.fieldsList.edges.map(field => ({
+            id: field.node.id,
+            displayName: field.node.displayName,
+            fieldId: field.node.fieldId,
+          })),
+        };
+      } else {
+        fieldsTag = await client.query(`
+          {
+            fieldsByTagId(tagId: ${dataRelease}) {
+              id
+              displayName
+              fieldId
+            }
+          }
+        `);
+      }
       return fieldsTag;
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -77,24 +102,44 @@ export default class Centaurus {
     }
   }
 
-  static async getAllPipelinesByFieldIdAndStageId(dataField, dataStage) {
+  static async getAllPipelinesByFieldIdAndStageId(tagId, dataField, dataStage) {
     try {
       const pipelinesStageId = await client.query(`
         {
-          pipelinesByFieldIdAndStageId(fieldId: ${dataField}, stageId: ${dataStage}) {
-            displayName
-            pipelineId
-            process {
-              processCount
-              lastProcessId
-              startTime
-              endTime
-              status
+          pipelinesByStageIdAndTagIdAndFieldId(
+            ${tagId !== '0' ? 'tagId:' + tagId + ',' : ''}
+            ${dataField !== '0' ? 'fieldId:' + dataField + ',' : ''}
+            ${dataStage !== '0' ? 'stageId:' + dataStage : ''}) {
+            edges {
+              node {
+                pipelineDisplayName
+                pipelineId
+                processCount
+                lastProcessId
+                lastProcessStartTime
+                lastProcessEndTime
+                lastProcessStatus
+              }
             }
           }
         }
       `);
-      return pipelinesStageId;
+
+      return {
+        pipelinesByFieldIdAndStageId: pipelinesStageId.pipelinesByStageIdAndTagIdAndFieldId.edges.map(
+          pipeline => ({
+            displayName: pipeline.node.pipelineDisplayName,
+            pipelineId: pipeline.node.pipelineId,
+            process: {
+              processCount: pipeline.node.processCount,
+              lastProcessId: pipeline.node.lastProcessId,
+              startTime: pipeline.node.lastProcessStartTime,
+              endTime: pipeline.node.lastProcessEndTime,
+              status: pipeline.node.lastProcessStatus,
+            },
+          })
+        ),
+      };
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);
@@ -103,13 +148,17 @@ export default class Centaurus {
   }
 
   static async getAllProcessesByFieldIdAndPipelineId(
+    tagId,
     dataField,
     dataPipelineId
   ) {
     try {
-      const pipelineProcesse = await client.query(`
+      const pipelineProcesses = await client.query(`
         {
-          processesByFieldIdAndPipelineId(fieldId: ${dataField}, pipelineId: ${dataPipelineId}) {
+          processesByTagIdAndFieldIdAndPipelineId(
+            ${tagId !== '0' ? 'tagId:' + tagId + ',' : ''}
+            ${dataField !== '0' ? 'fieldId:' + dataField + ',' : ''}
+            pipelineId: ${dataPipelineId}) {
             processId
             startTime
             endTime
@@ -143,7 +192,7 @@ export default class Centaurus {
           }
         }
       `);
-      return pipelineProcesse;
+      return pipelineProcesses;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);
