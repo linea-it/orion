@@ -44,6 +44,9 @@ const styles = {
     fontSize: '1.3em',
     textAlign: 'left',
   },
+  pipelineColumn: {
+    textAlign: 'left',
+  },
 };
 
 class Stages extends Component {
@@ -110,7 +113,11 @@ class Stages extends Component {
   };
 
   renderPipeline = rowData => {
-    return <span title={rowData.pipeline}>{rowData.pipeline}</span>;
+    return (
+      <span title={rowData.pipeline} style={styles.pipelineColumn}>
+        {rowData.pipeline}
+      </span>
+    );
   };
 
   renderStart = rowData => {
@@ -284,6 +291,17 @@ class Stages extends Component {
         <Column
           key={i}
           field={col.field}
+          // header={
+          //   <span
+          //     style={{
+          //       textAlign: 'center',
+          //       float: 'left',
+          //       width: '100%',
+          //     }}
+          //   >
+          //     {col.header}
+          //   </span>
+          // }
           header={col.header}
           // sortable={true}
           body={col.body}
@@ -292,6 +310,7 @@ class Stages extends Component {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             padding: '0.25em 0.857em',
+            textAlign: col.field === 'pipeline' ? 'left' : 'center',
           }}
         />
       );
