@@ -35,7 +35,38 @@ class Dashboard extends Component {
   };
 
   saveStage = tableStages => {
-    this.setState({ tables: tableStages });
+    /* 
+      ORDER OF RIGHT SIDE TABLES:
+        4. Special Samples
+        5. Simulations,
+        6. Science Analysis
+        7. Utilities
+    */
+    const orderedTables = tableStages
+      .map(table => {
+        let tableLevel = 0;
+        if (table.tableLevel === 4) {
+          tableLevel = 5;
+        } else if (table.tableLevel === 5) {
+          tableLevel = 7;
+        } else if (table.tableLevel === 7) {
+          tableLevel = 4;
+        } else {
+          tableLevel = table.tableLevel;
+        }
+        return {
+          tableLevel: tableLevel,
+          tableName: table.tableName,
+          rows: table.rows,
+        };
+      })
+      .sort((a, b) => {
+        if (a.tableLevel !== b.tableLevel) {
+          return a.tableLevel - b.tableLevel;
+        }
+      });
+
+    this.setState({ tables: orderedTables });
   };
 
   renderContent = () => {
