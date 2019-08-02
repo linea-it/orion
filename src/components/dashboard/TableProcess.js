@@ -85,11 +85,6 @@ class TableProcess extends Component {
         header: 'Start Date',
         body: this.renderStartDate,
       },
-      {
-        field: 'time',
-        header: 'Start Time',
-        body: this.renderStartTime,
-      },
       // {
       //   field: 'end',
       //   header: 'End time',
@@ -254,15 +249,7 @@ class TableProcess extends Component {
 
   renderStartDate = rowData => {
     if (rowData && rowData.start) {
-      return <span title={rowData.start}>{rowData.start}</span>;
-    } else {
-      return '-';
-    }
-  };
-
-  renderStartTime = rowData => {
-    if (rowData && rowData.time) {
-      return <span title={rowData.time}>{rowData.time}</span>;
+      return <span title={rowData.time}>{rowData.start}</span>;
     } else {
       return '-';
     }
