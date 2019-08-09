@@ -84,6 +84,7 @@ class TableProcess extends Component {
         field: 'start',
         header: 'Start Date',
         body: this.renderStartDate,
+        width: '130px',
       },
       // {
       //   field: 'end',
@@ -633,7 +634,7 @@ class TableProcess extends Component {
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            width: 'auto',
+            width: col.width ? col.width : 'auto',
             padding: '0.25em 0.857em',
           }}
         />
