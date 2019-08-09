@@ -233,8 +233,11 @@ class Stages extends Component {
       pipelineProcesses &&
       pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
     ) {
-      const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId.map(
-        row => {
+      console.log(pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId);
+
+      const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
+        .sort((a, b) => (a.startTime > b.startTIme ? 1 : -1))
+        .map(row => {
           const startDateSplit = row.startTime
             ? row.startTime.split('T')[0]
             : null;
@@ -268,8 +271,7 @@ class Stages extends Component {
             comments: row.comments,
             product: row.productLog,
           };
-        }
-      );
+        });
       this.setState({
         pipelineProcesses: pipelineProcessesLocal,
         currentProcess: currentProcess,

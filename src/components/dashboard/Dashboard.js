@@ -35,7 +35,7 @@ class Dashboard extends Component {
   };
 
   saveStage = tableStages => {
-    /* 
+    /*
       ORDER OF RIGHT SIDE TABLES:
         4. Special Samples
         5. Simulations,
@@ -71,6 +71,7 @@ class Dashboard extends Component {
 
   renderContent = () => {
     const { classes } = this.props;
+
     return (
       <div className={classes.gridRow}>
         <div className={classes.gridCol} style={{ marginRight: '5px' }}>
@@ -80,7 +81,11 @@ class Dashboard extends Component {
                 <Stages
                   key={index}
                   title={table.tableName}
-                  rows={table.rows.pipelinesByFieldIdAndStageId}
+                  rows={table.rows.pipelinesByFieldIdAndStageId.sort((a, b) =>
+                    `${a.startTime}T${a.start}` > `${b.startTime}T${b.start}`
+                      ? 1
+                      : -1
+                  )}
                 />
               );
             }
@@ -94,7 +99,11 @@ class Dashboard extends Component {
                 <Stages
                   key={index}
                   title={table.tableName}
-                  rows={table.rows.pipelinesByFieldIdAndStageId}
+                  rows={table.rows.pipelinesByFieldIdAndStageId.sort((a, b) =>
+                    `${a.startTime}T${a.start}` > `${b.startTime}T${b.start}`
+                      ? 1
+                      : -1
+                  )}
                 />
               );
             }
