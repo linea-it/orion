@@ -22,10 +22,18 @@ class TableDataset extends Component {
       {
         field: 'release',
         header: 'Release',
+        style: {
+          textAlign: 'left',
+          paddingLeft: '20px',
+        },
       },
       {
         field: 'dataset',
         header: 'Dataset',
+        style: {
+          textAlign: 'left',
+          paddingLeft: '20px',
+        },
       },
     ];
 
@@ -50,6 +58,7 @@ class TableDataset extends Component {
           header={col.header}
           // sortable={true}
           body={col.body}
+          style={col.style ? col.style : {}}
         />
       );
     });
