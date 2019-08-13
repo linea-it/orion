@@ -81,6 +81,16 @@ class TableProcess extends Component {
         body: this.renderProcess,
       },
       {
+        field: 'release',
+        header: 'Release',
+        body: this.renderRelease,
+      },
+      {
+        field: 'dataset',
+        header: 'Dataset',
+        body: this.renderDataset,
+      },
+      {
         field: 'start',
         header: 'Start Date',
         body: this.renderStartDate,
@@ -125,16 +135,6 @@ class TableProcess extends Component {
         field: 'published',
         header: 'Published',
         body: this.actionPublished,
-      },
-      {
-        field: 'release',
-        header: 'Release',
-        body: this.renderRelease,
-      },
-      {
-        field: 'dataset',
-        header: 'Dataset',
-        body: this.renderDataset,
       },
       {
         field: 'provenance',
@@ -217,7 +217,7 @@ class TableProcess extends Component {
     this.setState({ visible: false });
   };
 
-  renderProcess = rowData => {
+  renderRelease = rowData => {
     return <span title={rowData.release}>{rowData.release}</span>;
   };
 
