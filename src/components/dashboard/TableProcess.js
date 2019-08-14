@@ -84,11 +84,15 @@ class TableProcess extends Component {
         field: 'release',
         header: 'Release',
         body: this.renderRelease,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
       },
       {
         field: 'dataset',
         header: 'Dataset',
         body: this.renderDataset,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
       },
       {
         field: 'start',
@@ -115,6 +119,8 @@ class TableProcess extends Component {
         field: 'owner',
         header: 'Owner',
         body: this.renderOwner,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
       },
       {
         field: 'status',
@@ -635,7 +641,8 @@ class TableProcess extends Component {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             width: col.width ? col.width : 'auto',
-            padding: '0.25em 0.857em',
+            textAlign: col.align ? col.align : 'auto',
+            padding: col.padding ? col.padding : '0.25em 0.857em',
           }}
         />
       );

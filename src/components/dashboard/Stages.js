@@ -58,6 +58,8 @@ class Stages extends Component {
         field: 'pipeline',
         header: 'Pipeline',
         body: this.renderPipeline,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
       },
       {
         field: 'start',
@@ -311,8 +313,8 @@ class Stages extends Component {
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            padding: '0.25em 0.857em',
-            textAlign: col.field === 'pipeline' ? 'left' : 'center',
+            padding: col.padding ? col.padding : '0.25em 0.857em',
+            textAlign: col.align ? col.align : 'auto',
           }}
         />
       );

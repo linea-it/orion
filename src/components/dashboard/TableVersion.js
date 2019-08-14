@@ -22,6 +22,10 @@ class TableVersion extends Component {
       {
         field: 'name',
         header: 'Name',
+        style: {
+          textAlign: 'left',
+          paddingLeft: '20px',
+        },
       },
       {
         field: 'version',
@@ -53,6 +57,7 @@ class TableVersion extends Component {
           field={col.field}
           header={col.header}
           // sortable={true}
+          style={col.style ? col.style : {}}
           body={col.body}
         />
       );
