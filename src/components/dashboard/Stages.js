@@ -76,11 +76,11 @@ class Stages extends Component {
         header: 'Runs',
         body: this.actionRuns,
       },
-      {
-        field: 'status',
-        header: 'Status',
-        body: this.actionStatus,
-      },
+      // {
+      //   field: 'status',
+      //   header: 'Status',
+      //   body: this.actionStatus,
+      // },
     ];
 
     this.state = {
@@ -102,9 +102,9 @@ class Stages extends Component {
     this.loadTableProcesses(rowData);
   };
 
-  onShowStatus = rowData => {
-    console.log('onShowStatus: ', rowData);
-  };
+  // onShowStatus = rowData => {
+  //   console.log('onShowStatus: ', rowData);
+  // };
 
   onClickModal = () => {
     this.setState({ visible: true });
@@ -149,46 +149,46 @@ class Stages extends Component {
     }
   };
 
-  actionStatus = rowData => {
-    const { classes } = this.props;
-    if (rowData.status === 'failure') {
-      return (
-        <Button
-          variant="contained"
-          className={classes.button}
-          style={styles.btnFailure}
-          title="Failure"
-          onClick={() => this.onShowStatus(rowData)}
-        >
-          Failure
-        </Button>
-      );
-    } else if (rowData.status === 'running') {
-      return (
-        <Button
-          variant="contained"
-          className={classes.button}
-          style={styles.btnRunning}
-          title="Running"
-          onClick={() => this.onShowStatus(rowData)}
-        >
-          Running
-        </Button>
-      );
-    } else {
-      return (
-        <Button
-          variant="contained"
-          className={classes.button}
-          style={styles.btnSuccess}
-          title="Success"
-          onClick={() => this.onShowStatus(rowData)}
-        >
-          Success
-        </Button>
-      );
-    }
-  };
+  // actionStatus = rowData => {
+  //   const { classes } = this.props;
+  //   if (rowData.status === 'failure') {
+  //     return (
+  //       <Button
+  //         variant="contained"
+  //         className={classes.button}
+  //         style={styles.btnFailure}
+  //         title="Failure"
+  //         onClick={() => this.onShowStatus(rowData)}
+  //       >
+  //         Failure
+  //       </Button>
+  //     );
+  //   } else if (rowData.status === 'running') {
+  //     return (
+  //       <Button
+  //         variant="contained"
+  //         className={classes.button}
+  //         style={styles.btnRunning}
+  //         title="Running"
+  //         onClick={() => this.onShowStatus(rowData)}
+  //       >
+  //         Running
+  //       </Button>
+  //     );
+  //   } else {
+  //     return (
+  //       <Button
+  //         variant="contained"
+  //         className={classes.button}
+  //         style={styles.btnSuccess}
+  //         title="Success"
+  //         onClick={() => this.onShowStatus(rowData)}
+  //       >
+  //         Success
+  //       </Button>
+  //     );
+  //   }
+  // };
 
   renderProcessModal = () => {
     if (this.state.currentProcess) {
