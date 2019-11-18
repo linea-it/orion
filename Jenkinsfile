@@ -4,8 +4,9 @@ pipeline {
         registryCredential = 'Dockerhub'
         dockerImage = ''
         deployment = 'orion'
-        namespace = 'scienceportal-dev'
-        namespace_prod = 'scienceportal'
+        namespace = 'orion'
+        namespace_prod = 'orion'
+        commit = ''
     }
     agent any
 
@@ -43,8 +44,8 @@ pipeline {
                   curl -D - -X \"POST\" \
                     -H \"content-type: application/json\" \
                     -H \"X-Rundeck-Auth-Token: $RD_AUTH_TOKEN\" \
-                    -d '{\"argString\": \"-namespace $namespace -image $registry:$GIT_COMMIT -deployment $deployment\"}' \
-                    https://fox.linea.gov.br/api/1/job/e79ea1f7-e156-4992-98b6-75995ac4c15a/executions
+                    -d '{\"argString\": \"-namespace $namespace -commit $GIT_COMMIT -image $registry:$GIT_COMMIT -deployment $deployment\"}' \
+                    https://fox.linea.gov.br/api/1/job/a56d0037-203f-41b5-810c-7e20c1e38bbf/executions
                   """
             }
         }
@@ -67,8 +68,8 @@ pipeline {
                   curl -D - -X \"POST\" \
                     -H \"content-type: application/json\" \
                     -H \"X-Rundeck-Auth-Token: $RD_AUTH_TOKEN\" \
-                    -d '{\"argString\": \"-namespace $namespace_prod -image $registry:$TAG_NAME -deployment $deployment\"}' \
-                    https://fox.linea.gov.br/api/1/job/e79ea1f7-e156-4992-98b6-75995ac4c15a/executions
+                    -d '{\"argString\": \"-namespace $namespace_prod -commit $TAG_NAME -image $registry:$TAG_NAME -deployment $deployment\"}' \
+                    https://fox.linea.gov.br/api/1/job/a56d0037-203f-41b5-810c-7e20c1e38bbf/executions
                   """
             }
         }
