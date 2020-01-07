@@ -13,6 +13,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Centaurus from '../../api';
 import moment from 'moment';
+import PipelineFilter from './PipelineFilter';
 
 const BootstrapInput = withStyles(theme => ({
   root: {
@@ -356,8 +357,12 @@ class ReleaseFilter extends Component {
 
     return (
       <AppBar position="static" color="default" className={classes.filter}>
-        <Toolbar variant="dense" style={{ position: 'relative' }}>
+        <Toolbar
+          variant="dense"
+          style={{ position: 'relative', justifyContent: 'space-between' }}
+        >
           {this.renderFilter()}
+          <PipelineFilter />
           {this.renderLoading()}
         </Toolbar>
       </AppBar>
