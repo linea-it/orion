@@ -307,7 +307,6 @@ class ReleaseFilter extends Component {
             }
           >
             <option value="" />
-            {/* <option value="all">All</option> */}
             {this.state.optsRelease.map(opt => {
               return (
                 <option key={opt.id} value={opt.tagId}>
