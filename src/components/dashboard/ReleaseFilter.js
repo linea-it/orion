@@ -228,8 +228,6 @@ class ReleaseFilter extends Component {
           stage.id
         );
 
-        console.log(rows.pipelinesByFieldIdAndStageId);
-
         return {
           tableLevel: stage.level,
           tableName: stage.name,
