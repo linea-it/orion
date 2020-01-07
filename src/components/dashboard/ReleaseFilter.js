@@ -228,6 +228,8 @@ class ReleaseFilter extends Component {
           stage.id
         );
 
+        console.log(rows.pipelinesByFieldIdAndStageId);
+
         return {
           tableLevel: stage.level,
           tableName: stage.name,
@@ -246,6 +248,7 @@ class ReleaseFilter extends Component {
                 const duration = moment.utc(diff).format('HH:mm:ss');
                 return {
                   pipeline: row.displayName,
+                  name: row.name,
                   pipelineId: row.pipelineId,
                   tagId: this.state.selectRelease,
                   fieldId: this.state.selectField,

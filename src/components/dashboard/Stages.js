@@ -62,6 +62,13 @@ class Stages extends Component {
         padding: '0.25em 20px 0.857em',
       },
       {
+        field: 'name',
+        header: 'Name',
+        body: this.renderName,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
+      },
+      {
         field: 'start',
         header: 'Start',
         body: this.renderStart,
@@ -121,6 +128,10 @@ class Stages extends Component {
       </span>
     );
   };
+
+  renderName = rowData => {
+    return <span title={rowData.name}>{rowData.name}</span>;
+  }
 
   renderStart = rowData => {
     return <span title={rowData.start}>{rowData.startTime}</span>;
