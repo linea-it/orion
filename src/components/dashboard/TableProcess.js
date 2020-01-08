@@ -59,6 +59,11 @@ const styles = {
     cursor: 'default',
     textAlign: 'center',
   },
+  icoRemoved: {
+    color: 'red',
+    cursor: 'default',
+    textAlign: 'center',
+  },
   mark: {
     padding: '0px',
     minWidth: '30px',
@@ -131,6 +136,11 @@ class TableProcess extends Component {
         field: 'saved',
         header: 'Saved',
         body: this.actionSaved,
+      },
+      {
+        field: 'removed',
+        header: 'Removed',
+        body: this.actionRemoved,
       },
       // {
       //   field: 'share',
@@ -358,6 +368,32 @@ class TableProcess extends Component {
       }
     } else if (rowData.saved === null) {
       return '-';
+    }
+  };
+
+  actionRemoved = rowData => {
+    const { classes } = this.props;
+
+    if (typeof rowData.removed !== 'undefined') {
+      if (rowData.removed === true) {
+        return (
+          <Icon title="Removed" className={classes.icoCheck}>
+            check
+          </Icon>
+        );
+      } else {
+        return (
+          <Icon title="Not removed" className={classes.icoRemoved}>
+            close
+          </Icon>
+        );
+      }
+    } else {
+      return (
+        <Icon title="Not removed" className={classes.icoRemoved}>
+          close
+        </Icon>
+      );
     }
   };
 
