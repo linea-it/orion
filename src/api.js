@@ -20,7 +20,7 @@ export default class Centaurus {
               node {
                 id
                 releaseDisplayName
-                tagId               
+                tagId
               }
             }
           }
@@ -88,7 +88,7 @@ export default class Centaurus {
                 id
                 displayName
                 pipelineStageId
-                level              
+                level
               }
             }
           }
@@ -113,6 +113,7 @@ export default class Centaurus {
             edges {
               node {
                 pipelineDisplayName
+                pipelineName
                 pipelineId
                 processCount
                 lastProcessId
@@ -129,6 +130,7 @@ export default class Centaurus {
         pipelinesByFieldIdAndStageId: pipelinesStageId.pipelinesByStageIdAndTagIdAndFieldId.edges.map(
           pipeline => ({
             displayName: pipeline.node.pipelineDisplayName,
+            name: pipeline.node.pipelineName,
             pipelineId: pipeline.node.pipelineId,
             process: {
               processCount: pipeline.node.processCount,
@@ -163,6 +165,7 @@ export default class Centaurus {
             startTime
             endTime
             flagPublished
+            flagRemoved
             publishedDate
             comments
             productLog

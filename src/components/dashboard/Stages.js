@@ -62,6 +62,13 @@ class Stages extends Component {
         padding: '0.25em 20px 0.857em',
       },
       {
+        field: 'name',
+        header: 'Name',
+        body: this.renderName,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
+      },
+      {
         field: 'start',
         header: 'Start',
         body: this.renderStart,
@@ -120,6 +127,10 @@ class Stages extends Component {
         {rowData.pipeline}
       </span>
     );
+  };
+
+  renderName = rowData => {
+    return <span title={rowData.name}>{rowData.name}</span>;
   };
 
   renderStart = rowData => {
@@ -235,8 +246,6 @@ class Stages extends Component {
       pipelineProcesses &&
       pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
     ) {
-      console.log(pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId);
-
       const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
         .sort((a, b) => (a.startTime > b.startTIme ? 1 : -1))
         .map(row => {
@@ -268,6 +277,7 @@ class Stages extends Component {
             duration: row.startTime && row.endTime !== null ? duration : '-',
             owner: row.session.user.displayName,
             status: row.processStatus.name,
+            removed: row.flagRemoved,
             saved: row.savedProcesses,
             published: row.publishedDate,
             comments: row.comments,

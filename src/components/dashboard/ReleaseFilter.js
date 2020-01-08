@@ -247,6 +247,7 @@ class ReleaseFilter extends Component {
                 const duration = moment.utc(diff).format('HH:mm:ss');
                 return {
                   pipeline: row.displayName,
+                  name: row.name,
                   pipelineId: row.pipelineId,
                   tagId: this.state.selectRelease,
                   fieldId: this.state.selectField,
@@ -307,7 +308,6 @@ class ReleaseFilter extends Component {
             }
           >
             <option value="" />
-            {/* <option value="all">All</option> */}
             {this.state.optsRelease.map(opt => {
               return (
                 <option key={opt.id} value={opt.tagId}>
