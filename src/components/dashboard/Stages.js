@@ -131,7 +131,7 @@ class Stages extends Component {
 
   renderName = rowData => {
     return <span title={rowData.name}>{rowData.name}</span>;
-  }
+  };
 
   renderStart = rowData => {
     return <span title={rowData.start}>{rowData.startTime}</span>;
@@ -246,8 +246,6 @@ class Stages extends Component {
       pipelineProcesses &&
       pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
     ) {
-      console.log(pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId);
-
       const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
         .sort((a, b) => (a.startTime > b.startTIme ? 1 : -1))
         .map(row => {
@@ -279,6 +277,7 @@ class Stages extends Component {
             duration: row.startTime && row.endTime !== null ? duration : '-',
             owner: row.session.user.displayName,
             status: row.processStatus.name,
+            removed: row.flagRemoved,
             saved: row.savedProcesses,
             published: row.publishedDate,
             comments: row.comments,

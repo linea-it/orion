@@ -165,6 +165,7 @@ export default class Centaurus {
             startTime
             endTime
             flagPublished
+            flagRemoved
             publishedDate
             comments
             productLog
