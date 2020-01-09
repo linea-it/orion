@@ -102,32 +102,173 @@ export default class Centaurus {
     }
   }
 
-  static async getAllPipelinesByFieldIdAndStageId(tagId, dataField, dataStage) {
+  static async getAllPipelinesByFieldIdAndStageId(
+    tagId,
+    dataField,
+    pipelineFilter,
+    dataStage
+  ) {
     try {
-      const pipelinesStageId = await client.query(`
-        {
-          pipelinesByStageIdAndTagIdAndFieldId(
-            ${tagId !== '0' ? 'tagId:' + tagId + ',' : ''}
-            ${dataField !== '0' ? 'fieldId:' + dataField + ',' : ''}
-            ${dataStage !== '0' ? 'stageId:' + dataStage : ''}) {
-            edges {
-              node {
-                pipelineDisplayName
-                pipelineName
-                pipelineId
-                processCount
-                lastProcessId
-                lastProcessStartTime
-                lastProcessEndTime
-                lastProcessStatus
+      let pipelinesStageId = [];
+
+      if (Number(pipelineFilter) === 0) {
+        const allPipelines = await client.query(`
+          {
+            pipelinesByStageId(${
+              dataStage !== '0' ? 'stageId:' + dataStage : ''
+            }) {
+              edges {
+                node {
+                  pipelineDisplayName
+                  pipelineName
+                  pipelineId
+                }
               }
             }
           }
-        }
-      `);
+        `);
 
-      return {
-        pipelinesByFieldIdAndStageId: pipelinesStageId.pipelinesByStageIdAndTagIdAndFieldId.edges.map(
+        const pipelinesWithRuns = await client.query(`
+          {
+            pipelinesByStageIdAndTagIdAndFieldId(
+              ${tagId !== '0' ? 'tagId:' + tagId + ',' : ''}
+              ${dataField !== '0' ? 'fieldId:' + dataField + ',' : ''}
+              ${dataStage !== '0' ? 'stageId:' + dataStage : ''}) {
+              edges {
+                node {
+                  pipelineDisplayName
+                  pipelineName
+                  pipelineId
+                  processCount
+                  lastProcessId
+                  lastProcessStartTime
+                  lastProcessEndTime
+                  lastProcessStatus
+                }
+              }
+            }
+          }
+        `);
+
+        pipelinesStageId = allPipelines.pipelinesByStageId.edges.map(
+          pipeline => {
+            const samePipeline = pipelinesWithRuns.pipelinesByStageIdAndTagIdAndFieldId.edges.filter(
+              el => el.node.pipelineId === pipeline.node.pipelineId
+            );
+
+            if (samePipeline.length > 0) {
+              return {
+                displayName: pipeline.node.pipelineDisplayName,
+                name: pipeline.node.pipelineName,
+                pipelineId: pipeline.node.pipelineId,
+                process: {
+                  processCount: samePipeline[0].node.processCount,
+                  lastProcessId: samePipeline[0].node.lastProcessId,
+                  startTime: samePipeline[0].node.lastProcessStartTime,
+                  endTime: samePipeline[0].node.lastProcessEndTime,
+                  status: samePipeline[0].node.lastProcessStatus,
+                },
+              };
+            }
+            return {
+              displayName: pipeline.node.pipelineDisplayName,
+              name: pipeline.node.pipelineName,
+              pipelineId: pipeline.node.pipelineId,
+              process: {
+                processCount: 0,
+                lastProcessId: null,
+                startTime: null,
+                endTime: null,
+                status: null,
+              },
+            };
+          }
+        );
+      } else if (Number(pipelineFilter) === 2) {
+        const allPipelines = await client.query(`
+          {
+            pipelinesByStageId(${
+              dataStage !== '0' ? 'stageId:' + dataStage : ''
+            }) {
+              edges {
+                node {
+                  pipelineDisplayName
+                  pipelineName
+                  pipelineId
+                }
+              }
+            }
+          }
+        `);
+
+        const pipelinesWithRuns = await client.query(`
+          {
+            pipelinesByStageIdAndTagIdAndFieldId(
+              ${tagId !== '0' ? 'tagId:' + tagId + ',' : ''}
+              ${dataField !== '0' ? 'fieldId:' + dataField + ',' : ''}
+              ${dataStage !== '0' ? 'stageId:' + dataStage : ''}) {
+              edges {
+                node {
+                  pipelineDisplayName
+                  pipelineName
+                  pipelineId
+                  processCount
+                  lastProcessId
+                  lastProcessStartTime
+                  lastProcessEndTime
+                  lastProcessStatus
+                }
+              }
+            }
+          }
+        `);
+
+        pipelinesStageId = allPipelines.pipelinesByStageId.edges
+          .map(pipeline => {
+            const samePipeline = pipelinesWithRuns.pipelinesByStageIdAndTagIdAndFieldId.edges.filter(
+              el => el.node.pipelineId === pipeline.node.pipelineId
+            );
+
+            if (samePipeline.length === 0) {
+              return {
+                displayName: pipeline.node.pipelineDisplayName,
+                name: pipeline.node.pipelineName,
+                pipelineId: pipeline.node.pipelineId,
+                process: {
+                  processCount: 0,
+                  lastProcessId: null,
+                  startTime: null,
+                  endTime: null,
+                  status: null,
+                },
+              };
+            }
+          })
+          .filter(pipeline => !!pipeline);
+      } else {
+        const query = await client.query(`
+          {
+            pipelinesByStageIdAndTagIdAndFieldId(
+              ${tagId !== '0' ? 'tagId:' + tagId + ',' : ''}
+              ${dataField !== '0' ? 'fieldId:' + dataField + ',' : ''}
+              ${dataStage !== '0' ? 'stageId:' + dataStage : ''}) {
+              edges {
+                node {
+                  pipelineDisplayName
+                  pipelineName
+                  pipelineId
+                  processCount
+                  lastProcessId
+                  lastProcessStartTime
+                  lastProcessEndTime
+                  lastProcessStatus
+                }
+              }
+            }
+          }
+        `);
+
+        pipelinesStageId = query.pipelinesByStageIdAndTagIdAndFieldId.edges.map(
           pipeline => ({
             displayName: pipeline.node.pipelineDisplayName,
             name: pipeline.node.pipelineName,
@@ -140,8 +281,10 @@ export default class Centaurus {
               status: pipeline.node.lastProcessStatus,
             },
           })
-        ),
-      };
+        );
+      }
+
+      return pipelinesStageId;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);
