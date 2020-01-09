@@ -91,8 +91,9 @@ class ReleaseFilter extends Component {
       optsRelease: [],
       optsFields: [],
       pipelineStages: [],
-      selectRelease: '',
-      selectField: '',
+      selectRelease: '0',
+      selectField: '0',
+      pipelineFilterSelectedId: 1,
     };
   }
 
@@ -103,6 +104,8 @@ class ReleaseFilter extends Component {
 
   componentDidMount() {
     this.loadReleases();
+    this.loadFields(this.state.selectRelease);
+    this.loadStage(this.state.selectField);
   }
 
   handleChangeReleases = evt => {
@@ -226,6 +229,7 @@ class ReleaseFilter extends Component {
         const rows = await Centaurus.getAllPipelinesByFieldIdAndStageId(
           this.state.selectRelease,
           this.state.selectField,
+          this.state.pipelineFilterSelectedId,
           stage.id
         );
 
@@ -233,35 +237,35 @@ class ReleaseFilter extends Component {
           tableLevel: stage.level,
           tableName: stage.name,
           rows: {
-            pipelinesByFieldIdAndStageId: rows.pipelinesByFieldIdAndStageId.map(
-              row => {
-                const startDateSplit = row.process.startTime
-                  ? row.process.startTime.split('T')[1]
-                  : null;
-                const startTimeSplit = row.process.startTime
-                  ? row.process.startTime.split('T')[0]
-                  : null;
-                const startTime = moment(row.process.startTime);
-                const endTime = moment(row.process.endTime);
-                const diff = endTime.diff(startTime);
-                const duration = moment.utc(diff).format('HH:mm:ss');
-                return {
-                  pipeline: row.displayName,
-                  name: row.name,
-                  pipelineId: row.pipelineId,
-                  tagId: this.state.selectRelease,
-                  fieldId: this.state.selectField,
-                  start: startDateSplit,
-                  startTime: startTimeSplit,
-                  duration:
-                    row.process.startTime && row.process.endTime !== null
-                      ? duration
-                      : '-',
-                  runs: row.process.processCount,
-                  status: row.process.status,
-                };
-              }
-            ),
+            pipelinesByFieldIdAndStageId: rows
+              ? rows.map(row => {
+                  const startDateSplit = row.process.startTime
+                    ? row.process.startTime.split('T')[1]
+                    : null;
+                  const startTimeSplit = row.process.startTime
+                    ? row.process.startTime.split('T')[0]
+                    : null;
+                  const startTime = moment(row.process.startTime);
+                  const endTime = moment(row.process.endTime);
+                  const diff = endTime.diff(startTime);
+                  const duration = moment.utc(diff).format('HH:mm:ss');
+                  return {
+                    pipeline: row.displayName,
+                    name: row.name,
+                    pipelineId: row.pipelineId,
+                    tagId: this.state.selectRelease,
+                    fieldId: this.state.selectField,
+                    start: startDateSplit,
+                    startTime: startTimeSplit,
+                    duration:
+                      row.process.startTime && row.process.endTime !== null
+                        ? duration
+                        : '-',
+                    runs: row.process.processCount,
+                    status: row.process.status,
+                  };
+                })
+              : null,
           },
         };
       })
@@ -352,6 +356,16 @@ class ReleaseFilter extends Component {
     );
   };
 
+  handleChangePipelines = e => {
+    this.setState({
+      pipelineFilterSelectedId: e.target.value,
+    });
+
+    if (this.state.selectField !== '' && this.state.selectRelease !== '') {
+      this.loadStage(this.state.selectField);
+    }
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -362,7 +376,24 @@ class ReleaseFilter extends Component {
           style={{ position: 'relative', justifyContent: 'space-between' }}
         >
           {this.renderFilter()}
-          <PipelineFilter />
+          <PipelineFilter
+            pipelinesFilterList={[
+              {
+                id: 0,
+                displayName: 'All',
+              },
+              {
+                id: 1,
+                displayName: 'Executed',
+              },
+              {
+                id: 2,
+                displayName: 'Not Executed',
+              },
+            ]}
+            handleChangePipelines={this.handleChangePipelines}
+            pipelineFilterSelectedId={this.state.pipelineFilterSelectedId}
+          />
           {this.renderLoading()}
         </Toolbar>
       </AppBar>

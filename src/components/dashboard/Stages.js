@@ -134,7 +134,9 @@ class Stages extends Component {
   };
 
   renderStart = rowData => {
-    return <span title={rowData.start}>{rowData.startTime}</span>;
+    if (rowData.start)
+      return <span title={rowData.start}>{rowData.startTime}</span>;
+    return '-';
   };
 
   renderDuration = rowData => {
@@ -155,9 +157,17 @@ class Stages extends Component {
           {rowData.runs}
         </Button>
       );
-    } else {
-      return null;
     }
+    return (
+      <Button
+        variant="contained"
+        className={classes.button}
+        style={styles.btnRuns}
+        title={rowData.runs}
+      >
+        {rowData.runs}
+      </Button>
+    );
   };
 
   // actionStatus = rowData => {

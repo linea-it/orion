@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import InputBase from '@material-ui/core/InputBase';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Centaurus from '../../api';
 
 const useStyles = makeStyles({
   margin: {
@@ -55,22 +55,12 @@ const BootstrapInput = withStyles(theme => ({
   },
 }))(InputBase);
 
-function PipelineFilter() {
+function PipelineFilter({
+  pipelinesFilterList,
+  handleChangePipelines,
+  pipelineFilterSelectedId,
+}) {
   const classes = useStyles();
-  const [selectedPipeline, setSelectedPipeline] = useState(1);
-  const [stages, setStages] = useState([]);
-
-  const handleChangePipelines = e => setSelectedPipeline(e.target.value);
-
-  useEffect(() => {
-    Centaurus.getAllPipelineStageList()
-      .then(res =>
-        setStages(res.pipelineStageList.edges.map(row => ({ ...row.node })))
-      )
-      .catch(err => console.error(err));
-  }, []);
-
-  // useEffect(() => {}, [stages]);
 
   return (
     <form>
@@ -84,21 +74,30 @@ function PipelineFilter() {
           Pipelines:
         </InputLabel>
         <NativeSelect
-          value={selectedPipeline}
+          value={pipelineFilterSelectedId}
           onChange={handleChangePipelines}
           input={
             <BootstrapInput name="pipeline" id="age-customized-native-simple" />
           }
         >
-          <option value={0}>All</option>
-          <option value={1}>Executed</option>
-          <option value={2}>Not Executed</option>
-          <option value={3}>Deleted</option>
-          <option value={4}>Saved</option>
+          {pipelinesFilterList.map(filter => (
+            <option key={filter.id} value={filter.id}>
+              {filter.displayName}
+            </option>
+          ))}
         </NativeSelect>
       </FormControl>
     </form>
   );
 }
+
+PipelineFilter.propTypes = {
+  pipelinesFilterList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleChangePipelines: PropTypes.func.isRequired,
+  pipelineFilterSelectedId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]).isRequired,
+};
 
 export default PipelineFilter;
