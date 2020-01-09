@@ -1,6 +1,6 @@
 # DES Portal Dashboard
 
-This App is LIneA's Science Portal Dashboard!
+This App is LIneA's Science Portal Dashboard
 
 ---
 
