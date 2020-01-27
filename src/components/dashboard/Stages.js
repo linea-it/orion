@@ -158,58 +158,8 @@ class Stages extends Component {
         </Button>
       );
     }
-    return (
-      <Button
-        variant="contained"
-        className={classes.button}
-        style={styles.btnRuns}
-        title={rowData.runs}
-      >
-        {rowData.runs}
-      </Button>
-    );
+    return '-';
   };
-
-  // actionStatus = rowData => {
-  //   const { classes } = this.props;
-  //   if (rowData.status === 'failure') {
-  //     return (
-  //       <Button
-  //         variant="contained"
-  //         className={classes.button}
-  //         style={styles.btnFailure}
-  //         title="Failure"
-  //         onClick={() => this.onShowStatus(rowData)}
-  //       >
-  //         Failure
-  //       </Button>
-  //     );
-  //   } else if (rowData.status === 'running') {
-  //     return (
-  //       <Button
-  //         variant="contained"
-  //         className={classes.button}
-  //         style={styles.btnRunning}
-  //         title="Running"
-  //         onClick={() => this.onShowStatus(rowData)}
-  //       >
-  //         Running
-  //       </Button>
-  //     );
-  //   } else {
-  //     return (
-  //       <Button
-  //         variant="contained"
-  //         className={classes.button}
-  //         style={styles.btnSuccess}
-  //         title="Success"
-  //         onClick={() => this.onShowStatus(rowData)}
-  //       >
-  //         Success
-  //       </Button>
-  //     );
-  //   }
-  // };
 
   renderProcessModal = () => {
     if (this.state.currentProcess) {
