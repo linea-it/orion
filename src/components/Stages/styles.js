@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const styles = {
+const style = {
     button: {
         textTransform: 'none',
         padding: '1px 5px',
@@ -36,4 +36,16 @@ const styles = {
     },
 };
 
-export default styles;
+const buttonStyles = makeStyles((theme) => ({
+    button: {
+        textTransform: 'none',
+        padding: '1px 5px',
+        minWidth: '5em',
+        minHeight: '2em',
+        display: 'block',
+        margin: '0 auto',
+        fontSize: '1em',
+    },
+}));
+
+export {style, buttonStyles};

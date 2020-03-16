@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Dialog } from 'primereact/dialog';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+import Paper from '@material-ui/core/Paper';
+import Dialog from '@material-ui/core/Dialog';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 
 const styles = {
+  table: {
+    minWidth: 650,
+  },
   btn: {
     margin: '0 auto',
     width: '4em',
@@ -49,53 +58,27 @@ class TableProducts extends Component {
       {
         field: 'process',
         header: 'Process ID',
-        body: this.renderProcess,
       },
       {
         field: 'product',
         header: 'Product Name',
-        body: this.renderProductName,
       },
       {
         field: 'type',
         header: 'Type',
-        body: this.renderType,
       },
       {
         field: 'class',
         header: 'Class',
-        body: this.renderClass,
       },
-      // {
-      //   field: 'provenance',
-      //   header: 'Provenance',
-      //   body: this.actionProvenance,
-      // },
-      // {
-      //   field: 'viewer',
-      //   header: 'Viewer',
-      //   body: this.actionViewer,
-      // },
       {
         field: 'database',
         header: 'Database',
-        body: this.actionDatabase,
       },
-      // {
-      //   field: 'exported',
-      //   header: 'Exported',
-      //   body: this.actionExported,
-      // },
       {
         field: 'dataType',
         header: 'Data Type',
-        body: this.renderDataType,
       },
-      // {
-      //   field: 'download',
-      //   header: 'Download',
-      //   body: this.actionDownload,
-      // },
     ];
 
     this.state = {
@@ -139,134 +122,6 @@ class TableProducts extends Component {
     this.setState({ visible: false });
   };
 
-  renderProcess = rowData => {
-    if (rowData && rowData.process) {
-      return <span title={rowData.process}>{rowData.process}</span>;
-    } else {
-      return '-';
-    }
-  };
-
-  renderProductName = rowData => {
-    if (rowData && rowData.product) {
-      return <span title={rowData.product}>{rowData.product}</span>;
-    } else {
-      return '-';
-    }
-  };
-
-  renderType = rowData => {
-    if (rowData && rowData.type) {
-      return <span title={rowData.type}>{rowData.type}</span>;
-    } else {
-      return '-';
-    }
-  };
-
-  renderClass = rowData => {
-    if (rowData && rowData.class) {
-      return <span title={rowData.class}>{rowData.class}</span>;
-    } else {
-      return '-';
-    }
-  };
-
-  renderDataType = rowData => {
-    if (rowData && rowData.dataType) {
-      return <span title={rowData.dataType}>{rowData.dataType}</span>;
-    } else {
-      return '-';
-    }
-  };
-
-  actionProvenance = rowData => {
-    const { classes } = this.props;
-
-    if (rowData) {
-      return (
-        <Button
-          className={classes.button}
-          style={styles.btnIco}
-          title={rowData.provenance}
-          onClick={() => this.onShowProvenance(rowData)}
-        >
-          <Icon>device_hub</Icon>
-        </Button>
-      );
-    } else {
-      return '-';
-    }
-  };
-
-  actionViewer = rowData => {
-    const { classes } = this.props;
-    if (rowData) {
-      return (
-        <Button
-          className={classes.button}
-          style={styles.btnIco}
-          title={rowData.viewer}
-          onClick={() => this.onShowViewer(rowData)}
-        >
-          <Icon>warning</Icon>
-        </Button>
-      );
-    } else {
-      return '-';
-    }
-  };
-
-  actionDatabase = rowData => {
-    const { classes } = this.props;
-    if (rowData.database !== null) {
-      return (
-        <Button
-          className={classes.button}
-          style={styles.btnIco}
-          title={rowData.database}
-          onClick={() => this.onShowDatabase(rowData.database)}
-        >
-          <Icon>link</Icon>
-        </Button>
-      );
-    } else {
-      return <span style={styles.mark}>-</span>;
-    }
-  };
-
-  actionExported = rowData => {
-    const { classes } = this.props;
-    if (rowData) {
-      return (
-        <Button
-          className={classes.button}
-          style={styles.btnIco}
-          title={rowData.exported}
-        >
-          <Icon>more_horiz</Icon>
-        </Button>
-      );
-    } else {
-      return '-';
-    }
-  };
-
-  actionDownload = rowData => {
-    const { classes } = this.props;
-    if (rowData) {
-      return (
-        <Button
-          className={classes.button}
-          style={styles.btnIco}
-          title={rowData.provenance}
-          onClick={() => this.onShowDownload(rowData)}
-        >
-          <Icon>cloud_download</Icon>
-        </Button>
-      );
-    }
-    return '-';
-  };
 
   renderContentModal = () => {
     if (this.state.modalType === 'provenance') {
@@ -298,39 +153,36 @@ class TableProducts extends Component {
   render() {
     const columns = this.state.cols.map((col, i) => {
       return (
-        <Column
-          key={i}
-          field={col.field}
-          header={col.header}
-          // sortable={true}
-          body={col.body}
-          style={{
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-        />
+        <TableCell align="right" key={col.field} >{col.header}</TableCell>
       );
     });
 
     return (
       <div>
-        <DataTable
-          value={this.props.productsProcess}
-          resizableColumns={true}
-          columnResizeMode="expand"
-          reorderableColumns={true}
-          reorderableRows={true}
-          responsive={true}
-          selectionMode="single"
-          selection={this.state.selectedCar1}
-          onSelectionChange={e => this.setState({ selectedCar1: e.data })}
-          scrollable={true}
-          scrollHeight="600px"
-          style={{ zIndex: '95' }}
-        >
-          {columns}
-        </DataTable>
+      <TableContainer component={Paper}>
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              {columns}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.props.productsProcess.map((product, i) => {
+              return(
+                <TableRow>   
+                  {this.state.cols.map((col, j) => {
+                    return(
+                      <TableCell align="right">
+                        <span title={product[col.field]}>{product[col.field]}</span>
+                      </TableCell> 
+                    )
+                  })}
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
         {this.renderModal()}
       </div>
     );

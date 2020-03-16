@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const styles = makeStyles((theme) => ({
+const styles = {
     comment: {
         borderBottom: '1px solid #ccc',
         marginBottom: '10px',
@@ -10,6 +10,6 @@ const styles = makeStyles((theme) => ({
         zIndex: '99',
         position: 'relative',
     },
-}));
+};
 
 export default styles;

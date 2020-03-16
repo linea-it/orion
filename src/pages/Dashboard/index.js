@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import ReleaseFilter from '../ReleaseFilter/';
 import Stages from '../../components/Stages/';
 import styles from './styles';
-
-
 
 function Dashboard() {
 

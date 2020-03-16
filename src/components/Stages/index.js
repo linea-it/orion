@@ -1,112 +1,158 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 import Centaurus from '../../services/api';
 import moment from 'moment';
 
-import styles from './styles';
 import TableProcess from '../TableProcess/';
 
+const styles = {
+  button: {
+    textTransform: 'none',
+    padding: '1px 5px',
+    minWidth: '5em',
+    minHeight: '2em',
+    display: 'block',
+    margin: '0 auto',
+    fontSize: '1em',
+  },
+  btnSuccess: {
+    backgroundColor: 'green',
+    color: '#fff',
+  },
+  btnFailure: {
+    backgroundColor: 'red',
+    color: '#fff',
+  },
+  btnRunning: {
+    backgroundColor: '#ffba01',
+    color: '#000',
+  },
+  btnRuns: {
+    minWidth: '2em',
+    background: '#fff',
+  },
+  stageTitle: {
+    margin: '0',
+    fontSize: '1.3em',
+    textAlign: 'left',
+  },
+  pipelineColumn: {
+    textAlign: 'left',
+  },
+};
 
-function Stages(props) {
-  
-  const makeStyle = styles;
+class Stages extends Component {
+  constructor(props) {
+    super(props);
 
-  const columns = [
-    {
-      field: 'pipeline',
-      header: 'Pipeline',
-      body: renderPipeline,
-      align: 'left',
-      padding: '0.25em 20px 0.857em',
-    },
-    {
-      field: 'name',
-      header: 'Name',
-      body: renderName,
-      align: 'left',
-      padding: '0.25em 20px 0.857em',
-    },
-    {
-      field: 'start',
-      header: 'Start',
-      body: renderStart,
-    },
-    {
-      field: 'duration',
-      header: 'Duration',
-      body: renderDuration,
-    },
-    {
-      field: 'runs',
-      header: 'Runs',
-      body: actionRuns,
-    },
-    // {
-    //   field: 'status',
-    //   header: 'Status',
-    //   body: actionStatus,
-    // },
-  ];
+    const columns = [
+      {
+        field: 'pipeline',
+        header: 'Pipeline',
+        body: this.renderPipeline,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
+      },
+      {
+        field: 'name',
+        header: 'Name',
+        body: this.renderName,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
+      },
+      {
+        field: 'start',
+        header: 'Start',
+        body: this.renderStart,
+      },
+      {
+        field: 'duration',
+        header: 'Duration',
+        body: this.renderDuration,
+      },
+      {
+        field: 'runs',
+        header: 'Runs',
+        body: this.actionRuns,
+      },
+      // {
+      //   field: 'status',
+      //   header: 'Status',
+      //   body: this.actionStatus,
+      // },
+    ];
 
-  const [state, setState] = useState({
-    cols: columns,
-    loading: false,
-    visible: false,
-    pipelineProcesses: [],
-  });
+    this.state = {
+      cols: columns,
+      loading: false,
+      visible: false,
+      pipelineProcesses: [],
+    };
+  }
 
-
-  const onShowRuns = rowData => {
-    onClickModal(rowData);
-    loadTableProcesses(rowData);
+  static propTypes = {
+    title: PropTypes.string,
+    rows: PropTypes.array,
+    classes: PropTypes.object.isRequired,
   };
 
-  const onClickModal = () => {
-    setState({ visible: true });
+  onShowRuns = rowData => {
+    this.onClickModal(rowData);
+    this.loadTableProcesses(rowData);
   };
 
-  const onHideModal = () => {
-    setState({ visible: false });
+  // onShowStatus = rowData => {
+  //   console.log('onShowStatus: ', rowData);
+  // };
+
+  onClickModal = () => {
+    this.setState({ visible: true });
   };
 
-  const renderPipeline = rowData => {
+  onHideModal = () => {
+    this.setState({ visible: false });
+  };
+
+  renderPipeline = rowData => {
     return (
-      <span title={rowData.pipeline} style={makeStyle.pipelineColumn}>
+      <span title={rowData.pipeline} style={styles.pipelineColumn}>
         {rowData.pipeline}
       </span>
     );
   };
 
-  const renderName = rowData => {
+  renderName = rowData => {
     return <span title={rowData.name}>{rowData.name}</span>;
   };
 
-  const renderStart = rowData => {
+  renderStart = rowData => {
     if (rowData.start)
       return <span title={rowData.start}>{rowData.startTime}</span>;
     return '-';
   };
 
-  const renderDuration = rowData => {
+  renderDuration = rowData => {
     return <span title={rowData.duration}>{rowData.duration}</span>;
   };
 
-  const actionRuns = rowData => {
-    const { classes } = props;
+  actionRuns = rowData => {
+    const { classes } = this.props;
     if (rowData.runs !== 0) {
       return (
         <Button
           variant="contained"
           className={classes.button}
-          style={makeStyle.btnRuns}
+          style={styles.btnRuns}
           title={rowData.runs}
-          onClick={() => onShowRuns(rowData)}
+          onClick={() => this.onShowRuns(rowData)}
         >
           {rowData.runs}
         </Button>
@@ -116,7 +162,7 @@ function Stages(props) {
       <Button
         variant="contained"
         className={classes.button}
-        style={makeStyle.btnRuns}
+        style={styles.btnRuns}
         title={rowData.runs}
       >
         {rowData.runs}
@@ -125,15 +171,15 @@ function Stages(props) {
   };
 
   // actionStatus = rowData => {
-  //   const { classes } = props;
+  //   const { classes } = this.props;
   //   if (rowData.status === 'failure') {
   //     return (
   //       <Button
   //         variant="contained"
   //         className={classes.button}
-  //         style={makeStyle.btnFailure}
+  //         style={styles.btnFailure}
   //         title="Failure"
-  //         onClick={() => onShowStatus(rowData)}
+  //         onClick={() => this.onShowStatus(rowData)}
   //       >
   //         Failure
   //       </Button>
@@ -143,9 +189,9 @@ function Stages(props) {
   //       <Button
   //         variant="contained"
   //         className={classes.button}
-  //         style={makeStyle.btnRunning}
+  //         style={styles.btnRunning}
   //         title="Running"
-  //         onClick={() => onShowStatus(rowData)}
+  //         onClick={() => this.onShowStatus(rowData)}
   //       >
   //         Running
   //       </Button>
@@ -155,9 +201,9 @@ function Stages(props) {
   //       <Button
   //         variant="contained"
   //         className={classes.button}
-  //         style={makeStyle.btnSuccess}
+  //         style={styles.btnSuccess}
   //         title="Success"
-  //         onClick={() => onShowStatus(rowData)}
+  //         onClick={() => this.onShowStatus(rowData)}
   //       >
   //         Success
   //       </Button>
@@ -165,13 +211,13 @@ function Stages(props) {
   //   }
   // };
 
-  const renderProcessModal = () => {
-    if (state.currentProcess) {
+  renderProcessModal = () => {
+    if (this.state.currentProcess) {
       const title =
         'Processes: ' +
-        state.currentProcess.pipeline +
+        this.state.currentProcess.pipeline +
         ' (' +
-        state.currentProcess.runs +
+        this.state.currentProcess.runs +
         ')';
       const header = (
         <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>{title}</span>
@@ -179,9 +225,9 @@ function Stages(props) {
       return (
         <Dialog
           header={header}
-          visible={state.visible}
+          visible={this.state.visible}
           width="90%"
-          onHide={onHideModal}
+          onHide={this.onHideModal}
           maximizable={true}
           modal={true}
           style={{ zIndex: '999' }}
@@ -191,7 +237,7 @@ function Stages(props) {
             zIndex: '10000',
           }}
         >
-          <TableProcess pipelineProcesses={state.pipelineProcesses} />
+          <TableProcess pipelineProcesses={this.state.pipelineProcesses} />
         </Dialog>
       );
     } else {
@@ -199,7 +245,7 @@ function Stages(props) {
     }
   };
 
-  const loadTableProcesses = async currentProcess => {
+  loadTableProcesses = async currentProcess => {
     const pipelineProcesses = await Centaurus.getAllProcessesByFieldIdAndPipelineId(
       currentProcess.tagId,
       currentProcess.fieldId,
@@ -248,7 +294,7 @@ function Stages(props) {
             product: row.productLog,
           };
         });
-      setState({
+      this.setState({
         pipelineProcesses: pipelineProcessesLocal,
         currentProcess: currentProcess,
       });
@@ -257,64 +303,66 @@ function Stages(props) {
     }
   };
 
-  const header = (
-    <div>
-      <p style={makeStyle.stageTitle}>{props.title}</p>
-    </div>
-  );
-
-  const columnsList = state.cols.map((col, i) => {
-    return (
-      <Column
-        key={i}
-        field={col.field}
-        // header={
-        //   <span
-        //     style={{
-        //       textAlign: 'center',
-        //       float: 'left',
-        //       width: '100%',
-        //     }}
-        //   >
-        //     {col.header}
-        //   </span>
-        // }
-        header={col.header}
-        // sortable={true}
-        body={col.body}
-        style={{
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          padding: col.padding ? col.padding : '0.25em 0.857em',
-          textAlign: col.align ? col.align : 'auto',
-        }}
-      />
+  render() {
+    const header = (
+      <div>
+        <p style={styles.stageTitle}>{this.props.title}</p>
+      </div>
     );
-  });
 
-  return (
-    <div>
-      <DataTable
-        header={header}
-        value={props.rows}
-        resizableColumns={true}
-        columnResizeMode="expand"
-        reorderableColumns={true}
-        reorderableRows={true}
-        responsive={true}
-        selectionMode="single"
-        selection={state.selectedCar1}
-        onSelectionChange={e => setState({ selectedCar1: e.data })}
-        scrollable={true}
-        // scrollHeight="200px"
-        loading={state.loading}
-      >
-        {columnsList}
-      </DataTable>
-      {renderProcessModal()}
-    </div>
-  );
+    const columns = this.state.cols.map((col, i) => {
+      return (
+        <Column
+          key={i}
+          field={col.field}
+          // header={
+          //   <span
+          //     style={{
+          //       textAlign: 'center',
+          //       float: 'left',
+          //       width: '100%',
+          //     }}
+          //   >
+          //     {col.header}
+          //   </span>
+          // }
+          header={col.header}
+          // sortable={true}
+          body={col.body}
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            padding: col.padding ? col.padding : '0.25em 0.857em',
+            textAlign: col.align ? col.align : 'auto',
+          }}
+        />
+      );
+    });
+
+    return (
+      <div>
+        <DataTable
+          header={header}
+          value={this.props.rows}
+          resizableColumns={true}
+          columnResizeMode="expand"
+          reorderableColumns={true}
+          reorderableRows={true}
+          responsive={true}
+          selectionMode="single"
+          selection={this.state.selectedCar1}
+          onSelectionChange={e => this.setState({ selectedCar1: e.data })}
+          scrollable={true}
+          // scrollHeight="200px"
+          loading={this.state.loading}
+        >
+          {columns}
+        </DataTable>
+        {this.renderProcessModal()}
+      </div>
+    );
+  }
 }
 
-export default (Stages);
+export default withStyles(styles)(Stages);
