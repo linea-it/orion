@@ -41,7 +41,7 @@ class CustomColumnChooser extends Component {
           return (
             <React.Fragment key={key}>
               {isFirstIndex ? (
-                <>
+                <div>
                   <FormGroup row style={styles.chooserFormGroupWrapper}>
                     <FormControlLabel
                       control={(
@@ -59,7 +59,7 @@ class CustomColumnChooser extends Component {
                     />
                   </FormGroup>
                   <Divider />
-                </>
+                </div>
               ) : null}
               <FormGroup row style={styles.chooserFormGroupWrapper}>
                 <FormControlLabel

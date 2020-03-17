@@ -99,3 +99,4 @@ CustomTableHeaderRowCell.propTypes = {
 };
 
 export default CustomTableHeaderRowCell;
+

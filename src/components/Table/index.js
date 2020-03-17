@@ -259,7 +259,7 @@ function Table({
   const renderTable = (rows) => {
     if (remote === true) {
       return (
-        <>
+        <div>
           <Grid rows={rows} columns={customColumns}>
             {hasSearching ? <SearchState onValueChange={changeSearchValue} /> : null}
             {hasSorting ? <SortingState sorting={sorting} onSortingChange={changeSorting} columnExtensions={customColumnExtensions} /> : null}
@@ -326,11 +326,11 @@ function Table({
               : null}
           </Grid>
           {renderModal()}
-        </>
+        </div>
       );
     }
     return (
-      <>
+      <div>
         <Grid rows={rows} columns={customColumns}>
           {hasSearching ? <SearchState /> : null}
           {hasSorting
@@ -407,7 +407,7 @@ function Table({
             : null}
         </Grid>
         {renderModal()}
-      </>
+      </div>
     );
   };
 
@@ -430,14 +430,14 @@ function Table({
         ) {
           if (column.action) {
             line[key] = (
-              <>
+              <div>
                 <Button onClick={() => onClickAction(column, row)}>
                   {column.icon}
                 </Button>
-              </>
+              </div>
             );
           } else {
-            line[key] = <>{column.icon}</>;
+            line[key] = <div>{column.icon}</div>;
           }
           /*
             If the current row has a custom element, than render it, instead of the default.
@@ -457,11 +457,11 @@ function Table({
   });
 
   return (
-    <>
+    <div>
       {hasFiltering ? renderFilter() : null}
       {renderTable(rows)}
       {customLoading && renderLoading()}
-    </>
+    </div>
   );
 }
 
