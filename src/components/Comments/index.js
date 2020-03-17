@@ -1,21 +1,24 @@
 import React from 'react';
-import { Card } from 'primereact/card';
-import style from './styles'
+import {List, ListItem} from '@material-ui/core';
+import {classe, style} from './styles'
 
 function Comments(props) {
 
   const styles = style;
+  const classes = classe();
 
   return (
-    <Card style={styles.card}>
-      {props.commentsProcess.map((item, i) => {
-        return (
-          <div style={styles.comment} key={i}>
-            {item.date} - <strong>{item.user}:</strong> {item.comments}
-          </div>
-        );
-      })}
-    </Card>
+    <List className={classes.root}>
+        {props.commentsProcess.map((item, i) => {
+          return (
+            <ListItem alignItems="flex-start">
+              <div style={styles.comment} key={i}>
+                {item.date} - <strong>{item.user}:</strong> {item.comments}
+              </div>
+            </ListItem>
+          );
+        })}
+    </List>
   );
 }
 
