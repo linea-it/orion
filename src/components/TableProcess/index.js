@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Dialog } from 'primereact/dialog';
+import {Dialog, DialogTitle, DialogContent} from '@material-ui/core';
+import {IconButton, Typography} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+// import { Dialog } from 'primereact/dialog';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -27,6 +30,13 @@ const styles = {
     display: 'block',
     margin: '0 auto',
     lineHeight: '.5',
+  },
+  titleDialog:{
+    alignSelf: "center",
+    textAlign: "center",
+  },
+  closeButton:{
+    float: "right",
   },
   btnStatus: {
     textTransform: 'none',
@@ -539,32 +549,27 @@ class TableProcess extends Component {
   };
 
   renderModal = () => {
+    const { classes } = this.props;
     const title = this.state.modalType;
     const header = (
       <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>{title}</span>
     );
     return (
       <Dialog
-        header={header}
-        visible={this.state.visible}
-        width="50%"
-        onHide={this.onHideModal}
-        maximizable={true}
-        modal={false}
-        contentStyle={{ padding: '0', marginBottom: '-10px' }}
+        open={this.state.visible}
+        maxWidth="md"
+        onClose={this.onHideModal}
       >
-        <div
-          style={{
-            position: 'fixed',
-            width: '100%',
-            height: '100%',
-            background: 'rgba(102, 102, 102, 0.5)',
-            top: '0',
-            left: '0',
-            zIndex: '-1',
-          }}
-        />
-        {this.renderContentModal()}
+        <DialogTitle id="simple-dialog-title">
+          <Typography className={classes.titleDialog} variant="h6">{header}
+            <IconButton aria-label="close" className={classes.closeButton} onClick={this.onHideModal}>
+              <CloseIcon />
+            </IconButton>
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          {this.renderContentModal()}
+        </DialogContent>
       </Dialog>
     );
   };
