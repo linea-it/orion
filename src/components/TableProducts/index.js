@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
-import Paper from '@material-ui/core/Paper';
+import CardContent from '@material-ui/core/CardContent';
 import Dialog from '@material-ui/core/Dialog';
 
+import CustomTable from '../Table/';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
 
 const styles = {
   table: {
@@ -56,36 +48,38 @@ class TableProducts extends Component {
 
     const columns = [
       {
-        field: 'process',
-        header: 'Process ID',
+        name: 'process',
+        title: 'Process ID',
+        width: 200,
       },
       {
-        field: 'product',
-        header: 'Product Name',
+        name: 'product',
+        title: 'Product Name',
+        width: 150,
       },
       {
-        field: 'type',
-        header: 'Type',
+        name: 'type',
+        title: 'Type',
+        width: 150,
       },
       {
-        field: 'class',
-        header: 'Class',
+        name: 'class',
+        title: 'Class',
       },
       {
-        field: 'database',
-        header: 'Database',
+        name: 'database',
+        title: 'Database',
       },
       {
-        field: 'dataType',
-        header: 'Data Type',
+        name: 'dataType',
+        title: 'Data Type',
       },
     ];
 
     this.state = {
       cols: columns,
-      loading: false,
-      visible: false,
     };
+    
   }
 
   static propTypes = {
@@ -93,7 +87,7 @@ class TableProducts extends Component {
     productsProcess: PropTypes.array,
     classes: PropTypes.object.isRequired,
   };
-
+  
   onShowProvenance = rowData => {
     this.onClickModal(rowData, 'provenance');
   };
@@ -139,7 +133,7 @@ class TableProducts extends Component {
         header="Title Modal"
         visible={this.state.visible}
         width="50%"
-        onHide={this.onHideModal}
+        onClose={this.onHideModal}
         maximizable={true}
         modal={true}
         style={{ zIndex: '999' }}
@@ -151,38 +145,24 @@ class TableProducts extends Component {
   };
 
   render() {
-    const columns = this.state.cols.map((col, i) => {
-      return (
-        <TableCell align="right" key={col.field} >{col.header}</TableCell>
-      );
-    });
 
     return (
       <div>
-      <TableContainer component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              {columns}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.props.productsProcess.map((product, i) => {
-              return(
-                <TableRow>   
-                  {this.state.cols.map((col, j) => {
-                    return(
-                      <TableCell align="right">
-                        <span title={product[col.field]}>{product[col.field]}</span>
-                      </TableCell> 
-                    )
-                  })}
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        <CardContent>
+          <CustomTable
+            columns={this.state.cols}
+            data={this.props.productsProcess}
+            remote={false}
+            pageSize={5}
+            pageSizes={[5,15,50,100,500]}
+            totalCount={this.props.productsProcess.length}
+            reload={false}
+            hasSearching={false}
+            hasToolbar={false}
+            hasColumnVisibility={false}
+            loading
+          />
+        </CardContent>
         {this.renderModal()}
       </div>
     );
