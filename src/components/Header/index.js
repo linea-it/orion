@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Button } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import Logo from '../../assets/img/icon-des.png';

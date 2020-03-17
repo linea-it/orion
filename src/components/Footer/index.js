@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import { Typography, Toolbar } from '@material-ui/core';
 import logo from '../../assets/img/linea-logo-mini.png';

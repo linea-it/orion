@@ -243,6 +243,7 @@ export default class Centaurus {
                 },
               };
             }
+            return;
           })
           .filter(pipeline => !!pipeline);
       } else {
