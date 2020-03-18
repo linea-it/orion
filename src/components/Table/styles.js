@@ -24,7 +24,9 @@ const styles = makeStyles({
     display: 'inline-block',
     transform: 'translateX(-50%)',
   },
+  noPadding: {
+    padding: 0,
+  },
 });
-
 
 export default styles;

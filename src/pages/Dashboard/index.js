@@ -5,9 +5,8 @@ import Stages from '../../components/Stages/';
 import styles from './styles';
 
 function Dashboard() {
-
   const classes = styles();
-  const [state, setState] = useState({tables: []});
+  const [state, setState] = useState({ tables: [] });
 
   const saveStage = tableStages => {
     /*
@@ -105,4 +104,4 @@ function Dashboard() {
   );
 }
 
-export default (Dashboard);
+export default Dashboard;

@@ -38,9 +38,18 @@ import styles from './styles';
 function CustomNoDataCellComponent({ ...noDatProps }, customLoading) {
   const classes = styles();
   return (
-    <td className={clsx(classes.noDataCell, 'MuiTableCell-root', 'MuiTableCell-body')} {...noDatProps}>
+    <td
+      className={clsx(
+        classes.noDataCell,
+        'MuiTableCell-root',
+        'MuiTableCell-body'
+      )}
+      {...noDatProps}
+    >
       <div className={classes.noDataWrapper}>
-        <big className={classes.noDataText}>{customLoading ? 'Loading...' : 'No Data'}</big>
+        <big className={classes.noDataText}>
+          {customLoading ? 'Loading...' : 'No Data'}
+        </big>
       </div>
     </td>
   );
@@ -71,37 +80,46 @@ function Table({
   hasLineBreak,
   loading,
 }) {
-  const customColumns = columns.map((column) => ({
+  const customColumns = columns.map(column => ({
     name: column.name,
     title: column.title,
     hasLineBreak: column.hasLineBreak ? column.hasLineBreak : false,
     headerTooltip: column.headerTooltip ? column.headerTooltip : false,
   }));
-  const customColumnExtensions = columns.map((column) => ({
+  const customColumnExtensions = columns.map(column => ({
     columnName: column.name,
     width: !column.width ? 120 : column.width,
     maxWidth: column.maxWidth ? column.maxWidth : '',
-    sortingEnabled:
-      !!(!('sortingEnabled' in column) || column.sortingEnabled === true),
+    sortingEnabled: !!(
+      !('sortingEnabled' in column) || column.sortingEnabled === true
+    ),
     align:
       !('align' in column) || column.align === 'left' ? 'left' : column.align,
-    wordWrapEnabled:
-      !(!('wordWrapEnabled' in column) || column.wordWrapEnabled === false),
+    wordWrapEnabled: !(
+      !('wordWrapEnabled' in column) || column.wordWrapEnabled === false
+    ),
   }));
 
-  const customDefaultColumnWidths = columns.map((column) => ({
+  const customDefaultColumnWidths = columns.map(column => ({
     columnName: column.name,
     width: !column.width ? 120 : column.width,
   }));
 
   const customSorting = () => {
-    if (defaultSorting && defaultSorting[0].columnName && defaultSorting[0].direction) {
+    if (
+      defaultSorting &&
+      defaultSorting[0].columnName &&
+      defaultSorting[0].direction
+    ) {
       return defaultSorting;
-    } if (columns && columns[0]) {
-      return [{
-        columnName: columns[0].name,
-        direction: 'asc',
-      }];
+    }
+    if (columns && columns[0]) {
+      return [
+        {
+          columnName: columns[0].name,
+          direction: 'asc',
+        },
+      ];
     }
     return null;
   };
@@ -124,7 +142,12 @@ function Table({
   useEffect(() => {
     if (remote === true) {
       loadData({
-        sorting, pageSize, currentPage, after, filter, searchValue,
+        sorting,
+        pageSize,
+        currentPage,
+        after,
+        filter,
+        searchValue,
       });
     }
   }, [sorting, currentPage, reload, pageSize, filter, searchValue]); // eslint-disable-line
@@ -146,12 +169,11 @@ function Table({
     if (loading !== null) setCustomLoading(loading);
   }, [loading]);
 
-
   useEffect(() => {
     setCustomModalContent(modalContent);
   }, [modalContent]);
 
-  const changeSorting = (value) => {
+  const changeSorting = value => {
     if (remote === true) {
       clearData();
       setCustomLoading(true);
@@ -159,7 +181,7 @@ function Table({
     setSorting(value);
   };
 
-  const changeCurrentPage = (value) => {
+  const changeCurrentPage = value => {
     const offset = value * pageSize;
     const next = window.btoa(`arrayconnection:${offset - 1}`);
     if (remote === true) {
@@ -169,7 +191,7 @@ function Table({
     setAfter(next);
   };
 
-  const changePageSize = (value) => {
+  const changePageSize = value => {
     const totalPages = Math.ceil(customTotalCount / value);
     const theCurrentPage = Math.min(currentPage, totalPages - 1);
     if (remote === true) {
@@ -179,7 +201,7 @@ function Table({
     setCustomPageSize(value);
   };
 
-  const changeSearchValue = (value) => {
+  const changeSearchValue = value => {
     if (value.length > 2) {
       if (remote === true) {
         clearData();
@@ -191,10 +213,10 @@ function Table({
     }
   };
 
-  const changeSelection = (value) => {
+  const changeSelection = value => {
     let select = value;
     if (value.length > 0) {
-      const diff = value.filter((x) => !selection.includes(x));
+      const diff = value.filter(x => !selection.includes(x));
       select = diff;
     } else {
       select = [];
@@ -202,7 +224,7 @@ function Table({
     setSelection(select);
   };
 
-  const handleChangeFilter = (evt) => {
+  const handleChangeFilter = evt => {
     if (remote === true) {
       clearData();
       setCustomLoading(true);
@@ -256,51 +278,54 @@ function Table({
     column.action(row);
   };
 
-  const renderTable = (rows) => {
+  const renderTable = rows => {
     if (remote === true) {
       return (
         <div>
           <Grid rows={rows} columns={customColumns}>
-            {hasSearching ? <SearchState onValueChange={changeSearchValue} /> : null}
-            {hasSorting ? <SortingState sorting={sorting} onSortingChange={changeSorting} columnExtensions={customColumnExtensions} /> : null}
-            {hasPagination
-              ? (
-                <PagingState
-                  currentPage={currentPage}
-                  onCurrentPageChange={changeCurrentPage}
-                  pageSize={customPageSize}
-                  onPageSizeChange={changePageSize}
-                />
-              ) : null}
-            {hasPagination
-              ? <CustomPaging totalCount={customTotalCount} />
-              : null}
+            {hasSearching ? (
+              <SearchState onValueChange={changeSearchValue} />
+            ) : null}
+            {hasSorting ? (
+              <SortingState
+                sorting={sorting}
+                onSortingChange={changeSorting}
+                columnExtensions={customColumnExtensions}
+              />
+            ) : null}
+            {hasPagination ? (
+              <PagingState
+                currentPage={currentPage}
+                onCurrentPageChange={changeCurrentPage}
+                pageSize={customPageSize}
+                onPageSizeChange={changePageSize}
+              />
+            ) : null}
+            {hasPagination ? (
+              <CustomPaging totalCount={customTotalCount} />
+            ) : null}
             {hasSelection ? (
               <SelectionState
                 selection={selection}
                 onSelectionChange={changeSelection}
               />
-            )
-              : null}
+            ) : null}
             {hasGrouping ? (
               <GroupingState
                 grouping={grouping}
                 defaultExpandedGroups={defaultExpandedGroups}
-
               />
-            )
-              : null}
+            ) : null}
             {hasGrouping ? <IntegratedGrouping /> : null}
             {loading !== null ? (
               <MuiTable
                 columnExtensions={customColumnExtensions}
-                noDataCellComponent={(props) => CustomNoDataCellComponent({ ...props }, customLoading)}
+                noDataCellComponent={props =>
+                  CustomNoDataCellComponent({ ...props }, customLoading)
+                }
               />
-
             ) : (
-              <MuiTable
-                columnExtensions={customColumnExtensions}
-              />
+              <MuiTable columnExtensions={customColumnExtensions} />
             )}
             {hasSelection ? (
               <TableSelection
@@ -309,21 +334,18 @@ function Table({
                 showSelectionColumn={false}
               />
             ) : null}
-            {hasResizing ? <TableColumnResizing defaultColumnWidths={customDefaultColumnWidths} /> : null}
+            {hasResizing ? (
+              <TableColumnResizing
+                defaultColumnWidths={customDefaultColumnWidths}
+              />
+            ) : null}
             <CustomTableHeaderRowCell hasSorting={hasSorting} />
-            {hasGrouping ? (
-              <TableGroupRow />
-            )
-              : null}
+            {hasGrouping ? <TableGroupRow /> : null}
             {hasPagination ? <PagingPanel pageSizes={pageSizes} /> : null}
             {hasToolbar ? <Toolbar /> : null}
             {hasSearching ? <SearchPanel /> : null}
-            {hasColumnVisibility
-              ? (<TableColumnVisibility />)
-              : null}
-            {hasColumnVisibility
-              ? (<CustomColumnChooser />)
-              : null}
+            {hasColumnVisibility ? <TableColumnVisibility /> : null}
+            {hasColumnVisibility ? <CustomColumnChooser /> : null}
           </Grid>
           {renderModal()}
         </div>
@@ -333,54 +355,45 @@ function Table({
       <div>
         <Grid rows={rows} columns={customColumns}>
           {hasSearching ? <SearchState /> : null}
-          {hasSorting
-            ? (
-              <SortingState
-                sorting={sorting}
-                onSortingChange={changeSorting}
-                columnExtensions={customColumnExtensions}
-              />
-            )
-            : null}
+          {hasSorting ? (
+            <SortingState
+              sorting={sorting}
+              onSortingChange={changeSorting}
+              columnExtensions={customColumnExtensions}
+            />
+          ) : null}
           {hasSorting ? <IntegratedSorting /> : null}
-          {hasPagination
-            ? (
-              <PagingState
-                currentPage={currentPage}
-                onCurrentPageChange={setCurrentPage}
-                onPageSizeChange={setCustomPageSize}
-                pageSize={customPageSize}
-              />
-            ) : null}
-          {hasPagination
-            ? (
-              <IntegratedPaging />
-            ) : null}
+          {hasPagination ? (
+            <PagingState
+              currentPage={currentPage}
+              onCurrentPageChange={setCurrentPage}
+              onPageSizeChange={setCustomPageSize}
+              pageSize={customPageSize}
+            />
+          ) : null}
+          {hasPagination ? <IntegratedPaging /> : null}
           {hasSelection ? (
             <SelectionState
               selection={selection}
               onSelectionChange={changeSelection}
             />
-          )
-            : null}
+          ) : null}
           {hasGrouping ? (
             <GroupingState
               grouping={grouping}
               defaultExpandedGroups={defaultExpandedGroups}
             />
-          )
-            : null}
+          ) : null}
           {hasGrouping ? <IntegratedGrouping /> : null}
           {loading !== null ? (
             <MuiTable
               columnExtensions={customColumnExtensions}
-              noDataCellComponent={(props) => CustomNoDataCellComponent({ ...props }, customLoading)}
+              noDataCellComponent={props =>
+                CustomNoDataCellComponent({ ...props }, customLoading)
+              }
             />
-
           ) : (
-            <MuiTable
-              columnExtensions={customColumnExtensions}
-            />
+            <MuiTable columnExtensions={customColumnExtensions} />
           )}
 
           {hasSelection ? (
@@ -390,43 +403,44 @@ function Table({
               showSelectionColumn={false}
             />
           ) : null}
-          {hasResizing ? <TableColumnResizing defaultColumnWidths={customDefaultColumnWidths} /> : null}
-          <CustomTableHeaderRowCell hasLineBreak={hasLineBreak} hasSorting={hasSorting} remote={remote} />
-          {hasGrouping ? (
-            <TableGroupRow />
-          )
-            : null}
+          {hasResizing ? (
+            <TableColumnResizing
+              defaultColumnWidths={customDefaultColumnWidths}
+            />
+          ) : null}
+          <CustomTableHeaderRowCell
+            hasLineBreak={hasLineBreak}
+            hasSorting={hasSorting}
+            remote={remote}
+          />
+          {hasGrouping ? <TableGroupRow /> : null}
           {hasPagination ? <PagingPanel pageSizes={pageSizes} /> : null}
           {hasToolbar ? <Toolbar /> : null}
           {hasSearching ? <SearchPanel /> : null}
-          {hasColumnVisibility
-            ? (<TableColumnVisibility />)
-            : null}
-          {hasColumnVisibility
-            ? (<CustomColumnChooser />)
-            : null}
+          {hasColumnVisibility ? <TableColumnVisibility /> : null}
+          {hasColumnVisibility ? <CustomColumnChooser /> : null}
         </Grid>
         {renderModal()}
       </div>
     );
   };
 
-  const rows = customData.map((row) => {
+  const rows = customData.map(row => {
     const line = {};
-    Object.keys(row).forEach((key) => {
-      const column = columns.filter((el) => el.name === key)[0];
+    Object.keys(row).forEach(key => {
+      const column = columns.filter(el => el.name === key)[0];
       if (key in row) {
         if (
-          (column && column.icon && typeof row[key] !== 'object')
+          (column && column.icon && typeof row[key] !== 'object') ||
           /*
           If the current row is an array or object, then verify if its length is higher than 1.
           This was created for the "Release" column,
           that sometimes has multiple releases for a single dataset.
           */
-          || (column
-            && column.icon
-            && (typeof row[key] === 'object' && row[key].length > 1)
-            && !column.customElement)
+          (column &&
+            column.icon &&
+            (typeof row[key] === 'object' && row[key].length > 1) &&
+            !column.customElement)
         ) {
           if (column.action) {
             line[key] = (
@@ -477,6 +491,7 @@ Table.defaultProps = {
   hasSelection: true,
   hasColumnVisibility: true,
   hasPagination: true,
+  sizeTable: null,
   hasGrouping: false,
   hasToolbar: true,
   defaultExpandedGroups: [''],
@@ -488,7 +503,6 @@ Table.defaultProps = {
   grouping: [{}],
   loading: null,
 };
-
 
 Table.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -510,6 +524,7 @@ Table.propTypes = {
   hasColumnVisibility: PropTypes.bool,
   hasGrouping: PropTypes.bool,
   hasPagination: PropTypes.bool,
+  sizeTable: PropTypes.string,
   hasToolbar: PropTypes.bool,
   hasLineBreak: PropTypes.bool,
   defaultExpandedGroups: PropTypes.arrayOf(PropTypes.string),

@@ -19,7 +19,7 @@ import PipelineFilter from '../PipelineFilter/';
 const BootstrapInput = withStyles(theme => ({
   root: {
     'label + &': {
-      marginLeft: theme.spacing.unit * 9,
+      marginLeft: theme.spacing(9),
     },
   },
   input: {
