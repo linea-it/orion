@@ -79,7 +79,6 @@ class TableProducts extends Component {
     this.state = {
       cols: columns,
     };
-    
   }
 
   static propTypes = {
@@ -87,7 +86,7 @@ class TableProducts extends Component {
     productsProcess: PropTypes.array,
     classes: PropTypes.object.isRequired,
   };
-  
+
   onShowProvenance = rowData => {
     this.onClickModal(rowData, 'provenance');
   };
@@ -115,7 +114,6 @@ class TableProducts extends Component {
   onHideModal = () => {
     this.setState({ visible: false });
   };
-
 
   renderContentModal = () => {
     if (this.state.modalType === 'provenance') {
@@ -145,7 +143,6 @@ class TableProducts extends Component {
   };
 
   render() {
-
     return (
       <div>
         <CardContent>
@@ -154,7 +151,7 @@ class TableProducts extends Component {
             data={this.props.productsProcess}
             remote={false}
             pageSize={5}
-            pageSizes={[5,15,50,100,500]}
+            pageSizes={[5, 15, 50, 100, 500]}
             totalCount={this.props.productsProcess.length}
             reload={false}
             hasSearching={false}
