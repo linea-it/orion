@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CustomTable from '../Table/';
 
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Dialog } from 'primereact/dialog';
+// import { DataTable } from 'primereact/datatable';
+// import { Column } from 'primereact/column';
+// import { Dialog } from 'primereact/dialog';
 
-import { withStyles } from '@material-ui/core/styles';
+import {
+  withStyles,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  CardContent,
+  Typography,
+  IconButton,
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
 
 import Centaurus from '../../services/api';
@@ -14,12 +24,22 @@ import moment from 'moment';
 import TableProcess from '../TableProcess/';
 
 const styles = {
+  dialog: {
+    padding: 0,
+  },
+  titleDialog: {
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  closeButton: {
+    float: 'right',
+  },
   button: {
     textTransform: 'none',
     padding: '1px 5px',
     minWidth: '5em',
     minHeight: '2em',
-    display: 'block',
+    // display: 'block',
     margin: '0 auto',
     fontSize: '1em',
   },
@@ -55,37 +75,37 @@ class Stages extends Component {
 
     const columns = [
       {
-        field: 'pipeline',
-        header: 'Pipeline',
-        body: this.renderPipeline,
+        name: 'pipeline',
+        title: 'Pipeline',
+        customElement: this.renderPipeline,
         align: 'left',
         padding: '0.25em 20px 0.857em',
       },
       {
-        field: 'name',
-        header: 'Name',
-        body: this.renderName,
+        name: 'name',
+        title: 'Name',
+        customElement: this.renderName,
         align: 'left',
         padding: '0.25em 20px 0.857em',
       },
       {
-        field: 'start',
-        header: 'Start',
-        body: this.renderStart,
+        name: 'start',
+        title: 'Start',
+        customElement: this.renderStart,
       },
       {
-        field: 'duration',
-        header: 'Duration',
-        body: this.renderDuration,
+        name: 'duration',
+        title: 'Duration',
+        customElement: this.renderDuration,
       },
       {
-        field: 'runs',
-        header: 'Runs',
-        body: this.actionRuns,
+        name: 'runs',
+        title: 'Runs',
+        customElement: this.actionRuns,
       },
       // {
-      //   field: 'status',
-      //   header: 'Status',
+      //   name: 'status',
+      //   title: 'Status',
       //   body: this.actionStatus,
       // },
     ];
@@ -212,6 +232,7 @@ class Stages extends Component {
   // };
 
   renderProcessModal = () => {
+    const { classes } = this.props;
     if (this.state.currentProcess) {
       const title =
         'Processes: ' +
@@ -224,20 +245,25 @@ class Stages extends Component {
       );
       return (
         <Dialog
-          header={header}
-          visible={this.state.visible}
-          width="90%"
-          onHide={this.onHideModal}
-          maximizable={true}
-          modal={true}
-          style={{ zIndex: '999' }}
-          contentStyle={{
-            padding: '0',
-            position: 'relative',
-            zIndex: '10000',
-          }}
+          open={this.state.visible}
+          maxWidth="lg"
+          onClose={this.onHideModal}
         >
-          <TableProcess pipelineProcesses={this.state.pipelineProcesses} />
+          <DialogTitle id="dialog-title">
+            <Typography className={classes.titleDialog} variant="h6">
+              {header ? header : ''}
+              <IconButton
+                aria-label="close"
+                className={classes.closeButton}
+                onClick={this.onHideModal}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Typography>
+          </DialogTitle>
+          <DialogContent>
+            <TableProcess pipelineProcesses={this.state.pipelineProcesses} />
+          </DialogContent>
         </Dialog>
       );
     } else {
@@ -304,45 +330,66 @@ class Stages extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     const header = (
       <div>
         <p style={styles.stageTitle}>{this.props.title}</p>
       </div>
     );
 
-    const columns = this.state.cols.map((col, i) => {
-      return (
-        <Column
-          key={i}
-          field={col.field}
-          // header={
-          //   <span
-          //     style={{
-          //       textAlign: 'center',
-          //       float: 'left',
-          //       width: '100%',
-          //     }}
-          //   >
-          //     {col.header}
-          //   </span>
-          // }
-          header={col.header}
-          // sortable={true}
-          body={col.body}
-          style={{
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            padding: col.padding ? col.padding : '0.25em 0.857em',
-            textAlign: col.align ? col.align : 'auto',
-          }}
-        />
-      );
-    });
+    // const columns = this.state.cols.map((col, i) => {
+    //   return (
+    //     <Column
+    //       key={i}
+    //       field={col.name}
+    //       // header={
+    //       //   <span
+    //       //     style={{
+    //       //       textAlign: 'center',
+    //       //       float: 'left',
+    //       //       width: '100%',
+    //       //     }}
+    //       //   >
+    //       //     {col.header}
+    //       //   </span>
+    //       // }
+    //       header={col.title}
+    //       // sortable={true}
+    //       body={col.body}
+    //       style={{
+    //         whiteSpace: 'nowrap',
+    //         overflow: 'hidden',
+    //         textOverflow: 'ellipsis',
+    //         padding: col.padding ? col.padding : '0.25em 0.857em',
+    //         textAlign: col.align ? col.align : 'auto',
+    //       }}
+    //     />
+    //   );
+    // });
 
     return (
       <div>
-        <DataTable
+        <CardContent>
+          <Typography className={classes.titleDialog} variant="subtitle2">
+            {header ? header : ''}
+          </Typography>
+          <CustomTable
+            columns={this.state.cols}
+            data={this.props.rows}
+            remote={false}
+            pageSize={this.props.rows.length}
+            pageSizes={[this.props.rows.length]}
+            totalCount={this.props.rows.length}
+            reload={false}
+            hasSearching={false}
+            hasToolbar={false}
+            hasPagination={false}
+            hasColumnVisibility={false}
+            sizeTable={'smal'}
+          />
+        </CardContent>
+        {this.renderProcessModal()}
+        {/* <DataTable
           header={header}
           value={this.props.rows}
           resizableColumns={true}
@@ -359,7 +406,7 @@ class Stages extends Component {
         >
           {columns}
         </DataTable>
-        {this.renderProcessModal()}
+        {this.renderProcessModal()} */}
       </div>
     );
   }
