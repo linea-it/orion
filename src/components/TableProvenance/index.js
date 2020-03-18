@@ -227,12 +227,13 @@ export default class Demo extends React.PureComponent {
       expandedRowIds,
       loading,
     } = this.state;
-
-    data.map(row => {
-      row.product_btn = this.renderButtonProduct(row.product);
-      row.comments = this.renderButtonComments(row.comments);
-      return row;
-    });
+    if (data && data.length > 0) {
+      data.map(row => {
+        row.product_btn = this.renderButtonProduct(row.product);
+        row.comments = this.renderButtonComments(row.comments);
+        return row;
+      });
+    }
 
     return (
       <Paper style={{ position: 'relative', zIndex: '999' }}>
