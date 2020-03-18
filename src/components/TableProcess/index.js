@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CustomTable from '../Table/';
 
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import {Dialog, DialogTitle, DialogContent} from '@material-ui/core';
-import {IconButton, Typography} from '@material-ui/core';
+// import { DataTable } from 'primereact/datatable';
+// import { Column } from 'primereact/column';
+import {
+  CardContent,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  Typography,
+} from '@material-ui/core';
+
 import CloseIcon from '@material-ui/icons/Close';
-// import { Dialog } from 'primereact/dialog';
-
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
@@ -31,12 +37,12 @@ const styles = {
     margin: '0 auto',
     lineHeight: '.5',
   },
-  titleDialog:{
-    alignSelf: "center",
-    textAlign: "center",
+  titleDialog: {
+    alignSelf: 'center',
+    textAlign: 'center',
   },
-  closeButton:{
-    float: "right",
+  closeButton: {
+    float: 'right',
   },
   btnStatus: {
     textTransform: 'none',
@@ -91,101 +97,102 @@ class TableProcess extends Component {
 
     const columns = [
       {
-        field: 'process',
-        header: 'Process ID',
-        body: this.renderProcess,
+        name: 'process',
+        title: 'Process ID',
+        customElement: this.renderProcess,
+        width: 120,
       },
       {
-        field: 'release',
-        header: 'Release',
-        body: this.renderRelease,
+        name: 'release',
+        title: 'Release',
+        customElement: this.renderRelease,
         align: 'left',
         padding: '0.25em 20px 0.857em',
       },
       {
-        field: 'dataset',
-        header: 'Dataset',
-        body: this.renderDataset,
+        name: 'dataset',
+        title: 'Dataset',
+        customElement: this.renderDataset,
         align: 'left',
         padding: '0.25em 20px 0.857em',
       },
       {
-        field: 'start',
-        header: 'Start Date',
-        body: this.renderStartDate,
+        name: 'start',
+        title: 'Start Date',
+        customElement: this.renderStartDate,
         width: '130px',
       },
       // {
-      //   field: 'end',
-      //   header: 'End time',
-      //   body: this.renderEndTime,
+      //   name: 'end',
+      //   title: 'End time',
+      //   customElement: this.renderEndTime,
       // },
       {
-        field: 'duration',
-        header: 'Duration',
-        body: this.renderDuration,
+        name: 'duration',
+        title: 'Duration',
+        customElement: this.renderDuration,
       },
       {
-        field: 'version',
-        header: 'Version',
-        body: this.actionVersion,
+        name: 'version',
+        title: 'Version',
+        customElement: this.actionVersion,
       },
       {
-        field: 'owner',
-        header: 'Owner',
-        body: this.renderOwner,
+        name: 'owner',
+        title: 'Owner',
+        customElement: this.renderOwner,
         align: 'left',
         padding: '0.25em 20px 0.857em',
       },
       {
-        field: 'status',
-        header: 'Status',
-        body: this.actionStatus,
+        name: 'status',
+        title: 'Status',
+        customElement: this.actionStatus,
       },
       {
-        field: 'saved',
-        header: 'Saved',
-        body: this.actionSaved,
+        name: 'saved',
+        title: 'Saved',
+        customElement: this.actionSaved,
       },
       {
-        field: 'removed',
-        header: 'Removed',
-        body: this.actionRemoved,
+        name: 'removed',
+        title: 'Removed',
+        customElement: this.actionRemoved,
       },
       // {
-      //   field: 'share',
-      //   header: 'Share',
-      //   body: this.actionShare,
+      //   name: 'share',
+      //   title: 'Share',
+      //   customElement: this.actionShare,
       // },
       {
-        field: 'published',
-        header: 'Published',
-        body: this.actionPublished,
+        name: 'published',
+        title: 'Published',
+        customElement: this.actionPublished,
       },
       {
-        field: 'provenance',
-        header: 'Provenance',
-        body: this.actionProvenance,
+        name: 'provenance',
+        title: 'Provenance',
+        customElement: this.actionProvenance,
       },
       {
-        field: 'comments',
-        header: 'Comments',
-        body: this.actionComments,
+        name: 'comments',
+        title: 'Comments',
+        customElement: this.actionComments,
       },
       {
-        field: 'product',
-        header: 'Product Log',
-        body: this.actionProduct,
+        name: 'product',
+        title: 'Product Log',
+        customElement: this.actionProduct,
       },
       {
-        field: 'products',
-        header: 'Products',
-        body: this.actionProducts,
+        name: 'products',
+        title: 'Products',
+        customElement: this.actionProducts,
       },
       // {
-      //   field: 'export',
-      //   header: 'Export',
-      //   body: this.actionExport,
+      //   name: 'export',
+      //   title: 'Export',
+      //   customElement: this.actionExport,
       // },
     ];
 
@@ -561,15 +568,18 @@ class TableProcess extends Component {
         onClose={this.onHideModal}
       >
         <DialogTitle id="simple-dialog-title">
-          <Typography className={classes.titleDialog} variant="h6">{header}
-            <IconButton aria-label="close" className={classes.closeButton} onClick={this.onHideModal}>
+          <Typography className={classes.titleDialog} variant="h6">
+            {header}
+            <IconButton
+              aria-label="close"
+              className={classes.closeButton}
+              onClick={this.onHideModal}
+            >
               <CloseIcon />
             </IconButton>
           </Typography>
         </DialogTitle>
-        <DialogContent>
-          {this.renderContentModal()}
-        </DialogContent>
+        <DialogContent>{this.renderContentModal()}</DialogContent>
       </Dialog>
     );
   };
@@ -669,29 +679,48 @@ class TableProcess extends Component {
   };
 
   render() {
-    const columns = this.state.cols.map((col, i) => {
-      return (
-        <Column
-          key={i}
-          field={col.field}
-          header={col.header}
-          // sortable={true}
-          body={col.body}
-          style={{
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            width: col.width ? col.width : 'auto',
-            textAlign: col.align ? col.align : 'auto',
-            padding: col.padding ? col.padding : '0.25em 0.857em',
-          }}
-        />
-      );
-    });
+    // const columns = this.state.cols.map((col, i) => {
+    //   return (
+    //     <Column
+    //       key={i}
+    //       field={col.name}
+    //       header={col.title}
+    //       // sortable={true}
+    //       body={col.body}
+    //       style={{
+    //         whiteSpace: 'nowrap',
+    //         overflow: 'hidden',
+    //         textOverflow: 'ellipsis',
+    //         width: col.width ? col.width : 'auto',
+    //         textAlign: col.align ? col.align : 'auto',
+    //         padding: col.padding ? col.padding : '0.25em 0.857em',
+    //       }}
+    //     />
+    //   );
+    // });
 
     return (
       <div>
-        <DataTable
+        <CardContent>
+          {/* <Typography className={classes.titleDialog} variant="subtitle2">
+            {header ? header : ''}
+          </Typography> */}
+          <CustomTable
+            columns={this.state.cols}
+            data={this.props.pipelineProcesses}
+            remote={false}
+            pageSize={5}
+            pageSizes={[5, 15, 50, 100, 500]}
+            totalCount={this.props.pipelineProcesses.length}
+            reload={false}
+            hasSearching={false}
+            hasToolbar={false}
+            hasColumnVisibility={false}
+            sizeTable={'smal'}
+          />
+        </CardContent>
+        {this.renderModal()}
+        {/* <DataTable
           value={this.props.pipelineProcesses}
           resizableColumns={true}
           columnResizeMode="expand"
@@ -705,8 +734,7 @@ class TableProcess extends Component {
           scrollHeight="600px"
         >
           {columns}
-        </DataTable>
-        {this.renderModal()}
+        </DataTable> */}
       </div>
     );
   }
