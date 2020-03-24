@@ -250,7 +250,7 @@ class Stages extends Component {
           onClose={this.onHideModal}
         >
           <DialogTitle id="dialog-title">
-            <Typography className={classes.titleDialog} variant="h6">
+            <Typography className={classes.titleDialog}>
               {header ? header : ''}
               <IconButton
                 aria-label="close"
@@ -283,7 +283,7 @@ class Stages extends Component {
       pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
     ) {
       const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
-        .sort((a, b) => (a.startTime > b.startTIme ? 1 : -1))
+        .sort((a, b) => (a.startTime > b.startTIme ? -1 : 1))
         .map(row => {
           const startDateSplit = row.startTime
             ? row.startTime.split('T')[0]

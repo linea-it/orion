@@ -57,8 +57,8 @@ function Dashboard() {
                   title={table.tableName}
                   rows={table.rows.pipelinesByFieldIdAndStageId.sort((a, b) =>
                     `${a.startTime}T${a.start}` > `${b.startTime}T${b.start}`
-                      ? 1
-                      : -1
+                      ? -1
+                      : 1
                   )}
                 />
               );
@@ -75,8 +75,8 @@ function Dashboard() {
                   title={table.tableName}
                   rows={table.rows.pipelinesByFieldIdAndStageId.sort((a, b) =>
                     `${a.startTime}T${a.start}` > `${b.startTime}T${b.start}`
-                      ? 1
-                      : -1
+                      ? -1
+                      : 1
                   )}
                 />
               );
