@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import CardContent from '@material-ui/core/CardContent';
-import Dialog from '@material-ui/core/Dialog';
+// import Dialog from '@material-ui/core/Dialog';
 
 import CustomTable from '../Table/';
 import { withStyles } from '@material-ui/core/styles';
@@ -50,34 +50,38 @@ class TableProducts extends Component {
       {
         name: 'process',
         title: 'Process ID',
-        width: 200,
+        width: 140,
       },
       {
         name: 'product',
         title: 'Product Name',
-        width: 150,
+        width: 130,
       },
       {
         name: 'type',
         title: 'Type',
-        width: 150,
+        width: 120,
       },
       {
         name: 'class',
         title: 'Class',
+        width: 120,
       },
       {
         name: 'database',
         title: 'Database',
+        width: 230,
       },
       {
         name: 'dataType',
         title: 'Data Type',
+        width: 90,
       },
     ];
 
     this.state = {
       cols: columns,
+      visible: false,
     };
   }
 
@@ -126,20 +130,11 @@ class TableProducts extends Component {
   };
 
   renderModal = () => {
-    return (
-      <Dialog
-        header="Title Modal"
-        visible={this.state.visible}
-        width="50%"
-        onClose={this.onHideModal}
-        maximizable={true}
-        modal={true}
-        style={{ zIndex: '999' }}
-        contentStyle={{ padding: '0', marginBottom: '-10px' }}
-      >
-        {this.renderContentModal()}
-      </Dialog>
-    );
+    // return (
+    //   <Dialog open={this.state.visible} onClose={this.onHideModal}>
+    //     {this.renderContentModal()}
+    //   </Dialog>
+    // );
   };
 
   render() {

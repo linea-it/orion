@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CustomTable from '../Table/';
-
-// import { DataTable } from 'primereact/datatable';
 // import { Column } from 'primereact/column';
+// import { Dialog } from 'primereact/dialog';
+
 import {
+  withStyles,
   CardContent,
   Dialog,
+  Button,
   DialogTitle,
   DialogContent,
+  Icon,
   IconButton,
   Typography,
+  CircularProgress,
 } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import moment from 'moment';
 
 import Centaurus from '../../services/api';
@@ -100,7 +100,7 @@ class TableProcess extends Component {
         name: 'process',
         title: 'Process ID',
         customElement: this.renderProcess,
-        width: 120,
+        width: 110,
       },
       {
         name: 'release',
@@ -108,6 +108,7 @@ class TableProcess extends Component {
         customElement: this.renderRelease,
         align: 'left',
         padding: '0.25em 20px 0.857em',
+        width: 60,
       },
       {
         name: 'dataset',
@@ -115,12 +116,13 @@ class TableProcess extends Component {
         customElement: this.renderDataset,
         align: 'left',
         padding: '0.25em 20px 0.857em',
+        width: 80,
       },
       {
         name: 'start',
         title: 'Start Date',
         customElement: this.renderStartDate,
-        width: '130px',
+        width: 100,
       },
       // {
       //   name: 'end',
@@ -131,11 +133,13 @@ class TableProcess extends Component {
         name: 'duration',
         title: 'Duration',
         customElement: this.renderDuration,
+        width: 80,
       },
       {
         name: 'version',
         title: 'Version',
         customElement: this.actionVersion,
+        width: 70,
       },
       {
         name: 'owner',
@@ -143,21 +147,25 @@ class TableProcess extends Component {
         customElement: this.renderOwner,
         align: 'left',
         padding: '0.25em 20px 0.857em',
+        width: 80,
       },
       {
         name: 'status',
         title: 'Status',
         customElement: this.actionStatus,
+        width: 100,
       },
       {
         name: 'saved',
         title: 'Saved',
         customElement: this.actionSaved,
+        width: 65,
       },
       {
         name: 'removed',
         title: 'Removed',
         customElement: this.actionRemoved,
+        width: 65,
       },
       // {
       //   name: 'share',
@@ -168,26 +176,31 @@ class TableProcess extends Component {
         name: 'published',
         title: 'Published',
         customElement: this.actionPublished,
+        width: 65,
       },
       {
         name: 'provenance',
         title: 'Provenance',
         customElement: this.actionProvenance,
+        width: 65,
       },
       {
         name: 'comments',
         title: 'Comments',
         customElement: this.actionComments,
+        width: 65,
       },
       {
         name: 'product',
         title: 'Product Log',
         customElement: this.actionProduct,
+        width: 65,
       },
       {
         name: 'products',
         title: 'Products',
         customElement: this.actionProducts,
+        width: 65,
       },
       // {
       //   name: 'export',
@@ -384,7 +397,7 @@ class TableProcess extends Component {
         );
       }
     } else if (rowData.saved === null) {
-      return '-';
+      return <span style={styles.mark}>-</span>;
     }
   };
 
@@ -492,7 +505,7 @@ class TableProcess extends Component {
         <Button
           className={classes.button}
           style={styles.btnIco}
-          title={rowData.products}
+          title={rowData.products ? rowData.products : ''}
           onClick={() => this.onShowProducts(rowData)}
         >
           <Icon>view_list</Icon>
@@ -568,7 +581,7 @@ class TableProcess extends Component {
         onClose={this.onHideModal}
       >
         <DialogTitle id="simple-dialog-title">
-          <Typography className={classes.titleDialog} variant="h6">
+          <Typography className={classes.titleDialog}>
             {header}
             <IconButton
               aria-label="close"
@@ -679,26 +692,16 @@ class TableProcess extends Component {
   };
 
   render() {
-    // const columns = this.state.cols.map((col, i) => {
-    //   return (
-    //     <Column
-    //       key={i}
-    //       field={col.name}
-    //       header={col.title}
-    //       // sortable={true}
-    //       body={col.body}
-    //       style={{
-    //         whiteSpace: 'nowrap',
-    //         overflow: 'hidden',
-    //         textOverflow: 'ellipsis',
-    //         width: col.width ? col.width : 'auto',
-    //         textAlign: col.align ? col.align : 'auto',
-    //         padding: col.padding ? col.padding : '0.25em 0.857em',
-    //       }}
-    //     />
-    //   );
-    // });
-
+    if (
+      this.props.pipelineProcesses &&
+      this.props.pipelineProcesses.length > 0
+    ) {
+      this.props.pipelineProcesses.map(el => {
+        el.version = null;
+        el.products = null;
+        el.provenance = null;
+      });
+    }
     return (
       <div>
         <CardContent>
@@ -720,21 +723,6 @@ class TableProcess extends Component {
           />
         </CardContent>
         {this.renderModal()}
-        {/* <DataTable
-          value={this.props.pipelineProcesses}
-          resizableColumns={true}
-          columnResizeMode="expand"
-          reorderableColumns={true}
-          reorderableRows={true}
-          responsive={true}
-          selectionMode="single"
-          selection={this.state.selectedCar1}
-          onSelectionChange={e => this.setState({ selectedCar1: e.data })}
-          scrollable={true}
-          scrollHeight="600px"
-        >
-          {columns}
-        </DataTable> */}
       </div>
     );
   }
