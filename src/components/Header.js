@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, IconButton, Button } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import Logo from '../assets/img/icon-des.png';
 
@@ -12,6 +12,9 @@ const styles = {
   menuButton: {
     marginLeft: -13,
     marginRight: 10,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   },
   AppBar: {
     boxShadow: 'none',
@@ -50,14 +53,9 @@ class Header extends React.Component {
               Dashboard
             </Typography>
             <div className={classes.separatorToolBar} />
-            <Button
-              color="inherit"
-              size="large"
-              href={homeUrl}
-              startIcon={<HomeIcon />}
-            >
-              &nbsp;
-            </Button>
+            <a color="inherit" size="large" href={homeUrl}>
+              <HomeIcon />
+            </a>
           </Toolbar>
         </AppBar>
       </header>
