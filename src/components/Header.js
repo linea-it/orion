@@ -38,24 +38,26 @@ class Header extends React.Component {
       <header className={classes.root}>
         <AppBar className={classes.AppBar} position="fixed">
           <Toolbar variant="dense">
-              <IconButton
-                href={homeUrl}
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="Menu"
-                >
-                <img src={Logo} alt="Portal" />
-              </IconButton>
-              <Typography variant="h6" color="inherit">
-                Dashboard
-              </Typography>
-              <div className={classes.separatorToolBar} />
-              <Button
-                color="inherit"
-                size="extra-large"
-                href={homeUrl}
-                startIcon={<HomeIcon />}
-              />
+            <IconButton
+              href={homeUrl}
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Menu"
+            >
+              <img src={Logo} alt="Portal" />
+            </IconButton>
+            <Typography variant="h6" color="inherit">
+              Dashboard
+            </Typography>
+            <div className={classes.separatorToolBar} />
+            <Button
+              color="inherit"
+              size="large"
+              href={homeUrl}
+              startIcon={<HomeIcon />}
+            >
+              &nbsp;
+            </Button>
           </Toolbar>
         </AppBar>
       </header>
