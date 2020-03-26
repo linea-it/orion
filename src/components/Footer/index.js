@@ -3,10 +3,9 @@ import AppBar from '@material-ui/core/AppBar';
 import { Typography, Toolbar } from '@material-ui/core';
 import logo from '../../assets/img/linea-logo-mini.png';
 import git_json from '../../assets/json/version.json';
-import styles from './styles'
+import styles from './styles';
 
-function Footer () {
-  
+function Footer() {
   const classes = styles();
 
   const openLineaWebSite = () => {
@@ -67,4 +66,4 @@ function Footer () {
   );
 }
 
-export default (Footer);
+export default Footer;
