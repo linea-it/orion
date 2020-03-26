@@ -86,13 +86,6 @@ class TableProcess extends Component {
         body: this.renderProcess,
       },
       {
-        field: 'release',
-        header: 'Release',
-        body: this.renderRelease,
-        align: 'left',
-        padding: '0.25em 20px 0.857em',
-      },
-      {
         field: 'dataset',
         header: 'Dataset',
         body: this.renderDataset,
@@ -105,11 +98,6 @@ class TableProcess extends Component {
         body: this.renderStartDate,
         width: '130px',
       },
-      // {
-      //   field: 'end',
-      //   header: 'End time',
-      //   body: this.renderEndTime,
-      // },
       {
         field: 'duration',
         header: 'Duration',
@@ -142,11 +130,6 @@ class TableProcess extends Component {
         header: 'Removed',
         body: this.actionRemoved,
       },
-      // {
-      //   field: 'share',
-      //   header: 'Share',
-      //   body: this.actionShare,
-      // },
       {
         field: 'published',
         header: 'Published',
@@ -172,11 +155,6 @@ class TableProcess extends Component {
         header: 'Products',
         body: this.actionProducts,
       },
-      // {
-      //   field: 'export',
-      //   header: 'Export',
-      //   body: this.actionExport,
-      // },
     ];
 
     this.state = {
@@ -231,10 +209,6 @@ class TableProcess extends Component {
 
   onHideModal = () => {
     this.setState({ visible: false });
-  };
-
-  renderRelease = rowData => {
-    return <span title={rowData.release}>{rowData.release}</span>;
   };
 
   renderDataset = rowData => {
@@ -397,23 +371,6 @@ class TableProcess extends Component {
     }
   };
 
-  actionShare = rowData => {
-    const { classes } = this.props;
-    if (rowData) {
-      return (
-        <Button
-          className={classes.button}
-          style={styles.btnIco}
-          title={rowData.share}
-        >
-          <Icon>share</Icon>
-        </Button>
-      );
-    } else {
-      return '-';
-    }
-  };
-
   actionPublished = rowData => {
     const { classes } = this.props;
 
@@ -497,24 +454,6 @@ class TableProcess extends Component {
           onClick={() => this.onShowComments(rowData)}
         >
           <Icon>comment</Icon>
-        </Button>
-      );
-    } else {
-      return '-';
-    }
-  };
-
-  actionExport = rowData => {
-    const { classes } = this.props;
-    if (rowData) {
-      return (
-        <Button
-          className={classes.button}
-          style={styles.btnIco}
-          title={rowData.export}
-          onClick={() => this.onShowExport(rowData)}
-        >
-          <Icon>import_export</Icon>
         </Button>
       );
     } else {
