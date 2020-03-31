@@ -626,6 +626,13 @@ class TableProcess extends Component {
     return (
       <div>
         <DataTable
+          paginator
+          rows={10}
+          first={1}
+          emptyMessage="No customers found"
+          currentPageReportTemplate={`Total: ${this.props.pipelineProcesses.length} Processes`}
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
+          rowsPerPageOptions={[10, 25, 50]}
           value={this.props.pipelineProcesses}
           resizableColumns={true}
           columnResizeMode="expand"
