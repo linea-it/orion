@@ -126,14 +126,14 @@ class TableProcess extends Component {
         body: this.actionSaved,
       },
       {
-        field: 'removed',
-        header: 'Removed',
-        body: this.actionRemoved,
-      },
-      {
         field: 'published',
         header: 'Published',
         body: this.actionPublished,
+      },
+      {
+        field: 'removed',
+        header: 'Removed',
+        body: this.actionRemoved,
       },
       {
         field: 'provenance',
@@ -204,7 +204,11 @@ class TableProcess extends Component {
   };
 
   onClickModal = (rowData, modalType) => {
-    this.setState({ visible: true, modalType: modalType, rowData: rowData });
+    this.setState({
+      visible: true,
+      modalType: modalType,
+      rowData: rowData,
+    });
   };
 
   onHideModal = () => {
@@ -356,18 +360,10 @@ class TableProcess extends Component {
           </Icon>
         );
       } else {
-        return (
-          <Icon title="Not removed" className={classes.icoRemoved}>
-            close
-          </Icon>
-        );
+        return <span style={styles.mark}>-</span>;
       }
     } else {
-      return (
-        <Icon title="Not removed" className={classes.icoRemoved}>
-          close
-        </Icon>
-      );
+      return <span style={styles.mark}>-</span>;
     }
   };
 
@@ -427,7 +423,7 @@ class TableProcess extends Component {
 
   actionProducts = rowData => {
     const { classes } = this.props;
-    if (rowData) {
+    if (rowData && rowData.product && rowData.product.length > 0) {
       return (
         <Button
           className={classes.button}
@@ -478,7 +474,10 @@ class TableProcess extends Component {
   };
 
   renderModal = () => {
-    const title = this.state.modalType;
+    const title =
+      this.state.modalType == 'Version'
+        ? this.state.titleVersion
+        : this.state.modalType;
     const header = (
       <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>{title}</span>
     );
@@ -532,20 +531,25 @@ class TableProcess extends Component {
     const versionProcess = await Centaurus.getAllProcessComponentsByProcessId(
       currentVersion
     );
-
     if (versionProcess && versionProcess.processComponentsByProcessId) {
+      const titleVersion = `${versionProcess.processComponentsByProcessId[0].process.process_name} - (${versionProcess.processComponentsByProcessId[0].processId})`;
       const versionProcessLocal = versionProcess.processComponentsByProcessId.map(
         row => {
           return {
+            process_id: row.processId,
+            name_pipeline: row.process.process_name,
+            process_version:
+              row.process.processPipeline.edges[0].node.process_version,
             name: row.module.displayName,
-            version: row.version,
-            last_version: row.module.version,
+            used_version: row.used_version,
+            last_version: row.module.last_version,
           };
         }
       );
       this.setState({
         versionProcess: versionProcessLocal,
         currentVersion: currentVersion,
+        titleVersion: titleVersion,
       });
     } else {
       return null;
@@ -609,7 +613,7 @@ class TableProcess extends Component {
           key={i}
           field={col.field}
           header={col.header}
-          // sortable={true}
+          sortable={true}
           body={col.body}
           style={{
             whiteSpace: 'nowrap',
