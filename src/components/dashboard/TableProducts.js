@@ -132,7 +132,11 @@ class TableProducts extends Component {
   };
 
   onClickModal = (rowData, modalType) => {
-    this.setState({ visible: true, modalType: modalType, rowData: rowData });
+    this.setState({
+      visible: true,
+      modalType: modalType,
+      rowData: rowData,
+    });
   };
 
   onHideModal = () => {
@@ -302,7 +306,7 @@ class TableProducts extends Component {
           key={i}
           field={col.field}
           header={col.header}
-          // sortable={true}
+          sortable={true}
           body={col.body}
           style={{
             whiteSpace: 'nowrap',
