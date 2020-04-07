@@ -161,6 +161,11 @@ class ReleaseFilter extends Component {
           tagId: e.node.tagId,
         };
       });
+      optsReleaseLocal.sort(function compare(a, b) {
+        if (a.releaseDisplayName < b.releaseDisplayName) return 1;
+        if (b.releaseDisplayName < a.releaseDisplayName) return -1;
+        return 0;
+      });
       this.setState({
         optsRelease: [
           {
