@@ -28,8 +28,12 @@ class TableVersion extends Component {
         },
       },
       {
-        field: 'version',
-        header: 'Version',
+        field: 'process_version',
+        header: 'Process Version',
+      },
+      {
+        field: 'used_version',
+        header: 'Version Used',
       },
       {
         field: 'last_version',
@@ -56,7 +60,7 @@ class TableVersion extends Component {
           key={i}
           field={col.field}
           header={col.header}
-          // sortable={true}
+          sortable={true}
           style={col.style ? col.style : {}}
           body={col.body}
         />
