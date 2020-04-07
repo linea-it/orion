@@ -338,6 +338,14 @@ export default class Centaurus {
           }
         }
       `);
+      // #FIXME: Alterar ordenação para EndPoint;
+      pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId.sort(
+        function compare(a, b) {
+          if (a.startTime > b.startTime) return 1;
+          if (b.startTime > a.startTime) return -1;
+          return 0;
+        }
+      );
       return pipelineProcesses;
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -378,10 +386,22 @@ export default class Centaurus {
       const versionProcess = await client.query(`
         {
           processComponentsByProcessId(processId: ${dataProcessId}) {
-            version
+            processId
+            used_version: version
+            process {
+              process_name: name
+              processPipeline {
+                edges {
+                  node {
+                    process_version: version
+                  }
+                }
+              }
+            }
             module {
               displayName
-              version
+              last_version: version
+              versionDate
             }
           }
         }
