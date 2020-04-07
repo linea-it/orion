@@ -118,12 +118,13 @@ class ReleaseFilter extends Component {
       this.props.saveStage([]);
       this.clearFields();
     }
+    this.loadStage(evt.target.value);
   };
 
   handleChangeFields = evt => {
     this.setState({ selectField: evt.target.value });
     if (evt.target.value !== '') {
-      this.loadStage(evt.target.value);
+      this.loadStage(this.state.selectField);
     } else {
       this.props.saveStage([]);
     }
@@ -176,6 +177,7 @@ class ReleaseFilter extends Component {
   };
 
   loadFields = async dataField => {
+    console.log('hello');
     const fieldsTag = await Centaurus.getAllFieldsTag(dataField);
 
     if (fieldsTag && fieldsTag.fieldsByTagId) {
