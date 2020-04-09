@@ -23,6 +23,20 @@ const styles = {
     margin: '0 auto',
     fontSize: '1em',
   },
+  btnStatus: {
+    textTransform: 'none',
+    padding: '1px 5px',
+    width: '5em',
+    minHeight: '1em',
+    display: 'block',
+    margin: '0 auto',
+    textAlign: 'center',
+    lineHeight: '2',
+    boxShadow:
+      '0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)',
+    borderRadius: '4px',
+    boxSizing: 'border-box',
+  },
   btnSuccess: {
     backgroundColor: 'green',
     color: '#fff',
@@ -79,15 +93,15 @@ class Stages extends Component {
         body: this.renderDuration,
       },
       {
+        field: 'status',
+        header: 'Status',
+        body: this.renderStatus,
+      },
+      {
         field: 'runs',
         header: 'Runs',
         body: this.actionRuns,
       },
-      // {
-      //   field: 'status',
-      //   header: 'Status',
-      //   body: this.actionStatus,
-      // },
     ];
 
     this.state = {
@@ -141,6 +155,41 @@ class Stages extends Component {
 
   renderDuration = rowData => {
     return <span title={rowData.duration}>{rowData.duration}</span>;
+  };
+
+  renderStatus = rowData => {
+    const { classes } = this.props;
+    if (rowData.status === 'failure') {
+      return (
+        <span
+          title={rowData.status}
+          className={classes.btnStatus}
+          style={styles.btnFailure}
+        >
+          Failure
+        </span>
+      );
+    } else if (rowData.status === 'running') {
+      return (
+        <span
+          title={rowData.status}
+          className={classes.btnStatus}
+          style={styles.btnRunning}
+        >
+          Running
+        </span>
+      );
+    } else {
+      return (
+        <span
+          title={rowData.status}
+          className={classes.btnStatus}
+          style={styles.btnSuccess}
+        >
+          Success
+        </span>
+      );
+    }
   };
 
   actionRuns = rowData => {
