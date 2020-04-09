@@ -540,6 +540,8 @@ class TableProcess extends Component {
             name_pipeline: row.process.process_name,
             process_version:
               row.process.processPipeline.edges[0].node.process_version,
+            pipeline_version:
+              row.process.processPipeline.edges[0].node.pipeline.version,
             name: row.module.displayName,
             used_version: row.used_version,
             last_version: row.module.last_version,

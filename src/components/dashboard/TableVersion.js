@@ -32,6 +32,10 @@ class TableVersion extends Component {
         header: 'Process Version',
       },
       {
+        field: 'pipeline_version',
+        header: 'Pipeline Version',
+      },
+      {
         field: 'used_version',
         header: 'Version Used',
       },

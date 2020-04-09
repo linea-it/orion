@@ -394,6 +394,9 @@ export default class Centaurus {
                 edges {
                   node {
                     process_version: version
+                    pipeline {
+                      version
+                    }
                   }
                 }
               }
