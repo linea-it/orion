@@ -102,12 +102,13 @@ export default class Centaurus {
     }
   }
 
-  static async getAllPipelinesByFieldIdAndStageId(
+  static async getAllPipelinesByFieldIdAndStageId({
     tagId,
     dataField,
     pipelineFilter,
-    dataStage
-  ) {
+    pipelineStatusFilter,
+    dataStage,
+  }) {
     try {
       let pipelinesStageId = [];
 
@@ -122,6 +123,7 @@ export default class Centaurus {
                   pipelineDisplayName
                   pipelineName
                   pipelineId
+                  pipelineStatusId
                 }
               }
             }
@@ -139,6 +141,7 @@ export default class Centaurus {
                   pipelineDisplayName
                   pipelineName
                   pipelineId
+                  pipelineStatusId
                   processCount
                   lastProcessId
                   lastProcessStartTime
@@ -161,6 +164,7 @@ export default class Centaurus {
                 displayName: pipeline.node.pipelineDisplayName,
                 name: pipeline.node.pipelineName,
                 pipelineId: pipeline.node.pipelineId,
+                pipelineStatusId: pipeline.node.pipelineStatusId,
                 process: {
                   processCount: samePipeline[0].node.processCount,
                   lastProcessId: samePipeline[0].node.lastProcessId,
@@ -174,6 +178,7 @@ export default class Centaurus {
               displayName: pipeline.node.pipelineDisplayName,
               name: pipeline.node.pipelineName,
               pipelineId: pipeline.node.pipelineId,
+              pipelineStatusId: pipeline.node.pipelineStatusId,
               process: {
                 processCount: 0,
                 lastProcessId: null,
@@ -195,6 +200,7 @@ export default class Centaurus {
                   pipelineDisplayName
                   pipelineName
                   pipelineId
+                  pipelineStatusId
                 }
               }
             }
@@ -212,6 +218,7 @@ export default class Centaurus {
                   pipelineDisplayName
                   pipelineName
                   pipelineId
+                  pipelineStatusId
                   processCount
                   lastProcessId
                   lastProcessStartTime
@@ -234,6 +241,7 @@ export default class Centaurus {
                 displayName: pipeline.node.pipelineDisplayName,
                 name: pipeline.node.pipelineName,
                 pipelineId: pipeline.node.pipelineId,
+                pipelineStatusId: pipeline.node.pipelineStatusId,
                 process: {
                   processCount: 0,
                   lastProcessId: null,
@@ -257,6 +265,7 @@ export default class Centaurus {
                   pipelineDisplayName
                   pipelineName
                   pipelineId
+                  pipelineStatusId
                   processCount
                   lastProcessId
                   lastProcessStartTime
@@ -273,6 +282,7 @@ export default class Centaurus {
             displayName: pipeline.node.pipelineDisplayName,
             name: pipeline.node.pipelineName,
             pipelineId: pipeline.node.pipelineId,
+            pipelineStatusId: pipeline.node.pipelineStatusId,
             process: {
               processCount: pipeline.node.processCount,
               lastProcessId: pipeline.node.lastProcessId,
@@ -281,6 +291,12 @@ export default class Centaurus {
               status: pipeline.node.lastProcessStatus,
             },
           })
+        );
+      }
+      const statusId = Number(pipelineStatusFilter);
+      if (statusId !== 0) {
+        pipelinesStageId = pipelinesStageId.filter(
+          pipelineStage => statusId === pipelineStage.pipelineStatusId
         );
       }
 
