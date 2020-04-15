@@ -13,6 +13,8 @@ import moment from 'moment';
 
 import TableProcess from './TableProcess';
 
+import { mean, median, std } from 'mathjs';
+
 const styles = {
   button: {
     textTransform: 'none',
@@ -95,6 +97,9 @@ class Stages extends Component {
       loading: false,
       visible: false,
       pipelineProcesses: [],
+      mean: 0,
+      median: 0,
+      standardDeviation: 0,
     };
   }
 
@@ -219,6 +224,7 @@ class Stages extends Component {
           const endTime = moment(row.endTime);
           const diff = endTime.diff(startTime);
           const duration = moment.utc(diff).format('HH:mm:ss');
+
           return {
             release: row.fields.edges
               .map(edge => {
@@ -235,6 +241,7 @@ class Stages extends Component {
             end: row.endTime,
             time: startTimeSplit,
             duration: row.startTime && row.endTime !== null ? duration : '-',
+            diff: row.startTime && row.endTime !== null ? diff : 0,
             owner: row.session.user.displayName,
             status: row.processStatus.name,
             removed: row.flagRemoved,
@@ -244,9 +251,15 @@ class Stages extends Component {
             product: row.productLog,
           };
         });
+
+      const durationArray = pipelineProcessesLocal.map(process => process.diff);
+
       this.setState({
         pipelineProcesses: pipelineProcessesLocal,
         currentProcess: currentProcess,
+        mean: mean(durationArray),
+        median: median(durationArray),
+        standardDeviation: std(durationArray),
       });
     } else {
       return null;
