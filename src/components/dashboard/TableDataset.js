@@ -79,7 +79,7 @@ class TableDataset extends Component {
       <DataTable
         value={this.props.rowsDatasetProcess}
         scrollable={true}
-        scrollHeight="600px"
+        scrollHeight="60vh"
         style={{ zIndex: '95' }}
         sortField="release"
         sortOrder={1}
