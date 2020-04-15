@@ -16,6 +16,12 @@ const useStyles = makeStyles({
     margin: '-10px 0 0',
     fontSize: '23px',
   },
+  bootstrapFormLabelStatus: {
+    color: '#fff',
+    top: '50%',
+    margin: '-10px 20px 0',
+    fontSize: '23px',
+  },
 });
 
 const BootstrapInput = withStyles(theme => ({
@@ -59,6 +65,9 @@ function PipelineFilter({
   pipelinesFilterList,
   handleChangePipelines,
   pipelineFilterSelectedId,
+  pipelinesStatusFilterList,
+  handleChangePipelinesStatus,
+  pipelineStatusFilterSelectedId,
 }) {
   const classes = useStyles();
 
@@ -87,6 +96,30 @@ function PipelineFilter({
           ))}
         </NativeSelect>
       </FormControl>
+      <FormControl className={classes.margin}>
+        <InputLabel
+          shrink
+          htmlFor="age-customized-native-simple"
+          className={classes.bootstrapFormLabelStatus}
+          focused={false}
+        >
+          Status:
+        </InputLabel>
+        <NativeSelect
+          className={classes.statusSelect}
+          value={pipelineStatusFilterSelectedId}
+          onChange={handleChangePipelinesStatus}
+          input={
+            <BootstrapInput name="pipeline" id="age-customized-native-simple" />
+          }
+        >
+          {pipelinesStatusFilterList.map(filter => (
+            <option key={filter.id} value={filter.id}>
+              {filter.displayName}
+            </option>
+          ))}
+        </NativeSelect>
+      </FormControl>
     </form>
   );
 }
@@ -95,6 +128,12 @@ PipelineFilter.propTypes = {
   pipelinesFilterList: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleChangePipelines: PropTypes.func.isRequired,
   pipelineFilterSelectedId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]).isRequired,
+  pipelinesStatusFilterList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleChangePipelinesStatus: PropTypes.func.isRequired,
+  pipelineStatusFilterSelectedId: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
   ]).isRequired,

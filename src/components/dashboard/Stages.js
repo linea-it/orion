@@ -290,7 +290,7 @@ class Stages extends Component {
           //   </span>
           // }
           header={col.header}
-          // sortable={true}
+          sortable={true}
           body={col.body}
           style={{
             whiteSpace: 'nowrap',

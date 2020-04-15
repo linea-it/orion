@@ -68,7 +68,7 @@ class TableDataset extends Component {
           key={i}
           field={col.field}
           header={col.header}
-          // sortable={true}
+          sortable={true}
           body={col.body}
           style={col.style ? col.style : {}}
         />
