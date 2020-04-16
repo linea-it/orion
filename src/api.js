@@ -308,6 +308,26 @@ export default class Centaurus {
     }
   }
 
+  static async getProcessesStatsByTagIdAndFieldIdAndPipelineId(
+    tagId,
+    fieldId,
+    pipelineId
+  ) {
+    const processes = await client.query(`
+      {
+        processesByTagIdAndFieldIdAndPipelineId(
+          ${tagId !== '0' ? 'tagId:' + tagId + ',' : ''}
+          ${fieldId !== '0' ? 'fieldId:' + fieldId + ',' : ''}
+          pipelineId: ${pipelineId}) {
+            startTime
+            endTime
+          }
+      }
+    `);
+
+    return processes.processesByTagIdAndFieldIdAndPipelineId;
+  }
+
   static async getAllProcessesByFieldIdAndPipelineId(
     tagId,
     dataField,

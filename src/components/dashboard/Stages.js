@@ -53,48 +53,16 @@ class Stages extends Component {
   constructor(props) {
     super(props);
 
-    const columns = [
-      {
-        field: 'pipeline',
-        header: 'Pipeline',
-        body: this.renderPipeline,
-        align: 'left',
-        padding: '0.25em 20px 0.857em',
-      },
-      {
-        field: 'name',
-        header: 'Name',
-        body: this.renderName,
-        align: 'left',
-        padding: '0.25em 20px 0.857em',
-      },
-      {
-        field: 'start',
-        header: 'Start',
-        body: this.renderStart,
-      },
-      {
-        field: 'duration',
-        header: 'Duration',
-        body: this.renderDuration,
-      },
-      {
-        field: 'runs',
-        header: 'Runs',
-        body: this.actionRuns,
-      },
-      // {
-      //   field: 'status',
-      //   header: 'Status',
-      //   body: this.actionStatus,
-      // },
-    ];
+    // console.log(props);
 
     this.state = {
-      cols: columns,
+      cols: [],
       loading: false,
       visible: false,
       pipelineProcesses: [],
+      mean: 0,
+      median: 0,
+      standardDeviation: 0,
     };
   }
 
@@ -102,16 +70,92 @@ class Stages extends Component {
     title: PropTypes.string,
     rows: PropTypes.array,
     classes: PropTypes.object.isRequired,
+    selectedRelease: PropTypes.string.isRequired,
+    selectedField: PropTypes.string.isRequired,
+    processesStats: PropTypes.object.isRequired,
   };
+
+  updateColumns = () => {
+    if (
+      this.props.selectedRelease !== '0' &&
+      this.props.selectedField !== '0'
+    ) {
+      this.setState({
+        cols: [
+          {
+            field: 'pipeline',
+            header: 'Pipeline',
+            body: this.renderPipeline,
+            align: 'left',
+            padding: '0.25em 20px 0.857em',
+          },
+          {
+            field: 'mean',
+            header: 'Mean',
+            body: this.renderMean,
+          },
+          {
+            field: 'median',
+            header: 'Median',
+            body: this.renderMedian,
+          },
+          {
+            field: 'std',
+            header: 'Standard Deviation',
+            body: this.renderStd,
+          },
+          {
+            field: 'runs',
+            header: 'Runs',
+            body: this.actionRuns,
+          },
+        ],
+      });
+    } else {
+      this.setState({
+        cols: [
+          {
+            field: 'pipeline',
+            header: 'Pipeline',
+            body: this.renderPipeline,
+            align: 'left',
+            padding: '0.25em 20px 0.857em',
+          },
+          {
+            field: 'name',
+            header: 'Name',
+            body: this.renderName,
+            align: 'left',
+            padding: '0.25em 20px 0.857em',
+          },
+          {
+            field: 'runs',
+            header: 'Runs',
+            body: this.actionRuns,
+          },
+        ],
+      });
+    }
+  };
+
+  componentDidMount() {
+    this.updateColumns();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.selectedRelease !== this.props.selectedRelease ||
+      prevProps.selectedField !== this.props.selectedField ||
+      prevProps.processesStats !== this.props.processesStats
+    ) {
+      this.updateColumns();
+    }
+  }
 
   onShowRuns = rowData => {
     this.onClickModal(rowData);
     this.loadTableProcesses(rowData);
   };
-
-  // onShowStatus = rowData => {
-  //   console.log('onShowStatus: ', rowData);
-  // };
 
   onClickModal = () => {
     this.setState({ visible: true });
@@ -141,6 +185,48 @@ class Stages extends Component {
 
   renderDuration = rowData => {
     return <span title={rowData.duration}>{rowData.duration}</span>;
+  };
+
+  renderMean = rowData => {
+    try {
+      if (this.props.processesStats[rowData.pipelineId]) {
+        const meanFormat = moment
+          .utc(this.props.processesStats[rowData.pipelineId].mean)
+          .format('HH:mm:ss');
+
+        return <span title={meanFormat}>{meanFormat}</span>;
+      }
+    } catch (error) {
+      return '-';
+    }
+  };
+
+  renderMedian = rowData => {
+    try {
+      if (this.props.processesStats[rowData.pipelineId]) {
+        const medianFormat = moment
+          .utc(this.props.processesStats[rowData.pipelineId].median)
+          .format('HH:mm:ss');
+
+        return <span title={medianFormat}>{medianFormat}</span>;
+      }
+    } catch (error) {
+      return '-';
+    }
+  };
+
+  renderStd = rowData => {
+    try {
+      if (this.props.processesStats[rowData.pipelineId]) {
+        const stdFormat = moment
+          .utc(this.props.processesStats[rowData.pipelineId].std)
+          .format('HH:mm:ss');
+
+        return <span title={stdFormat}>{stdFormat}</span>;
+      }
+    } catch (error) {
+      return '-';
+    }
   };
 
   actionRuns = rowData => {
@@ -219,6 +305,7 @@ class Stages extends Component {
           const endTime = moment(row.endTime);
           const diff = endTime.diff(startTime);
           const duration = moment.utc(diff).format('HH:mm:ss');
+
           return {
             release: row.fields.edges
               .map(edge => {
@@ -235,6 +322,7 @@ class Stages extends Component {
             end: row.endTime,
             time: startTimeSplit,
             duration: row.startTime && row.endTime !== null ? duration : '-',
+            diff: row.startTime && row.endTime !== null ? diff : 0,
             owner: row.session.user.displayName,
             status: row.processStatus.name,
             removed: row.flagRemoved,
@@ -244,6 +332,7 @@ class Stages extends Component {
             product: row.productLog,
           };
         });
+
       this.setState({
         pipelineProcesses: pipelineProcessesLocal,
         currentProcess: currentProcess,
