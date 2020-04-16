@@ -15,6 +15,8 @@ import Centaurus from '../../api';
 import moment from 'moment';
 import PipelineFilter from './PipelineFilter';
 
+import { mean, median, std } from 'mathjs';
+
 const BootstrapInput = withStyles(theme => ({
   root: {
     'label + &': {
@@ -101,6 +103,9 @@ class ReleaseFilter extends Component {
   static propTypes = {
     classes: PropTypes.object,
     saveStage: PropTypes.func.isRequired,
+    saveReleaseAndDataset: PropTypes.func.isRequired,
+    processesStats: PropTypes.object.isRequired,
+    saveProcessesStats: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -111,7 +116,7 @@ class ReleaseFilter extends Component {
 
   handleChangeReleases = evt => {
     this.setState({ selectRelease: evt.target.value });
-
+    this.props.saveReleaseAndDataset(evt.target.value, this.state.selectField);
     if (evt.target.value !== '') {
       this.loadFields(evt.target.value);
       this.props.saveStage([]);
@@ -123,6 +128,10 @@ class ReleaseFilter extends Component {
 
   handleChangeFields = evt => {
     this.setState({ selectField: evt.target.value });
+    this.props.saveReleaseAndDataset(
+      this.state.selectRelease,
+      evt.target.value
+    );
     if (evt.target.value !== '') {
       this.loadStage(evt.target.value);
     } else {
@@ -228,6 +237,32 @@ class ReleaseFilter extends Component {
     }
   };
 
+  loadProcessStatsByPipelineId = async (pipelineId, tagId, fieldId) => {
+    const processesDates = await Centaurus.getProcessesStatsByTagIdAndFieldIdAndPipelineId(
+      tagId,
+      fieldId,
+      pipelineId
+    );
+
+    const durations = processesDates.map(process => {
+      const startTime = moment(process.startTime ? process.startTime : 0);
+      const endTime = moment(process.endTime ? process.endTime : 0);
+      return endTime.diff(startTime);
+    });
+
+    const processMean = mean(durations);
+    const processMedian = median(durations);
+    const processStandardDeviation = std(durations);
+    this.props.saveProcessesStats({
+      ...this.props.processesStats,
+      [pipelineId]: {
+        mean: processMean,
+        median: processMedian,
+        std: processStandardDeviation,
+      },
+    });
+  };
+
   loadTableStages = async pipelineStages => {
     // eslint-disable-next-line
     const tableStage = await Promise.all(
@@ -256,6 +291,13 @@ class ReleaseFilter extends Component {
                   const endTime = moment(row.process.endTime);
                   const diff = endTime.diff(startTime);
                   const duration = moment.utc(diff).format('HH:mm:ss');
+
+                  this.loadProcessStatsByPipelineId(
+                    row.pipelineId,
+                    this.state.selectRelease,
+                    this.state.selectField
+                  );
+
                   return {
                     pipeline: row.displayName,
                     name: row.name,

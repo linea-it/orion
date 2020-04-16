@@ -27,11 +27,21 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       tables: [],
+      selectRelease: '0',
+      selectField: '0',
+      processesStats: {},
     };
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
+  };
+
+  saveReleaseAndDataset = (release, field) => {
+    this.setState({
+      selectRelease: release,
+      selectField: field,
+    });
   };
 
   saveStage = tableStages => {
@@ -86,6 +96,9 @@ class Dashboard extends Component {
                       ? 1
                       : -1
                   )}
+                  selectedRelease={this.state.selectRelease}
+                  selectedField={this.state.selectField}
+                  processesStats={this.state.processesStats}
                 />
               );
             }
@@ -104,6 +117,9 @@ class Dashboard extends Component {
                       ? 1
                       : -1
                   )}
+                  selectedRelease={this.state.selectRelease}
+                  selectedField={this.state.selectField}
+                  processesStats={this.state.processesStats}
                 />
               );
             }
@@ -114,10 +130,27 @@ class Dashboard extends Component {
     );
   };
 
+  saveProcessesStats = processesStats => {
+    this.setState({
+      processesStats: processesStats,
+    });
+  };
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevState.processesStats !== this.state.processesStats) {
+  //     console.log(this.state.processesStats);
+  //   }
+  // }
+
   renderDashboard = () => {
     return (
       <div>
-        <ReleaseFilter saveStage={this.saveStage} />
+        <ReleaseFilter
+          saveStage={this.saveStage}
+          saveReleaseAndDataset={this.saveReleaseAndDataset}
+          processesStats={this.state.processesStats}
+          saveProcessesStats={this.saveProcessesStats}
+        />
         {this.renderContent()}
       </div>
     );
