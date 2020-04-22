@@ -20,16 +20,16 @@ class TableDataset extends Component {
 
     const columns = [
       {
-        field: 'release',
-        header: 'Release',
+        field: 'dataset',
+        header: 'Dataset',
         style: {
           textAlign: 'left',
           paddingLeft: '20px',
         },
       },
       {
-        field: 'dataset',
-        header: 'Dataset',
+        field: 'release',
+        header: 'Release',
         style: {
           textAlign: 'left',
           paddingLeft: '20px',
@@ -78,29 +78,11 @@ class TableDataset extends Component {
     return (
       <DataTable
         value={this.props.rowsDatasetProcess}
-        // resizableColumns={true}
-        // columnResizeMode="expand"
-        // reorderableColumns={true}
-        // reorderableRows={true}
-        // responsive={true}
-        // selectionMode="single"
-        // selection={this.state.selectedCar1}
-        // onSelectionChange={e => this.setState({ selectedCar1: e.data })}
-        // scrollable={true}
-        // scrollHeight="600px"
-        // style={{ zIndex: '95' }}
-        rowGroupMode="subheader"
+        scrollable={true}
+        scrollHeight="60vh"
+        style={{ zIndex: '95' }}
         sortField="release"
         sortOrder={1}
-        groupField="release"
-        rowGroupHeaderTemplate={this.headerTemplate}
-        rowGroupFooterTemplate={this.footerTemplate}
-        expandableRowGroups={true}
-        expandedRows={this.state.expandedRows}
-        onRowToggle={e => {
-          console.log(e);
-          this.setState({ expandedRows: e.data });
-        }}
       >
         {columns}
       </DataTable>

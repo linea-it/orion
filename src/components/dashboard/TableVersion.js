@@ -83,7 +83,7 @@ class TableVersion extends Component {
         selection={this.state.selectedCar1}
         onSelectionChange={e => this.setState({ selectedCar1: e.data })}
         scrollable={true}
-        scrollHeight="600px"
+        scrollHeight="60vh"
         style={{ zIndex: '95' }}
       >
         {columns}
