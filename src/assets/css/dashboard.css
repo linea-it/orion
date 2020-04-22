@@ -10,10 +10,6 @@ body {
 svg {
   color: white; }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
- monospace; }
-
 /* SELECAO DA LINHA NA TABELA DO PRIMEREACT */
 .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
   background-color: #E2E2E2;

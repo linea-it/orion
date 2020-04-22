@@ -94,6 +94,7 @@ class ReleaseFilter extends Component {
       selectRelease: '0',
       selectField: '0',
       pipelineFilterSelectedId: 1,
+      pipelineStatusFilterSelectedId: 1,
     };
   }
 
@@ -161,6 +162,11 @@ class ReleaseFilter extends Component {
           tagId: e.node.tagId,
         };
       });
+      optsReleaseLocal.sort(function compare(a, b) {
+        if (a.releaseDisplayName < b.releaseDisplayName) return 1;
+        if (b.releaseDisplayName < a.releaseDisplayName) return -1;
+        return 0;
+      });
       this.setState({
         optsRelease: [
           {
@@ -226,12 +232,13 @@ class ReleaseFilter extends Component {
     // eslint-disable-next-line
     const tableStage = await Promise.all(
       pipelineStages.map(async stage => {
-        const rows = await Centaurus.getAllPipelinesByFieldIdAndStageId(
-          this.state.selectRelease,
-          this.state.selectField,
-          this.state.pipelineFilterSelectedId,
-          stage.id
-        );
+        const rows = await Centaurus.getAllPipelinesByFieldIdAndStageId({
+          tagId: this.state.selectRelease,
+          dataField: this.state.selectField,
+          pipelineFilter: this.state.pipelineFilterSelectedId,
+          pipelineStatusFilter: this.state.pipelineStatusFilterSelectedId,
+          dataStage: stage.id,
+        });
 
         return {
           tableLevel: stage.level,
@@ -366,6 +373,16 @@ class ReleaseFilter extends Component {
     }
   };
 
+  handleChangePipelinesStatus = e => {
+    this.setState({
+      pipelineStatusFilterSelectedId: e.target.value,
+    });
+
+    if (this.state.selectField !== '' && this.state.selectRelease !== '') {
+      this.loadStage(this.state.selectField);
+    }
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -393,6 +410,28 @@ class ReleaseFilter extends Component {
             ]}
             handleChangePipelines={this.handleChangePipelines}
             pipelineFilterSelectedId={this.state.pipelineFilterSelectedId}
+            pipelinesStatusFilterList={[
+              {
+                id: 0,
+                displayName: 'All',
+              },
+              {
+                id: 1,
+                displayName: 'Enabled',
+              },
+              {
+                id: 2,
+                displayName: 'Disabled',
+              },
+              {
+                id: 3,
+                displayName: 'Deprecated',
+              },
+            ]}
+            handleChangePipelinesStatus={this.handleChangePipelinesStatus}
+            pipelineStatusFilterSelectedId={
+              this.state.pipelineStatusFilterSelectedId
+            }
           />
           {this.renderLoading()}
         </Toolbar>
