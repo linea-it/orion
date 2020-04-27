@@ -75,13 +75,13 @@ class Stages extends Component {
         align: 'left',
         padding: '0.25em 20px 0.857em',
       },
-      {
-        field: 'name',
-        header: 'Name',
-        body: this.renderName,
-        align: 'left',
-        padding: '0.25em 20px 0.857em',
-      },
+      // {
+      //   field: 'name',
+      //   header: 'Name',
+      //   body: this.renderName,
+      //   align: 'left',
+      //   padding: '0.25em 20px 0.857em',
+      // },
       {
         field: 'start',
         header: 'Start',
@@ -92,15 +92,16 @@ class Stages extends Component {
         header: 'Duration',
         body: this.renderDuration,
       },
-      {
-        field: 'status',
-        header: 'Status',
-        body: this.renderStatus,
-      },
+      // {
+      //   field: 'status',
+      //   header: 'Status',
+      //   body: this.renderStatus,
+      // },
       {
         field: 'runs',
         header: 'Runs',
         body: this.actionRuns,
+        width: '140px'
       },
     ];
 
@@ -149,7 +150,7 @@ class Stages extends Component {
 
   renderStart = rowData => {
     if (rowData.start)
-      return <span title={rowData.start}>{rowData.startTime}</span>;
+      return <span title={rowData.start}>{rowData.startTime} {rowData.start}</span>;
     return '-';
   };
 
@@ -199,7 +200,14 @@ class Stages extends Component {
         <Button
           variant="contained"
           className={classes.button}
-          style={styles.btnRuns}
+          // style={styles.btnRuns}
+          style={
+            rowData.status === 'failure'
+              ? styles.btnFailure
+              : rowData.status === 'running'
+              ? styles.btnRunning
+              : styles.btnSuccess
+          }
           title={rowData.runs}
           onClick={() => this.onShowRuns(rowData)}
         >
@@ -325,8 +333,8 @@ class Stages extends Component {
           //     {col.header}
           //   </span>
           // }
+          // sortable={true}
           header={col.header}
-          sortable={true}
           body={col.body}
           style={{
             whiteSpace: 'nowrap',
@@ -334,6 +342,7 @@ class Stages extends Component {
             textOverflow: 'ellipsis',
             padding: col.padding ? col.padding : '0.25em 0.857em',
             textAlign: col.align ? col.align : 'auto',
+            width: col.width || 'auto',
           }}
         />
       );
