@@ -244,7 +244,7 @@ class TableProcess extends Component {
 
   renderStartDate = rowData => {
     if (rowData && rowData.start) {
-      return <span title={rowData.time}>{rowData.start}</span>;
+      return <span title={rowData.time}>{rowData.start} {rowData.time}</span>;
     } else {
       return '-';
     }
@@ -355,7 +355,7 @@ class TableProcess extends Component {
     if (typeof rowData.removed !== 'undefined') {
       if (rowData.removed === true) {
         return (
-          <Icon title="Removed" className={classes.icoCheck}>
+          <Icon title="Removed" className={classes.icoRemoved}>
             check
           </Icon>
         );
@@ -532,7 +532,7 @@ class TableProcess extends Component {
       currentVersion
     );
     if (versionProcess && versionProcess.processComponentsByProcessId) {
-      const titleVersion = `${versionProcess.processComponentsByProcessId[0].process.process_name} - (${versionProcess.processComponentsByProcessId[0].processId})`;
+      const titleVersion = `Process: ${versionProcess.processComponentsByProcessId[0].processId}`;
       const versionProcessLocal = versionProcess.processComponentsByProcessId.map(
         row => {
           return {
@@ -542,9 +542,12 @@ class TableProcess extends Component {
               row.process.processPipeline.edges[0].node.process_version,
             pipeline_version:
               row.process.processPipeline.edges[0].node.pipeline.version,
+            pipeline_version_date:
+              row.process.processPipeline.edges[0].node.pipeline.versionDate,
             name: row.module.displayName,
             used_version: row.used_version,
             last_version: row.module.last_version,
+            version_date: row.module.versionDate,
           };
         }
       );
