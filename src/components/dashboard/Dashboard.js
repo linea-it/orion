@@ -100,9 +100,7 @@ class Dashboard extends Component {
                   key={index}
                   title={table.tableName}
                   rows={table.rows.pipelinesByFieldIdAndStageId.sort((a, b) =>
-                    `${a.startTime}T${a.start}` > `${b.startTime}T${b.start}`
-                      ? 1
-                      : -1
+                    a.displayName > b.displayName ? -1 : 1
                   )}
                 />
               );
