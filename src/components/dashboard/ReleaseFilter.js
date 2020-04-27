@@ -110,28 +110,44 @@ class ReleaseFilter extends Component {
   }
 
   handleChangeReleases = evt => {
-    this.setState({ selectRelease: evt.target.value });
-
-    if (evt.target.value !== '') {
+    console.log("teste");
+    this.setState({ 
+      selectRelease: evt.target.value,
+      selectField: {
+        id: 0,
+        displayName: 'All',
+        fieldId: 0,
+      },
+    });
+    
+    // if (evt.target.value !== '') {
       this.loadFields(evt.target.value);
       this.props.saveStage([]);
-    } else {
-      this.props.saveStage([]);
-      this.clearFields();
-    }
+      this.handleChangeFields();
+    // } else {
+    //   this.props.saveStage([]);
+    //   this.clearFields();
+    // }
   };
 
   handleChangeFields = evt => {
-    this.setState({ selectField: evt.target.value });
-    if (evt.target.value !== '') {
-      this.loadStage(evt.target.value);
-    } else {
-      this.props.saveStage([]);
-    }
+    this.setState({ selectField: evt ? evt.target.value : 0 });
+    // if (evt.target.value !== '') {
+    this.loadStage(evt ? evt.target.value : 0);
+    // } else {
+    //   this.props.saveStage([]);
+    // }
   };
 
   clearFields = () => {
-    this.setState({ optsFields: [], selectField: '' });
+    this.setState({
+      optsFields: [],
+      selectField: {
+        id: 0,
+        displayName: 'All',
+        fieldId: 0,
+      },
+    });
   };
 
   /* Valid field */
@@ -318,7 +334,7 @@ class ReleaseFilter extends Component {
               />
             }
           >
-            <option value="" />
+            {/* <option value="" /> */}
             {this.state.optsRelease.map(opt => {
               return (
                 <option key={opt.id} value={opt.tagId}>
@@ -348,7 +364,7 @@ class ReleaseFilter extends Component {
               />
             }
           >
-            <option value="" />
+            {/* <option value="" /> */}
             {/* <option value="all">All</option> */}
             {this.state.optsFields.map(opt => {
               return (
