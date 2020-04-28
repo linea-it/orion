@@ -70,6 +70,11 @@ export default class Centaurus {
           }
         `);
       }
+      fieldsTag.fieldsByTagId.sort(function compare(a, b) {
+        if (a.displayName > b.displayName) return 1;
+        if (b.displayName > a.displayName) return -1;
+        return 0;
+      });
       return fieldsTag;
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -412,6 +417,7 @@ export default class Centaurus {
                     process_version: version
                     pipeline {
                       version
+                      versionDate
                     }
                   }
                 }
