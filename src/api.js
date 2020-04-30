@@ -333,6 +333,9 @@ export default class Centaurus {
             publishedDate
             comments
             productLog
+            products{
+              totalCount
+            }
             savedProcesses {
               savedDate
               savedDateEnd

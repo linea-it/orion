@@ -151,7 +151,7 @@ class TableProcess extends Component {
         body: this.actionProduct,
       },
       {
-        field: 'products',
+        field: 'totalProducts',
         header: 'Products',
         body: this.actionProducts,
       },
@@ -244,7 +244,11 @@ class TableProcess extends Component {
 
   renderStartDate = rowData => {
     if (rowData && rowData.start) {
-      return <span title={rowData.time}>{rowData.start} {rowData.time}</span>;
+      return (
+        <span title={rowData.time}>
+          {rowData.start} {rowData.time}
+        </span>
+      );
     } else {
       return '-';
     }
@@ -423,7 +427,7 @@ class TableProcess extends Component {
 
   actionProducts = rowData => {
     const { classes } = this.props;
-    if (rowData && rowData.product && rowData.product.length > 0) {
+    if (rowData && rowData.product && rowData.totalProducts > 0) {
       return (
         <Button
           className={classes.button}
