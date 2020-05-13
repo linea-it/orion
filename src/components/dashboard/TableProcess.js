@@ -155,6 +155,11 @@ class TableProcess extends Component {
         header: 'Products',
         body: this.actionProducts,
       },
+      {
+        field: 'uriExport',
+        header: 'Export',
+        body: this.actionExport,
+      },
     ];
 
     this.state = {
@@ -436,6 +441,25 @@ class TableProcess extends Component {
           onClick={() => this.onShowProducts(rowData)}
         >
           <Icon>view_list</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
+  };
+
+  actionExport = rowData => {
+    const { classes } = this.props;
+    if (rowData && rowData.uriExport) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={'Exports'}
+          color={'inherit'}
+          // onClick={() => this.onShowProducts(rowData)}
+        >
+          <Icon>get_app</Icon>
         </Button>
       );
     } else {

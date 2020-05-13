@@ -314,6 +314,7 @@ class Stages extends Component {
             comments: row.comments,
             product: row.productLog,
             totalProducts: row.products.totalCount,
+            uriExport: 'url',
           };
         });
       this.setState({
