@@ -101,7 +101,7 @@ class Stages extends Component {
         field: 'runs',
         header: 'Runs',
         body: this.actionRuns,
-        width: '140px'
+        width: '140px',
       },
     ];
 
@@ -150,7 +150,11 @@ class Stages extends Component {
 
   renderStart = rowData => {
     if (rowData.start)
-      return <span title={rowData.start}>{rowData.startTime} {rowData.start}</span>;
+      return (
+        <span title={rowData.start}>
+          {rowData.startTime} {rowData.start}
+        </span>
+      );
     return '-';
   };
 
@@ -299,6 +303,7 @@ class Stages extends Component {
             published: row.publishedDate,
             comments: row.comments,
             product: row.productLog,
+            totalProducts: row.products.totalCount,
           };
         });
       this.setState({
