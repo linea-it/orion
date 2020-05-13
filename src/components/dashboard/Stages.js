@@ -83,14 +83,22 @@ class Stages extends Component {
       //   padding: '0.25em 20px 0.857em',
       // },
       {
+        field: 'startTime',
+        header: 'Start Time',
+        body: this.renderStartTime,
+        width: '140px',
+      },
+      {
         field: 'start',
         header: 'Start',
         body: this.renderStart,
+        width: '140px',
       },
       {
         field: 'duration',
         header: 'Duration',
         body: this.renderDuration,
+        width: '200px',
       },
       // {
       //   field: 'status',
@@ -148,13 +156,15 @@ class Stages extends Component {
     return <span title={rowData.name}>{rowData.name}</span>;
   };
 
+  renderStartTime = rowData => {
+    if (rowData.startTime)
+      return <span title={rowData.startTime}>{rowData.startTime}</span>;
+    return '-';
+  };
+
   renderStart = rowData => {
     if (rowData.start)
-      return (
-        <span title={rowData.start}>
-          {rowData.startTime} {rowData.start}
-        </span>
-      );
+      return <span title={rowData.start}>{rowData.start}</span>;
     return '-';
   };
 
