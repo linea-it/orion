@@ -164,7 +164,11 @@ class Stages extends Component {
 
   renderStart = rowData => {
     if (rowData.start)
-      return <span title={rowData.start}>{rowData.start}</span>;
+      return (
+        <span title={rowData.start}>
+          {rowData.startTime} {rowData.start}
+        </span>
+      );
     return '-';
   };
 
