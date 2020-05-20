@@ -83,14 +83,22 @@ class Stages extends Component {
       //   padding: '0.25em 20px 0.857em',
       // },
       {
+        field: 'startTime',
+        header: 'Start Time',
+        body: this.renderStartTime,
+        width: '140px',
+      },
+      {
         field: 'start',
         header: 'Start',
         body: this.renderStart,
+        width: '140px',
       },
       {
         field: 'duration',
         header: 'Duration',
         body: this.renderDuration,
+        width: '200px',
       },
       // {
       //   field: 'status',
@@ -146,6 +154,12 @@ class Stages extends Component {
 
   renderName = rowData => {
     return <span title={rowData.name}>{rowData.name}</span>;
+  };
+
+  renderStartTime = rowData => {
+    if (rowData.startTime)
+      return <span title={rowData.startTime}>{rowData.startTime}</span>;
+    return '-';
   };
 
   renderStart = rowData => {
@@ -304,6 +318,7 @@ class Stages extends Component {
             comments: row.comments,
             product: row.productLog,
             totalProducts: row.products.totalCount,
+            uriExport: 'url',
           };
         });
       this.setState({
