@@ -7,8 +7,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-svg {
-  color: white; }
+header svg { color: white }
 
 /* SELECAO DA LINHA NA TABELA DO PRIMEREACT */
 .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
