@@ -57,20 +57,27 @@ class TableVersion extends Component {
 
   renderData = rowData => {
     if (rowData && rowData.version_date) {
-      return <span>{moment(rowData.version_date).format('YYYY-MM-DD HH:mm:ss')}</span>;
+      return (
+        <span>
+          {moment(rowData.version_date).format('YYYY-MM-DD HH:mm:ss')}
+        </span>
+      );
     } else {
       return '-';
     }
   };
 
   render() {
-    const pipelineProcess = this.props.versionProcess[0] ?
-      [{
-        name: this.props.versionProcess[0].name_pipeline,
-        used_version: this.props.versionProcess[0].process_version,
-        last_version: this.props.versionProcess[0].pipeline_version,
-        version_date: this.props.versionProcess[0].pipeline_version_date,
-      }] : [];
+    const pipelineProcess = this.props.versionProcess[0]
+      ? [
+          {
+            name: this.props.versionProcess[0].name_pipeline,
+            used_version: this.props.versionProcess[0].process_version,
+            last_version: this.props.versionProcess[0].pipeline_version,
+            version_date: this.props.versionProcess[0].pipeline_version_date,
+          },
+        ]
+      : [];
 
     const columns = this.state.cols.map((col, i) => {
       return (

@@ -681,6 +681,8 @@ class TableProcess extends Component {
           onSelectionChange={e => this.setState({ selectedCar1: e.data })}
           scrollable={true}
           scrollHeight="60vh"
+          sortField="start"
+          sortOrder={-1}
         >
           {columns}
         </DataTable>

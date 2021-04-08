@@ -128,8 +128,8 @@ class Stages extends Component {
   };
 
   onShowRuns = rowData => {
-    this.onClickModal(rowData);
     this.loadTableProcesses(rowData);
+    this.onClickModal(rowData);
   };
 
   // onShowStatus = rowData => {
@@ -276,14 +276,12 @@ class Stages extends Component {
       currentProcess.fieldId,
       currentProcess.pipelineId
     );
-
     if (
       pipelineProcesses &&
       pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
     ) {
-      const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
-        .sort((a, b) => (a.startTime > b.startTIme ? 1 : -1))
-        .map(row => {
+      const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId.map(
+        row => {
           const startDateSplit = row.startTime
             ? row.startTime.split('T')[0]
             : null;
@@ -320,7 +318,8 @@ class Stages extends Component {
             totalProducts: row.products.totalCount,
             uriExport: 'url',
           };
-        });
+        }
+      );
       this.setState({
         pipelineProcesses: pipelineProcessesLocal,
         currentProcess: currentProcess,

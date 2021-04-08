@@ -363,13 +363,6 @@ export default class Centaurus {
         }
       `);
       // #FIXME: Alterar ordenação para EndPoint;
-      pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId.sort(
-        function compare(a, b) {
-          if (a.startTime > b.startTime) return 1;
-          if (b.startTime > a.startTime) return -1;
-          return 0;
-        }
-      );
       return pipelineProcesses;
     } catch (e) {
       // eslint-disable-next-line no-console
