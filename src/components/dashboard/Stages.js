@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Centaurus from '../../api';
 import moment from 'moment';
 
-import TableProcess from './TableProcess';
+import TableProcess from '../TableProcess/';
 
 const styles = {
   button: {
@@ -75,6 +75,14 @@ class Stages extends Component {
         align: 'left',
         padding: '0.25em 20px 0.857em',
       },
+      {
+        field: 'processId',
+        header: 'Process ID',
+        body: this.renderProcess,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
+        width: '140px',
+      },
       // {
       //   field: 'name',
       //   header: 'Name',
@@ -98,7 +106,7 @@ class Stages extends Component {
         field: 'duration',
         header: 'Duration',
         body: this.renderDuration,
-        width: '200px',
+        width: '140px',
       },
       // {
       //   field: 'status',
@@ -128,8 +136,8 @@ class Stages extends Component {
   };
 
   onShowRuns = rowData => {
-    this.onClickModal(rowData);
     this.loadTableProcesses(rowData);
+    // this.onClickModal(rowData);
   };
 
   // onShowStatus = rowData => {
@@ -141,7 +149,11 @@ class Stages extends Component {
   };
 
   onHideModal = () => {
-    this.setState({ visible: false });
+    this.setState({ visible: false, loading: false });
+  };
+
+  renderProcess = rowData => {
+    return <span title={rowData.processId}>{rowData.processId}</span>;
   };
 
   renderPipeline = rowData => {
@@ -271,19 +283,18 @@ class Stages extends Component {
   };
 
   loadTableProcesses = async currentProcess => {
+    this.setState({ loading: true });
     const pipelineProcesses = await Centaurus.getAllProcessesByFieldIdAndPipelineId(
       currentProcess.tagId,
       currentProcess.fieldId,
       currentProcess.pipelineId
     );
-
     if (
       pipelineProcesses &&
       pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
     ) {
-      const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId
-        .sort((a, b) => (a.startTime > b.startTIme ? 1 : -1))
-        .map(row => {
+      const pipelineProcessesLocal = pipelineProcesses.processesByTagIdAndFieldIdAndPipelineId.map(
+        row => {
           const startDateSplit = row.startTime
             ? row.startTime.split('T')[0]
             : null;
@@ -320,11 +331,14 @@ class Stages extends Component {
             totalProducts: row.products.totalCount,
             uriExport: 'url',
           };
-        });
+        }
+      );
       this.setState({
         pipelineProcesses: pipelineProcessesLocal,
         currentProcess: currentProcess,
       });
+      this.setState({ visible: true, loading: false });
+      this;
     } else {
       return null;
     }

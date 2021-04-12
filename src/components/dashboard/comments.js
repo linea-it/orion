@@ -33,6 +33,11 @@ class Comments extends Component {
             </div>
           );
         })}
+        {this.props.commentsProcess.length === 0 ? (
+          <div>Not found results</div>
+        ) : (
+          ''
+        )}
       </Card>
     );
   }

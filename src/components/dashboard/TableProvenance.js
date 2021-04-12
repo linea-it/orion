@@ -1,8 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Typography,
+  CircularProgress,
+  Paper,
+  Button,
+  Icon,
+  IconButton,
+} from '@material-ui/core';
 import { TreeDataState, CustomTreeData } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -10,10 +18,13 @@ import {
   TableHeaderRow,
   TableTreeColumn,
 } from '@devexpress/dx-react-grid-material-ui';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Provenance from './provenance';
+import Comments from './comments';
 
+import moment from 'moment';
 import Centaurus from '../../api';
+
+import CloseIcon from '@material-ui/icons/Close';
 
 const getRowId = row => {
   return row.id;
@@ -36,6 +47,13 @@ const styles = {
     display: 'block',
     margin: '0px auto',
     lineHeight: '2',
+  },
+  titleDialog: {
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  closeButton: {
+    float: 'right',
   },
 };
 
@@ -93,6 +111,15 @@ export default class Demo extends React.PureComponent {
       expandedRowIds: [],
       loading: false,
       data: [],
+      dataModal: {
+        loading: false,
+        visible: false,
+        productsProcess: [],
+        rowsDatasetProcess: {},
+        versionProcess: [],
+        commentsProcess: [],
+        processByProcessId: [],
+      },
     };
   }
 
@@ -111,7 +138,12 @@ export default class Demo extends React.PureComponent {
     }
   }
 
+  handleClickProductLog = rowData => {
+    window.open(rowData, 'Product Log');
+  };
+
   renderButtonProduct = rowData => {
+    console.log(rowData);
     if (rowData !== null) {
       return (
         <Button
@@ -128,27 +160,101 @@ export default class Demo extends React.PureComponent {
   };
 
   renderButtonComments = rowData => {
-    if (rowData !== null && rowData.length > 0) {
-      return (
-        <Button
-          style={styles.btnIco}
-          title={rowData}
-          onClick={() => this.handleClickComments(rowData)}
-        >
-          <Icon>comment</Icon>
-        </Button>
-      );
-    } else {
-      return <span style={styles.mark}>-</span>;
-    }
-  };
-
-  handleClickProductLog = rowData => {
-    window.open(rowData, 'Product Log');
+    return (
+      <Button
+        style={styles.btnIco}
+        title={rowData}
+        onClick={() => this.handleClickComments(rowData)}
+      >
+        <Icon>comment</Icon>
+      </Button>
+    );
   };
 
   handleClickComments = rowData => {
-    console.log(rowData, 'Comments');
+    rowData.commentsProcess = [];
+    this.loadComments(rowData);
+  };
+
+  loadComments = async rowData => {
+    const rowDataLocal = rowData;
+    const commentsProcess = await Centaurus.getAllCommentsByProcessId(
+      rowData.process
+    );
+
+    if (commentsProcess && commentsProcess.commentsByProcessId) {
+      rowDataLocal.commentsProcess = commentsProcess.commentsByProcessId.map(
+        row => {
+          return {
+            date: moment(row.date).format('DD/MM/YYYY hh:mm:ss'),
+            user: row.user.displayName,
+            comments: row.comments,
+          };
+        }
+      );
+      this.onClickModal(rowDataLocal.commentsProcess, 'Comments');
+    } else {
+      return null;
+    }
+  };
+
+  onClickModal = (rowData, modalType) => {
+    console.log(rowData);
+
+    this.setState(prevState => ({
+      ...prevState,
+      dataModal: {
+        visible: true,
+        modalType: modalType,
+        rowData: rowData,
+      },
+    }));
+  };
+
+  onHideModal = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      dataModal: {
+        visible: false,
+      },
+    }));
+  };
+
+  renderContentModal = () => {
+    if (this.state.dataModal.modalType === 'Comments') {
+      return <Comments commentsProcess={this.state.dataModal.rowData} />;
+    }
+  };
+
+  renderModal = () => {
+    const title =
+      this.state.dataModal.modalType == 'Version'
+        ? this.state.dataModal.titleVersion
+        : this.state.dataModal.modalType;
+    const header = (
+      <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>{title}</span>
+    );
+    return (
+      <Dialog
+        open={this.state.dataModal.visible}
+        maxWidth="md"
+        onClose={this.onHideModal}
+      >
+        <DialogTitle id="simple-dialog-title">
+          <Typography style={styles.titleDialog}>
+            {header}
+            <IconButton
+              aria-label="close"
+              style={styles.closeButton}
+              onClick={this.onHideModal}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Typography>
+        </DialogTitle>
+        <DialogContent>{this.renderContentModal()}</DialogContent>
+      </Dialog>
+    );
   };
 
   findProduct = async processId => {
@@ -228,12 +334,13 @@ export default class Demo extends React.PureComponent {
       loading,
     } = this.state;
 
-    data ||
-      [].map(row => {
+    if (data) {
+      data.map(row => {
         row.product_btn = this.renderButtonProduct(row.product);
-        row.comments = this.renderButtonComments(row.comments);
+        row.comments = this.renderButtonComments(row);
         return row;
       });
+    }
 
     return (
       <Paper style={{ position: 'relative', zIndex: '999' }}>
@@ -261,6 +368,7 @@ export default class Demo extends React.PureComponent {
             }}
           />
         )}
+        {this.renderModal()}
       </Paper>
     );
   }
