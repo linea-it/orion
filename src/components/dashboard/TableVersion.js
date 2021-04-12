@@ -27,9 +27,10 @@ class TableVersion extends Component {
           textAlign: 'left',
           paddingLeft: '20px',
         },
+        width: 120,
       },
       {
-        field: 'version_date',
+        field: 'versionDate',
         header: 'Date',
         body: this.renderData,
       },
@@ -56,11 +57,9 @@ class TableVersion extends Component {
   };
 
   renderData = rowData => {
-    if (rowData && rowData.version_date) {
+    if (rowData && rowData.versionDate) {
       return (
-        <span>
-          {moment(rowData.version_date).format('YYYY-MM-DD HH:mm:ss')}
-        </span>
+        <span>{moment(rowData.versionDate).format('YYYY-MM-DD HH:mm:ss')}</span>
       );
     } else {
       return '-';
@@ -68,13 +67,14 @@ class TableVersion extends Component {
   };
 
   render() {
+    console.log(this.props);
     const pipelineProcess = this.props.versionProcess[0]
       ? [
           {
             name: this.props.versionProcess[0].name_pipeline,
             used_version: this.props.versionProcess[0].process_version,
             last_version: this.props.versionProcess[0].pipeline_version,
-            version_date: this.props.versionProcess[0].pipeline_version_date,
+            versionDate: this.props.versionProcess[0].pipeline_versionDate,
           },
         ]
       : [];

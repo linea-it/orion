@@ -1,23 +1,32 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CustomTable from '../Table/';
+// import { Column } from 'primereact/column';
+// import { Dialog } from 'primereact/dialog';
 
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Dialog } from 'primereact/dialog';
+import {
+  withStyles,
+  CardContent,
+  Dialog,
+  Button,
+  DialogTitle,
+  DialogContent,
+  Icon,
+  IconButton,
+  Typography,
+  CircularProgress,
+} from '@material-ui/core';
 
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CloseIcon from '@material-ui/icons/Close';
 import moment from 'moment';
 
 import Centaurus from '../../api';
 
-import TableVersion from './TableVersion';
-import TableProvenance from './TableProvenance';
-import Comments from './comments';
-import TableProducts from './TableProducts';
-import TableDataset from './TableDataset';
+import TableVersion from '../dashboard/TableVersion';
+import TableProvenance from '../dashboard/TableProvenance';
+import Comments from '../dashboard/comments';
+import TableProducts from '../dashboard/TableProducts';
+import TableDataset from '../dashboard/TableDataset';
 
 const styles = {
   btnIco: {
@@ -27,6 +36,13 @@ const styles = {
     display: 'block',
     margin: '0 auto',
     lineHeight: '.5',
+  },
+  titleDialog: {
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  closeButton: {
+    float: 'right',
   },
   btnStatus: {
     textTransform: 'none',
@@ -81,85 +97,116 @@ class TableProcess extends Component {
 
     const columns = [
       {
-        field: 'process',
-        header: 'Process ID',
-        body: this.renderProcess,
+        name: 'process',
+        title: 'Process ID',
+        customElement: this.renderProcess,
+        width: 150,
       },
       {
-        field: 'dataset',
-        header: 'Dataset',
-        body: this.renderDataset,
+        name: 'release',
+        title: 'Release',
+        customElement: this.renderRelease,
         align: 'left',
         padding: '0.25em 20px 0.857em',
+        width: 120,
       },
       {
-        field: 'start',
-        header: 'Start Date',
-        body: this.renderStartDate,
-        width: '130px',
-      },
-      {
-        field: 'duration',
-        header: 'Duration',
-        body: this.renderDuration,
-      },
-      {
-        field: 'version',
-        header: 'Version',
-        body: this.actionVersion,
-      },
-      {
-        field: 'owner',
-        header: 'Owner',
-        body: this.renderOwner,
+        name: 'dataset',
+        title: 'Dataset',
+        customElement: this.renderDataset,
         align: 'left',
         padding: '0.25em 20px 0.857em',
+        width: 120,
       },
       {
-        field: 'status',
-        header: 'Status',
-        body: this.actionStatus,
+        name: 'start',
+        title: 'Start Date',
+        customElement: this.renderStartDate,
+        width: 120,
+      },
+      // {
+      //   name: 'end',
+      //   title: 'End time',
+      //   customElement: this.renderEndTime,
+      // },
+      {
+        name: 'duration',
+        title: 'Duration',
+        customElement: this.renderDuration,
+        width: 120,
       },
       {
-        field: 'saved',
-        header: 'Saved',
-        body: this.actionSaved,
+        name: 'version',
+        title: 'Version',
+        customElement: this.actionVersion,
+        width: 70,
       },
       {
-        field: 'published',
-        header: 'Published',
-        body: this.actionPublished,
+        name: 'owner',
+        title: 'Owner',
+        customElement: this.renderOwner,
+        align: 'left',
+        padding: '0.25em 20px 0.857em',
+        width: 200,
       },
       {
-        field: 'removed',
-        header: 'Removed',
-        body: this.actionRemoved,
+        name: 'status',
+        title: 'Status',
+        customElement: this.actionStatus,
+        width: 100,
       },
       {
-        field: 'provenance',
-        header: 'Provenance',
-        body: this.actionProvenance,
+        name: 'saved',
+        title: 'Saved',
+        customElement: this.actionSaved,
+        width: 80,
       },
       {
-        field: 'comments',
-        header: 'Comments',
-        body: this.actionComments,
+        name: 'removed',
+        title: 'Removed',
+        customElement: this.actionRemoved,
+        width: 80,
+      },
+      // {
+      //   name: 'share',
+      //   title: 'Share',
+      //   customElement: this.actionShare,
+      // },
+      {
+        name: 'published',
+        title: 'Published',
+        customElement: this.actionPublished,
+        width: 80,
       },
       {
-        field: 'product',
-        header: 'Product Log',
-        body: this.actionProduct,
+        name: 'provenance',
+        title: 'Provenance',
+        customElement: this.actionProvenance,
+        width: 80,
       },
       {
-        field: 'totalProducts',
-        header: 'Products',
-        body: this.actionProducts,
+        name: 'comments',
+        title: 'Comments',
+        customElement: this.actionComments,
+        width: 80,
       },
       {
-        field: 'uriExport',
-        header: 'Export',
-        body: this.actionExport,
+        name: 'product',
+        title: 'Product Log',
+        customElement: this.actionProduct,
+        width: 80,
       },
+      {
+        name: 'products',
+        title: 'Products',
+        customElement: this.actionProducts,
+        width: 80,
+      },
+      // {
+      //   name: 'export',
+      //   title: 'Export',
+      //   customElement: this.actionExport,
+      // },
     ];
 
     this.state = {
@@ -209,15 +256,15 @@ class TableProcess extends Component {
   };
 
   onClickModal = (rowData, modalType) => {
-    this.setState({
-      visible: true,
-      modalType: modalType,
-      rowData: rowData,
-    });
+    this.setState({ visible: true, modalType: modalType, rowData: rowData });
   };
 
   onHideModal = () => {
     this.setState({ visible: false });
+  };
+
+  renderRelease = rowData => {
+    return <span title={rowData.release}>{rowData.release}</span>;
   };
 
   renderDataset = rowData => {
@@ -249,11 +296,7 @@ class TableProcess extends Component {
 
   renderStartDate = rowData => {
     if (rowData && rowData.start) {
-      return (
-        <span title={rowData.time}>
-          {rowData.start} {rowData.time}
-        </span>
-      );
+      return <span title={rowData.time}>{rowData.start}</span>;
     } else {
       return '-';
     }
@@ -354,7 +397,7 @@ class TableProcess extends Component {
         );
       }
     } else if (rowData.saved === null) {
-      return '-';
+      return <span style={styles.mark}>-</span>;
     }
   };
 
@@ -364,15 +407,40 @@ class TableProcess extends Component {
     if (typeof rowData.removed !== 'undefined') {
       if (rowData.removed === true) {
         return (
-          <Icon title="Removed" className={classes.icoRemoved}>
+          <Icon title="Removed" className={classes.icoCheck}>
             check
           </Icon>
         );
       } else {
-        return <span style={styles.mark}>-</span>;
+        return (
+          <Icon title="Not removed" className={classes.icoRemoved}>
+            close
+          </Icon>
+        );
       }
     } else {
-      return <span style={styles.mark}>-</span>;
+      return (
+        <Icon title="Not removed" className={classes.icoRemoved}>
+          close
+        </Icon>
+      );
+    }
+  };
+
+  actionShare = rowData => {
+    const { classes } = this.props;
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.share}
+        >
+          <Icon>share</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
     }
   };
 
@@ -432,34 +500,15 @@ class TableProcess extends Component {
 
   actionProducts = rowData => {
     const { classes } = this.props;
-    if (rowData && rowData.product && rowData.totalProducts > 0) {
+    if (rowData) {
       return (
         <Button
           className={classes.button}
           style={styles.btnIco}
-          title={rowData.products}
+          title={rowData.products ? rowData.products : ''}
           onClick={() => this.onShowProducts(rowData)}
         >
           <Icon>view_list</Icon>
-        </Button>
-      );
-    } else {
-      return '-';
-    }
-  };
-
-  actionExport = rowData => {
-    const { classes } = this.props;
-    if (rowData && rowData.uriExport) {
-      return (
-        <Button
-          className={classes.button}
-          style={styles.btnIco}
-          title={'Exports'}
-          color={'inherit'}
-          // onClick={() => this.onShowProducts(rowData)}
-        >
-          <Icon>get_app</Icon>
         </Button>
       );
     } else {
@@ -485,6 +534,24 @@ class TableProcess extends Component {
     }
   };
 
+  actionExport = rowData => {
+    const { classes } = this.props;
+    if (rowData) {
+      return (
+        <Button
+          className={classes.button}
+          style={styles.btnIco}
+          title={rowData.export}
+          onClick={() => this.onShowExport(rowData)}
+        >
+          <Icon>import_export</Icon>
+        </Button>
+      );
+    } else {
+      return '-';
+    }
+  };
+
   renderContentModal = () => {
     if (this.state.modalType === 'Version') {
       return <TableVersion versionProcess={this.state.versionProcess} />;
@@ -502,35 +569,30 @@ class TableProcess extends Component {
   };
 
   renderModal = () => {
-    const title =
-      this.state.modalType == 'Version'
-        ? this.state.titleVersion
-        : this.state.modalType;
+    const { classes } = this.props;
+    const title = this.state.modalType;
     const header = (
       <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>{title}</span>
     );
     return (
       <Dialog
-        header={header}
-        visible={this.state.visible}
-        width="50%"
-        onHide={this.onHideModal}
-        maximizable={true}
-        modal={false}
-        contentStyle={{ padding: '0', marginBottom: '-10px' }}
+        open={this.state.visible}
+        maxWidth="md"
+        onClose={this.onHideModal}
       >
-        <div
-          style={{
-            position: 'fixed',
-            width: '100%',
-            height: '100%',
-            background: 'rgba(102, 102, 102, 0.5)',
-            top: '0',
-            left: '0',
-            zIndex: '-1',
-          }}
-        />
-        {this.renderContentModal()}
+        <DialogTitle id="simple-dialog-title">
+          <Typography className={classes.titleDialog}>
+            {header}
+            <IconButton
+              aria-label="close"
+              className={classes.closeButton}
+              onClick={this.onHideModal}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Typography>
+        </DialogTitle>
+        <DialogContent>{this.renderContentModal()}</DialogContent>
       </Dialog>
     );
   };
@@ -559,30 +621,31 @@ class TableProcess extends Component {
     const versionProcess = await Centaurus.getAllProcessComponentsByProcessId(
       currentVersion
     );
+
     if (versionProcess && versionProcess.processComponentsByProcessId) {
-      const titleVersion = `Process: ${versionProcess.processComponentsByProcessId[0].processId}`;
       const versionProcessLocal = versionProcess.processComponentsByProcessId.map(
         row => {
           return {
-            process_id: row.processId,
-            name_pipeline: row.process.process_name,
-            process_version:
-              row.process.processPipeline.edges[0].node.process_version,
-            pipeline_version:
-              row.process.processPipeline.edges[0].node.pipeline.version,
-            pipeline_version_date:
-              row.process.processPipeline.edges[0].node.pipeline.versionDate,
             name: row.module.displayName,
             used_version: row.used_version,
             last_version: row.module.last_version,
-            version_date: row.module.versionDate,
+            versionDate: row.module.versionDate,
+
+            name_pipeline: row.process.process_name,
+            process_version:
+              row.process.processPipeline.edges[0].node.process_version,
+
+            pipeline_version:
+              row.process.processPipeline.edges[0].node.pipeline.version,
+
+            pipeline_versionDate:
+              row.process.processPipeline.edges[0].node.pipeline.versionDate,
           };
         }
       );
       this.setState({
         versionProcess: versionProcessLocal,
         currentVersion: currentVersion,
-        titleVersion: titleVersion,
       });
     } else {
       return null;
@@ -640,52 +703,42 @@ class TableProcess extends Component {
   };
 
   render() {
-    const columns = this.state.cols.map((col, i) => {
-      return (
-        <Column
-          key={i}
-          field={col.field}
-          header={col.header}
-          sortable={true}
-          body={col.body}
-          style={{
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            width: col.width ? col.width : 'auto',
-            textAlign: col.align ? col.align : 'auto',
-            padding: col.padding ? col.padding : '0.25em 0.857em',
-          }}
-        />
-      );
-    });
-
+    if (
+      this.props.pipelineProcesses &&
+      this.props.pipelineProcesses.length > 0
+    ) {
+      this.props.pipelineProcesses.map(el => {
+        el.version = null;
+        el.products = null;
+        el.provenance = null;
+      });
+    }
     return (
       <div>
-        <DataTable
-          paginator
-          rows={10}
-          first={1}
-          emptyMessage="No customers found"
-          currentPageReportTemplate={`Total: ${this.props.pipelineProcesses.length} Processes`}
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
-          rowsPerPageOptions={[10, 25, 50]}
-          value={this.props.pipelineProcesses}
-          resizableColumns={true}
-          columnResizeMode="expand"
-          reorderableColumns={true}
-          reorderableRows={true}
-          responsive={true}
-          selectionMode="single"
-          selection={this.state.selectedCar1}
-          onSelectionChange={e => this.setState({ selectedCar1: e.data })}
-          scrollable={true}
-          scrollHeight="60vh"
-          sortField="start"
-          sortOrder={-1}
-        >
-          {columns}
-        </DataTable>
+        <CardContent>
+          {/* <Typography className={classes.titleDialog} variant="subtitle2">
+            {header ? header : ''}
+          </Typography> */}
+          <CustomTable
+            columns={this.state.cols}
+            data={this.props.pipelineProcesses}
+            remote={false}
+            pageSize={10}
+            pageSizes={[10, 15, 50, 100, 500]}
+            totalCount={this.props.pipelineProcesses.length}
+            reload={false}
+            hasSearching={false}
+            hasToolbar={false}
+            hasColumnVisibility={false}
+            sizeTable={'smal'}
+            defaultSorting={[
+              {
+                columnName: 'start',
+                direction: 'desc',
+              },
+            ]}
+          />
+        </CardContent>
         {this.renderModal()}
       </div>
     );

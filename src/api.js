@@ -166,6 +166,7 @@ export default class Centaurus {
 
             if (samePipeline.length > 0) {
               return {
+                processId: samePipeline[0].node.lastProcessId,
                 displayName: pipeline.node.pipelineDisplayName,
                 name: pipeline.node.pipelineName,
                 pipelineId: pipeline.node.pipelineId,
@@ -180,6 +181,7 @@ export default class Centaurus {
               };
             }
             return {
+              processId: null,
               displayName: pipeline.node.pipelineDisplayName,
               name: pipeline.node.pipelineName,
               pipelineId: pipeline.node.pipelineId,
@@ -243,6 +245,7 @@ export default class Centaurus {
 
             if (samePipeline.length === 0) {
               return {
+                processId: null,
                 displayName: pipeline.node.pipelineDisplayName,
                 name: pipeline.node.pipelineName,
                 pipelineId: pipeline.node.pipelineId,
@@ -284,6 +287,7 @@ export default class Centaurus {
 
         pipelinesStageId = query.pipelinesByStageIdAndTagIdAndFieldId.edges.map(
           pipeline => ({
+            processId: pipeline.node.lastProcessId,
             displayName: pipeline.node.pipelineDisplayName,
             name: pipeline.node.pipelineName,
             pipelineId: pipeline.node.pipelineId,

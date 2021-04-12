@@ -110,8 +110,7 @@ class ReleaseFilter extends Component {
   }
 
   handleChangeReleases = evt => {
-    console.log("teste");
-    this.setState({ 
+    this.setState({
       selectRelease: evt.target.value,
       selectField: {
         id: 0,
@@ -119,11 +118,11 @@ class ReleaseFilter extends Component {
         fieldId: 0,
       },
     });
-    
+
     // if (evt.target.value !== '') {
-      this.loadFields(evt.target.value);
-      this.props.saveStage([]);
-      this.handleChangeFields();
+    this.loadFields(evt.target.value);
+    this.props.saveStage([]);
+    this.handleChangeFields();
     // } else {
     //   this.props.saveStage([]);
     //   this.clearFields();
@@ -273,6 +272,7 @@ class ReleaseFilter extends Component {
                   const diff = endTime.diff(startTime);
                   const duration = moment.utc(diff).format('HH:mm:ss');
                   return {
+                    processId: row.processId,
                     pipeline: row.displayName,
                     name: row.name,
                     pipelineId: row.pipelineId,
