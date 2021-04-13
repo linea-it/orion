@@ -18,10 +18,19 @@ code {
 /* SELECAO DA LINHA NA TABELA DO PRIMEREACT */
 .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
 	background-color: #E2E2E2;
-	color: #222;
+	color: #222; }
+  
+.MuiTableCell-root {
+padding-top: 0px !important;
+padding-bottom: 0px !important; 
+}
+
+body .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):not(.p-highlight-contextmenu) {
+color: #181818!important;
+font-size: 16px;
+font-weight: 600;
 }
 
 .MuiTableCell-root {
-	padding-top: 0px!important;
-	padding-bottom: 0px!important;
+font-weight: 600!important;
 }
