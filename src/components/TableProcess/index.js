@@ -580,7 +580,7 @@ class TableProcess extends Component {
     const processId = this.state.processId;
     const header = (
       <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>
-        {title} Process: {processId}
+        {title} - Process ID: {processId}
       </span>
     );
     return (

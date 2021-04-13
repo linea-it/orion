@@ -90,17 +90,17 @@ class Stages extends Component {
       //   align: 'left',
       //   padding: '0.25em 20px 0.857em',
       // },
-      {
-        field: 'startTime',
-        header: 'Start Time',
-        body: this.renderStartTime,
-        width: '140px',
-      },
+      // {
+      //   field: 'startTime',
+      //   header: 'Start Time',
+      //   body: this.renderStartTime,
+      //   width: '140px',
+      // },
       {
         field: 'start',
         header: 'Start',
         body: this.renderStart,
-        width: '140px',
+        width: '220px',
       },
       {
         field: 'duration',
