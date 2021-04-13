@@ -31,16 +31,16 @@ class TableVersion extends Component {
       },
       {
         field: 'versionDate',
-        header: 'Date',
+        header: 'Current Date',
         body: this.renderData,
-      },
-      {
-        field: 'used_version',
-        header: 'Version Used',
       },
       {
         field: 'last_version',
         header: 'Current Version',
+      },
+      {
+        field: 'used_version',
+        header: 'Current Used',
       },
     ];
 
@@ -67,7 +67,6 @@ class TableVersion extends Component {
   };
 
   render() {
-    console.log(this.props);
     const pipelineProcess = this.props.versionProcess[0]
       ? [
           {

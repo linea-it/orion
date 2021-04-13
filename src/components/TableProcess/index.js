@@ -256,7 +256,13 @@ class TableProcess extends Component {
   };
 
   onClickModal = (rowData, modalType) => {
-    this.setState({ visible: true, modalType: modalType, rowData: rowData });
+    console.log(rowData);
+    this.setState({
+      visible: true,
+      modalType: modalType,
+      rowData: rowData,
+      processId: rowData.process,
+    });
   };
 
   onHideModal = () => {
@@ -571,8 +577,11 @@ class TableProcess extends Component {
   renderModal = () => {
     const { classes } = this.props;
     const title = this.state.modalType;
+    const processId = this.state.processId;
     const header = (
-      <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>{title}</span>
+      <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>
+        {title} Process: {processId}
+      </span>
     );
     return (
       <Dialog

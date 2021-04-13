@@ -21,15 +21,12 @@ code {
 
 .MuiTableCell-root {
   padding-top: 0px !important;
-  padding-bottom: 0px !important; 
-}
+  padding-bottom: 0px !important; }
 
 body .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):not(.p-highlight-contextmenu) {
-  color: #181818!important;
+  color: #181818 !important;
   font-size: 16px;
-  font-weight: 600;
-}
+  font-weight: 600; }
 
 .MuiTableCell-root {
-  font-weight: 600!important;
-}
+  font-weight: 600 !important; }
