@@ -15,7 +15,7 @@
     "history": "^4.7.2",
     "lokka": "^1.7.0",
     "lokka-transport-http": "^1.6.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "node-sass-chokidar": "^1.3.3",
     "primeicons": "^1.0.0-beta.9",
     "primereact": "^2.0.0-beta.1",
